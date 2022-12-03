@@ -5,8 +5,8 @@ import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
-import { GameV1Interface } from "./interfaces/GameV1Interface.sol";
-import { CronUpkeepInterface } from "./interfaces/CronUpkeepInterface.sol";
+import { GameV1Interface } from "../interfaces/GameV1Interface.sol";
+import { CronUpkeepInterface } from "../interfaces/CronUpkeepInterface.sol";
 import { Cron as CronExternal } from "@chainlink/contracts/src/v0.8/libraries/external/Cron.sol";
 
 contract GameV1 is GameV1Interface, ReentrancyGuard, Pausable {

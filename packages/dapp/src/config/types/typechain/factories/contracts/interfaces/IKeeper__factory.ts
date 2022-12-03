@@ -58,7 +58,20 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
+        internalType: "contract CronUpkeep",
+        name: "_cronUpkeep",
+        type: "address",
+      },
+    ],
+    name: "registerCronToUpkeep",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "contract CronUpkeep",
         name: "_cronUpkeep",
         type: "address",
       },

@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.6;
 
+// import { ICronUpkeep } from "./ICronUpkeep.sol";
+import { CronUpkeep } from "../upkeeps/CronUpkeep.sol";
+
 interface IKeeper {
     /**
      * @notice Called when the creator or admin update encodedCron
@@ -12,11 +15,17 @@ interface IKeeper {
     event CronUpkeepUpdated(uint256 jobId, address cronUpkeep);
 
     /**
+     * @notice Register the cron to the upkeep contract
+     * @dev Callable by admin or creator or factory
+     */
+    function registerCronToUpkeep(CronUpkeep _cronUpkeep) external;
+
+    /**
      * @notice Set the keeper address
      * @param _cronUpkeep the new keeper address
      * @dev Callable by admin or factory
      */
-    function setCronUpkeep(address _cronUpkeep) external;
+    function setCronUpkeep(CronUpkeep _cronUpkeep) external;
 
     /**
      * @notice Set the encoded cron

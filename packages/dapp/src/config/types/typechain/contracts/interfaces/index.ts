@@ -2,5 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { CronUpkeepInterface } from "./CronUpkeepInterface";
+export type { GameInterface } from "./GameInterface";
 export type { GameV1Interface } from "./GameV1Interface";
+export type { IChild } from "./IChild";
+export type { ICronUpkeep } from "./ICronUpkeep";
 export type { IKeeper } from "./IKeeper";

@@ -26,9 +26,9 @@ import type {
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../common";
+} from "../../common";
 
-export declare namespace GameV1Interface {
+export declare namespace IChild {
   export type PrizeStruct = {
     position: PromiseOrValue<BigNumberish>;
     amount: PromiseOrValue<BigNumberish>;
@@ -51,6 +51,30 @@ export declare namespace GameV1Interface {
     tokenId: BigNumber;
   };
 
+  export type WinnerStruct = {
+    roundId: PromiseOrValue<BigNumberish>;
+    playerAddress: PromiseOrValue<string>;
+    amountWon: PromiseOrValue<BigNumberish>;
+    position: PromiseOrValue<BigNumberish>;
+    prizeClaimed: PromiseOrValue<boolean>;
+  };
+
+  export type WinnerStructOutput = [
+    BigNumber,
+    string,
+    BigNumber,
+    BigNumber,
+    boolean
+  ] & {
+    roundId: BigNumber;
+    playerAddress: string;
+    amountWon: BigNumber;
+    position: BigNumber;
+    prizeClaimed: boolean;
+  };
+}
+
+export declare namespace GameInterface {
   export type GameDataStruct = {
     id: PromiseOrValue<BigNumberish>;
     versionId: PromiseOrValue<BigNumberish>;
@@ -137,28 +161,6 @@ export declare namespace GameV1Interface {
     isSplitOk: boolean;
   };
 
-  export type WinnerStruct = {
-    roundId: PromiseOrValue<BigNumberish>;
-    playerAddress: PromiseOrValue<string>;
-    amountWon: PromiseOrValue<BigNumberish>;
-    position: PromiseOrValue<BigNumberish>;
-    prizeClaimed: PromiseOrValue<boolean>;
-  };
-
-  export type WinnerStructOutput = [
-    BigNumber,
-    string,
-    BigNumber,
-    BigNumber,
-    boolean
-  ] & {
-    roundId: BigNumber;
-    playerAddress: string;
-    amountWon: BigNumber;
-    position: BigNumber;
-    prizeClaimed: boolean;
-  };
-
   export type InitializationStruct = {
     owner: PromiseOrValue<string>;
     creator: PromiseOrValue<string>;
@@ -172,7 +174,7 @@ export declare namespace GameV1Interface {
     treasuryFee: PromiseOrValue<BigNumberish>;
     creatorFee: PromiseOrValue<BigNumberish>;
     encodedCron: PromiseOrValue<string>;
-    prizes: GameV1Interface.PrizeStruct[];
+    prizes: IChild.PrizeStruct[];
   };
 
   export type InitializationStructOutput = [
@@ -188,7 +190,7 @@ export declare namespace GameV1Interface {
     BigNumber,
     BigNumber,
     string,
-    GameV1Interface.PrizeStructOutput[]
+    IChild.PrizeStructOutput[]
   ] & {
     owner: string;
     creator: string;
@@ -202,7 +204,7 @@ export declare namespace GameV1Interface {
     treasuryFee: BigNumber;
     creatorFee: BigNumber;
     encodedCron: string;
-    prizes: GameV1Interface.PrizeStructOutput[];
+    prizes: IChild.PrizeStructOutput[];
   };
 
   export type UpdateGameDataStruct = {
@@ -234,44 +236,25 @@ export declare namespace GameV1Interface {
   };
 }
 
-export interface GameV1Interface extends utils.Interface {
+export interface GameInterfaceInterface extends utils.Interface {
   functions: {
-    "MAX_CREATOR_FEE()": FunctionFragment;
-    "MAX_TREASURY_FEE()": FunctionFragment;
     "addPrizes((uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
     "claimCreatorFee()": FunctionFragment;
     "claimPrize(uint256)": FunctionFragment;
     "claimTreasuryFee()": FunctionFragment;
-    "creator()": FunctionFragment;
-    "creatorAmount()": FunctionFragment;
-    "creatorFee()": FunctionFragment;
-    "cronUpkeep()": FunctionFragment;
-    "encodedCron()": FunctionFragment;
-    "factory()": FunctionFragment;
     "getGameData()": FunctionFragment;
     "getPlayer(address)": FunctionFragment;
     "getPlayerAddresses()": FunctionFragment;
     "getPrizes(uint256)": FunctionFragment;
     "getRemainingPlayersCount()": FunctionFragment;
     "getWinners(uint256)": FunctionFragment;
-    "id()": FunctionFragment;
     "initialize((address,address,address,bytes32,uint256,uint256,uint256,uint256,uint256,uint256,uint256,string,(uint256,uint256,uint256,address,uint256)[]))": FunctionFragment;
     "isAllPlayersSplitOk()": FunctionFragment;
     "isGameAllPrizesStandard()": FunctionFragment;
     "isGamePayable()": FunctionFragment;
-    "isInProgress()": FunctionFragment;
-    "maxPlayers()": FunctionFragment;
-    "name()": FunctionFragment;
-    "owner()": FunctionFragment;
     "pause()": FunctionFragment;
-    "paused()": FunctionFragment;
     "playRound()": FunctionFragment;
-    "playTimeRange()": FunctionFragment;
-    "playerAddresses(uint256)": FunctionFragment;
-    "players(address)": FunctionFragment;
     "registerForGame()": FunctionFragment;
-    "registrationAmount()": FunctionFragment;
-    "roundId()": FunctionFragment;
     "setCreatorFee(uint256)": FunctionFragment;
     "setCronUpkeep(address)": FunctionFragment;
     "setEncodedCron(string)": FunctionFragment;
@@ -284,53 +267,31 @@ export interface GameV1Interface extends utils.Interface {
     "transferAdminOwnership(address)": FunctionFragment;
     "transferCreatorOwnership(address)": FunctionFragment;
     "transferFactoryOwnership(address)": FunctionFragment;
-    "treasuryAmount()": FunctionFragment;
-    "treasuryFee()": FunctionFragment;
     "triggerDailyCheckpoint()": FunctionFragment;
     "unpause()": FunctionFragment;
-    "version()": FunctionFragment;
     "voteToSplitPot()": FunctionFragment;
     "withdrawFunds(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "MAX_CREATOR_FEE"
-      | "MAX_TREASURY_FEE"
       | "addPrizes"
       | "claimCreatorFee"
       | "claimPrize"
       | "claimTreasuryFee"
-      | "creator"
-      | "creatorAmount"
-      | "creatorFee"
-      | "cronUpkeep"
-      | "encodedCron"
-      | "factory"
       | "getGameData"
       | "getPlayer"
       | "getPlayerAddresses"
       | "getPrizes"
       | "getRemainingPlayersCount"
       | "getWinners"
-      | "id"
       | "initialize"
       | "isAllPlayersSplitOk"
       | "isGameAllPrizesStandard"
       | "isGamePayable"
-      | "isInProgress"
-      | "maxPlayers"
-      | "name"
-      | "owner"
       | "pause"
-      | "paused"
       | "playRound"
-      | "playTimeRange"
-      | "playerAddresses"
-      | "players"
       | "registerForGame"
-      | "registrationAmount"
-      | "roundId"
       | "setCreatorFee"
       | "setCronUpkeep"
       | "setEncodedCron"
@@ -343,26 +304,15 @@ export interface GameV1Interface extends utils.Interface {
       | "transferAdminOwnership"
       | "transferCreatorOwnership"
       | "transferFactoryOwnership"
-      | "treasuryAmount"
-      | "treasuryFee"
       | "triggerDailyCheckpoint"
       | "unpause"
-      | "version"
       | "voteToSplitPot"
       | "withdrawFunds"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "MAX_CREATOR_FEE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MAX_TREASURY_FEE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "addPrizes",
-    values: [GameV1Interface.PrizeStruct[]]
+    values: [IChild.PrizeStruct[]]
   ): string;
   encodeFunctionData(
     functionFragment: "claimCreatorFee",
@@ -376,24 +326,6 @@ export interface GameV1Interface extends utils.Interface {
     functionFragment: "claimTreasuryFee",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "creator", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "creatorAmount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "creatorFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "cronUpkeep",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "encodedCron",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "factory", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getGameData",
     values?: undefined
@@ -418,10 +350,9 @@ export interface GameV1Interface extends utils.Interface {
     functionFragment: "getWinners",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(functionFragment: "id", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [GameV1Interface.InitializationStruct]
+    values: [GameInterface.InitializationStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "isAllPlayersSplitOk",
@@ -435,40 +366,12 @@ export interface GameV1Interface extends utils.Interface {
     functionFragment: "isGamePayable",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "isInProgress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "maxPlayers",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(functionFragment: "playRound", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "playTimeRange",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "playerAddresses",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "players",
-    values: [PromiseOrValue<string>]
-  ): string;
   encodeFunctionData(
     functionFragment: "registerForGame",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "registrationAmount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "roundId", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setCreatorFee",
     values: [PromiseOrValue<BigNumberish>]
@@ -483,7 +386,7 @@ export interface GameV1Interface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setGameData",
-    values: [GameV1Interface.UpdateGameDataStruct]
+    values: [GameInterface.UpdateGameDataStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "setMaxPlayers",
@@ -515,19 +418,10 @@ export interface GameV1Interface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "treasuryAmount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "treasuryFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "triggerDailyCheckpoint",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "version", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "voteToSplitPot",
     values?: undefined
@@ -537,14 +431,6 @@ export interface GameV1Interface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "MAX_CREATOR_FEE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "MAX_TREASURY_FEE",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "addPrizes", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "claimCreatorFee",
@@ -555,18 +441,6 @@ export interface GameV1Interface extends utils.Interface {
     functionFragment: "claimTreasuryFee",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "creator", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "creatorAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "creatorFee", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "cronUpkeep", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "encodedCron",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "factory", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getGameData",
     data: BytesLike
@@ -582,7 +456,6 @@ export interface GameV1Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getWinners", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "id", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isAllPlayersSplitOk",
@@ -596,34 +469,12 @@ export interface GameV1Interface extends utils.Interface {
     functionFragment: "isGamePayable",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "isInProgress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "maxPlayers", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "playRound", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "playTimeRange",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "playerAddresses",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "players", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "registerForGame",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "registrationAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "roundId", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setCreatorFee",
     data: BytesLike
@@ -667,19 +518,10 @@ export interface GameV1Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "treasuryAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "treasuryFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "triggerDailyCheckpoint",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "voteToSplitPot",
     data: BytesLike
@@ -691,6 +533,7 @@ export interface GameV1Interface extends utils.Interface {
 
   events: {
     "AdminOwnershipTransferred(address,address)": EventFragment;
+    "ChildPrizeClaimed(address,uint256,uint256)": EventFragment;
     "CreatorFeeClaimed(uint256)": EventFragment;
     "CreatorOwnershipTransferred(address,address)": EventFragment;
     "CronUpkeepUpdated(uint256,address)": EventFragment;
@@ -701,7 +544,6 @@ export interface GameV1Interface extends utils.Interface {
     "GamePrizeClaimed(address,uint256,uint256)": EventFragment;
     "GameSplitted(uint256,uint256,uint256)": EventFragment;
     "GameWon(uint256,uint256,address,uint256)": EventFragment;
-    "Paused(address)": EventFragment;
     "PlayedRound(address)": EventFragment;
     "PrizeAdded(uint256,uint256,uint256,uint256,address,uint256)": EventFragment;
     "Received(address,uint256)": EventFragment;
@@ -711,11 +553,11 @@ export interface GameV1Interface extends utils.Interface {
     "TreasuryFeeClaimed(uint256)": EventFragment;
     "TreasuryFeeClaimedByFactory(uint256)": EventFragment;
     "TriggeredDailyCheckpoint(uint256,address,uint256)": EventFragment;
-    "Unpaused(address)": EventFragment;
     "VoteToSplitPot(uint256,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "AdminOwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ChildPrizeClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CreatorFeeClaimed"): EventFragment;
   getEvent(
     nameOrSignatureOrTopic: "CreatorOwnershipTransferred"
@@ -730,7 +572,6 @@ export interface GameV1Interface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "GamePrizeClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GameSplitted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GameWon"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PlayedRound"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PrizeAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Received"): EventFragment;
@@ -742,7 +583,6 @@ export interface GameV1Interface extends utils.Interface {
     nameOrSignatureOrTopic: "TreasuryFeeClaimedByFactory"
   ): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TriggeredDailyCheckpoint"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "VoteToSplitPot"): EventFragment;
 }
 
@@ -757,6 +597,19 @@ export type AdminOwnershipTransferredEvent = TypedEvent<
 
 export type AdminOwnershipTransferredEventFilter =
   TypedEventFilter<AdminOwnershipTransferredEvent>;
+
+export interface ChildPrizeClaimedEventObject {
+  claimer: string;
+  roundId: BigNumber;
+  amountClaimed: BigNumber;
+}
+export type ChildPrizeClaimedEvent = TypedEvent<
+  [string, BigNumber, BigNumber],
+  ChildPrizeClaimedEventObject
+>;
+
+export type ChildPrizeClaimedEventFilter =
+  TypedEventFilter<ChildPrizeClaimedEvent>;
 
 export interface CreatorFeeClaimedEventObject {
   amount: BigNumber;
@@ -878,13 +731,6 @@ export type GameWonEvent = TypedEvent<
 
 export type GameWonEventFilter = TypedEventFilter<GameWonEvent>;
 
-export interface PausedEventObject {
-  account: string;
-}
-export type PausedEvent = TypedEvent<[string], PausedEventObject>;
-
-export type PausedEventFilter = TypedEventFilter<PausedEvent>;
-
 export interface PlayedRoundEventObject {
   playerAddress: string;
 }
@@ -987,13 +833,6 @@ export type TriggeredDailyCheckpointEvent = TypedEvent<
 export type TriggeredDailyCheckpointEventFilter =
   TypedEventFilter<TriggeredDailyCheckpointEvent>;
 
-export interface UnpausedEventObject {
-  account: string;
-}
-export type UnpausedEvent = TypedEvent<[string], UnpausedEventObject>;
-
-export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
-
 export interface VoteToSplitPotEventObject {
   roundId: BigNumber;
   playerAddress: string;
@@ -1005,12 +844,12 @@ export type VoteToSplitPotEvent = TypedEvent<
 
 export type VoteToSplitPotEventFilter = TypedEventFilter<VoteToSplitPotEvent>;
 
-export interface GameV1 extends BaseContract {
+export interface GameInterface extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: GameV1Interface;
+  interface: GameInterfaceInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -1032,12 +871,8 @@ export interface GameV1 extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    MAX_CREATOR_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    MAX_TREASURY_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     addPrizes(
-      _prizes: GameV1Interface.PrizeStruct[],
+      _prizes: IChild.PrizeStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -1054,23 +889,11 @@ export interface GameV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    creator(overrides?: CallOverrides): Promise<[string]>;
-
-    creatorAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    creatorFee(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    cronUpkeep(overrides?: CallOverrides): Promise<[string]>;
-
-    encodedCron(overrides?: CallOverrides): Promise<[string]>;
-
-    factory(overrides?: CallOverrides): Promise<[string]>;
-
     getGameData(
       overrides?: CallOverrides
     ): Promise<
-      [GameV1Interface.GameDataStructOutput] & {
-        gameData: GameV1Interface.GameDataStructOutput;
+      [GameInterface.GameDataStructOutput] & {
+        gameData: GameInterface.GameDataStructOutput;
       }
     >;
 
@@ -1078,8 +901,8 @@ export interface GameV1 extends BaseContract {
       _player: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<
-      [GameV1Interface.PlayerStructOutput] & {
-        gamePlayer: GameV1Interface.PlayerStructOutput;
+      [GameInterface.PlayerStructOutput] & {
+        gamePlayer: GameInterface.PlayerStructOutput;
       }
     >;
 
@@ -1091,9 +914,7 @@ export interface GameV1 extends BaseContract {
       _roundId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [GameV1Interface.PrizeStructOutput[]] & {
-        gamePrizes: GameV1Interface.PrizeStructOutput[];
-      }
+      [IChild.PrizeStructOutput[]] & { childPrizes: IChild.PrizeStructOutput[] }
     >;
 
     getRemainingPlayersCount(
@@ -1104,15 +925,13 @@ export interface GameV1 extends BaseContract {
       _roundId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [GameV1Interface.WinnerStructOutput[]] & {
-        gameWinners: GameV1Interface.WinnerStructOutput[];
+      [IChild.WinnerStructOutput[]] & {
+        childWinners: IChild.WinnerStructOutput[];
       }
     >;
 
-    id(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     initialize(
-      _initialization: GameV1Interface.InitializationStruct,
+      _initialization: GameInterface.InitializationStruct,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -1128,63 +947,17 @@ export interface GameV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean] & { isPayable: boolean }>;
 
-    isInProgress(overrides?: CallOverrides): Promise<[boolean]>;
-
-    maxPlayers(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    name(overrides?: CallOverrides): Promise<[string]>;
-
-    owner(overrides?: CallOverrides): Promise<[string]>;
-
     pause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    paused(overrides?: CallOverrides): Promise<[boolean]>;
 
     playRound(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    playTimeRange(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    playerAddresses(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    players(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        string,
-        BigNumber,
-        BigNumber,
-        boolean,
-        BigNumber,
-        BigNumber,
-        boolean,
-        boolean
-      ] & {
-        playerAddress: string;
-        roundRangeLowerLimit: BigNumber;
-        roundRangeUpperLimit: BigNumber;
-        hasPlayedRound: boolean;
-        roundCount: BigNumber;
-        position: BigNumber;
-        hasLost: boolean;
-        isSplitOk: boolean;
-      }
-    >;
-
     registerForGame(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    registrationAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    roundId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     setCreatorFee(
       _creatorFee: PromiseOrValue<BigNumberish>,
@@ -1202,7 +975,7 @@ export interface GameV1 extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setGameData(
-      _updateGameData: GameV1Interface.UpdateGameDataStruct,
+      _updateGameData: GameInterface.UpdateGameDataStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -1245,10 +1018,6 @@ export interface GameV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    treasuryAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    treasuryFee(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     triggerDailyCheckpoint(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -1256,8 +1025,6 @@ export interface GameV1 extends BaseContract {
     unpause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    version(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     voteToSplitPot(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1269,12 +1036,8 @@ export interface GameV1 extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  MAX_CREATOR_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
-  MAX_TREASURY_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
   addPrizes(
-    _prizes: GameV1Interface.PrizeStruct[],
+    _prizes: IChild.PrizeStruct[],
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1291,45 +1054,31 @@ export interface GameV1 extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  creator(overrides?: CallOverrides): Promise<string>;
-
-  creatorAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-  creatorFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-  cronUpkeep(overrides?: CallOverrides): Promise<string>;
-
-  encodedCron(overrides?: CallOverrides): Promise<string>;
-
-  factory(overrides?: CallOverrides): Promise<string>;
-
   getGameData(
     overrides?: CallOverrides
-  ): Promise<GameV1Interface.GameDataStructOutput>;
+  ): Promise<GameInterface.GameDataStructOutput>;
 
   getPlayer(
     _player: PromiseOrValue<string>,
     overrides?: CallOverrides
-  ): Promise<GameV1Interface.PlayerStructOutput>;
+  ): Promise<GameInterface.PlayerStructOutput>;
 
   getPlayerAddresses(overrides?: CallOverrides): Promise<string[]>;
 
   getPrizes(
     _roundId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<GameV1Interface.PrizeStructOutput[]>;
+  ): Promise<IChild.PrizeStructOutput[]>;
 
   getRemainingPlayersCount(overrides?: CallOverrides): Promise<BigNumber>;
 
   getWinners(
     _roundId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<GameV1Interface.WinnerStructOutput[]>;
-
-  id(overrides?: CallOverrides): Promise<BigNumber>;
+  ): Promise<IChild.WinnerStructOutput[]>;
 
   initialize(
-    _initialization: GameV1Interface.InitializationStruct,
+    _initialization: GameInterface.InitializationStruct,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1339,63 +1088,17 @@ export interface GameV1 extends BaseContract {
 
   isGamePayable(overrides?: CallOverrides): Promise<boolean>;
 
-  isInProgress(overrides?: CallOverrides): Promise<boolean>;
-
-  maxPlayers(overrides?: CallOverrides): Promise<BigNumber>;
-
-  name(overrides?: CallOverrides): Promise<string>;
-
-  owner(overrides?: CallOverrides): Promise<string>;
-
   pause(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
-
-  paused(overrides?: CallOverrides): Promise<boolean>;
 
   playRound(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  playTimeRange(overrides?: CallOverrides): Promise<BigNumber>;
-
-  playerAddresses(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  players(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      string,
-      BigNumber,
-      BigNumber,
-      boolean,
-      BigNumber,
-      BigNumber,
-      boolean,
-      boolean
-    ] & {
-      playerAddress: string;
-      roundRangeLowerLimit: BigNumber;
-      roundRangeUpperLimit: BigNumber;
-      hasPlayedRound: boolean;
-      roundCount: BigNumber;
-      position: BigNumber;
-      hasLost: boolean;
-      isSplitOk: boolean;
-    }
-  >;
-
   registerForGame(
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
-
-  registrationAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-  roundId(overrides?: CallOverrides): Promise<BigNumber>;
 
   setCreatorFee(
     _creatorFee: PromiseOrValue<BigNumberish>,
@@ -1413,7 +1116,7 @@ export interface GameV1 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setGameData(
-    _updateGameData: GameV1Interface.UpdateGameDataStruct,
+    _updateGameData: GameInterface.UpdateGameDataStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1456,10 +1159,6 @@ export interface GameV1 extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  treasuryAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-  treasuryFee(overrides?: CallOverrides): Promise<BigNumber>;
-
   triggerDailyCheckpoint(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -1467,8 +1166,6 @@ export interface GameV1 extends BaseContract {
   unpause(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
-
-  version(overrides?: CallOverrides): Promise<BigNumber>;
 
   voteToSplitPot(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1480,12 +1177,8 @@ export interface GameV1 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    MAX_CREATOR_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MAX_TREASURY_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
     addPrizes(
-      _prizes: GameV1Interface.PrizeStruct[],
+      _prizes: IChild.PrizeStruct[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1498,45 +1191,31 @@ export interface GameV1 extends BaseContract {
 
     claimTreasuryFee(overrides?: CallOverrides): Promise<void>;
 
-    creator(overrides?: CallOverrides): Promise<string>;
-
-    creatorAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    creatorFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    cronUpkeep(overrides?: CallOverrides): Promise<string>;
-
-    encodedCron(overrides?: CallOverrides): Promise<string>;
-
-    factory(overrides?: CallOverrides): Promise<string>;
-
     getGameData(
       overrides?: CallOverrides
-    ): Promise<GameV1Interface.GameDataStructOutput>;
+    ): Promise<GameInterface.GameDataStructOutput>;
 
     getPlayer(
       _player: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<GameV1Interface.PlayerStructOutput>;
+    ): Promise<GameInterface.PlayerStructOutput>;
 
     getPlayerAddresses(overrides?: CallOverrides): Promise<string[]>;
 
     getPrizes(
       _roundId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<GameV1Interface.PrizeStructOutput[]>;
+    ): Promise<IChild.PrizeStructOutput[]>;
 
     getRemainingPlayersCount(overrides?: CallOverrides): Promise<BigNumber>;
 
     getWinners(
       _roundId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<GameV1Interface.WinnerStructOutput[]>;
-
-    id(overrides?: CallOverrides): Promise<BigNumber>;
+    ): Promise<IChild.WinnerStructOutput[]>;
 
     initialize(
-      _initialization: GameV1Interface.InitializationStruct,
+      _initialization: GameInterface.InitializationStruct,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1546,57 +1225,11 @@ export interface GameV1 extends BaseContract {
 
     isGamePayable(overrides?: CallOverrides): Promise<boolean>;
 
-    isInProgress(overrides?: CallOverrides): Promise<boolean>;
-
-    maxPlayers(overrides?: CallOverrides): Promise<BigNumber>;
-
-    name(overrides?: CallOverrides): Promise<string>;
-
-    owner(overrides?: CallOverrides): Promise<string>;
-
     pause(overrides?: CallOverrides): Promise<void>;
-
-    paused(overrides?: CallOverrides): Promise<boolean>;
 
     playRound(overrides?: CallOverrides): Promise<void>;
 
-    playTimeRange(overrides?: CallOverrides): Promise<BigNumber>;
-
-    playerAddresses(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    players(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        string,
-        BigNumber,
-        BigNumber,
-        boolean,
-        BigNumber,
-        BigNumber,
-        boolean,
-        boolean
-      ] & {
-        playerAddress: string;
-        roundRangeLowerLimit: BigNumber;
-        roundRangeUpperLimit: BigNumber;
-        hasPlayedRound: boolean;
-        roundCount: BigNumber;
-        position: BigNumber;
-        hasLost: boolean;
-        isSplitOk: boolean;
-      }
-    >;
-
     registerForGame(overrides?: CallOverrides): Promise<void>;
-
-    registrationAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    roundId(overrides?: CallOverrides): Promise<BigNumber>;
 
     setCreatorFee(
       _creatorFee: PromiseOrValue<BigNumberish>,
@@ -1614,7 +1247,7 @@ export interface GameV1 extends BaseContract {
     ): Promise<void>;
 
     setGameData(
-      _updateGameData: GameV1Interface.UpdateGameDataStruct,
+      _updateGameData: GameInterface.UpdateGameDataStruct,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1655,15 +1288,9 @@ export interface GameV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    treasuryAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    treasuryFee(overrides?: CallOverrides): Promise<BigNumber>;
-
     triggerDailyCheckpoint(overrides?: CallOverrides): Promise<void>;
 
     unpause(overrides?: CallOverrides): Promise<void>;
-
-    version(overrides?: CallOverrides): Promise<BigNumber>;
 
     voteToSplitPot(overrides?: CallOverrides): Promise<void>;
 
@@ -1682,6 +1309,17 @@ export interface GameV1 extends BaseContract {
       oldAdmin?: null,
       newAdmin?: null
     ): AdminOwnershipTransferredEventFilter;
+
+    "ChildPrizeClaimed(address,uint256,uint256)"(
+      claimer?: null,
+      roundId?: null,
+      amountClaimed?: null
+    ): ChildPrizeClaimedEventFilter;
+    ChildPrizeClaimed(
+      claimer?: null,
+      roundId?: null,
+      amountClaimed?: null
+    ): ChildPrizeClaimedEventFilter;
 
     "CreatorFeeClaimed(uint256)"(amount?: null): CreatorFeeClaimedEventFilter;
     CreatorFeeClaimed(amount?: null): CreatorFeeClaimedEventFilter;
@@ -1774,9 +1412,6 @@ export interface GameV1 extends BaseContract {
       amountWon?: null
     ): GameWonEventFilter;
 
-    "Paused(address)"(account?: null): PausedEventFilter;
-    Paused(account?: null): PausedEventFilter;
-
     "PlayedRound(address)"(playerAddress?: null): PlayedRoundEventFilter;
     PlayedRound(playerAddress?: null): PlayedRoundEventFilter;
 
@@ -1845,9 +1480,6 @@ export interface GameV1 extends BaseContract {
       timestamp?: null
     ): TriggeredDailyCheckpointEventFilter;
 
-    "Unpaused(address)"(account?: null): UnpausedEventFilter;
-    Unpaused(account?: null): UnpausedEventFilter;
-
     "VoteToSplitPot(uint256,address)"(
       roundId?: null,
       playerAddress?: null
@@ -1859,12 +1491,8 @@ export interface GameV1 extends BaseContract {
   };
 
   estimateGas: {
-    MAX_CREATOR_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MAX_TREASURY_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
     addPrizes(
-      _prizes: GameV1Interface.PrizeStruct[],
+      _prizes: IChild.PrizeStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1880,18 +1508,6 @@ export interface GameV1 extends BaseContract {
     claimTreasuryFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
-
-    creator(overrides?: CallOverrides): Promise<BigNumber>;
-
-    creatorAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    creatorFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    cronUpkeep(overrides?: CallOverrides): Promise<BigNumber>;
-
-    encodedCron(overrides?: CallOverrides): Promise<BigNumber>;
-
-    factory(overrides?: CallOverrides): Promise<BigNumber>;
 
     getGameData(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1914,10 +1530,8 @@ export interface GameV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    id(overrides?: CallOverrides): Promise<BigNumber>;
-
     initialize(
-      _initialization: GameV1Interface.InitializationStruct,
+      _initialization: GameInterface.InitializationStruct,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1927,43 +1541,17 @@ export interface GameV1 extends BaseContract {
 
     isGamePayable(overrides?: CallOverrides): Promise<BigNumber>;
 
-    isInProgress(overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxPlayers(overrides?: CallOverrides): Promise<BigNumber>;
-
-    name(overrides?: CallOverrides): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
-
     pause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
-
-    paused(overrides?: CallOverrides): Promise<BigNumber>;
 
     playRound(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    playTimeRange(overrides?: CallOverrides): Promise<BigNumber>;
-
-    playerAddresses(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    players(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     registerForGame(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
-
-    registrationAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    roundId(overrides?: CallOverrides): Promise<BigNumber>;
 
     setCreatorFee(
       _creatorFee: PromiseOrValue<BigNumberish>,
@@ -1981,7 +1569,7 @@ export interface GameV1 extends BaseContract {
     ): Promise<BigNumber>;
 
     setGameData(
-      _updateGameData: GameV1Interface.UpdateGameDataStruct,
+      _updateGameData: GameInterface.UpdateGameDataStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -2024,10 +1612,6 @@ export interface GameV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    treasuryAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    treasuryFee(overrides?: CallOverrides): Promise<BigNumber>;
-
     triggerDailyCheckpoint(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -2035,8 +1619,6 @@ export interface GameV1 extends BaseContract {
     unpause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
-
-    version(overrides?: CallOverrides): Promise<BigNumber>;
 
     voteToSplitPot(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -2049,12 +1631,8 @@ export interface GameV1 extends BaseContract {
   };
 
   populateTransaction: {
-    MAX_CREATOR_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    MAX_TREASURY_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     addPrizes(
-      _prizes: GameV1Interface.PrizeStruct[],
+      _prizes: IChild.PrizeStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2070,18 +1648,6 @@ export interface GameV1 extends BaseContract {
     claimTreasuryFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
-
-    creator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    creatorAmount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    creatorFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    cronUpkeep(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    encodedCron(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    factory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getGameData(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -2108,10 +1674,8 @@ export interface GameV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    id(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     initialize(
-      _initialization: GameV1Interface.InitializationStruct,
+      _initialization: GameInterface.InitializationStruct,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2125,45 +1689,17 @@ export interface GameV1 extends BaseContract {
 
     isGamePayable(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    isInProgress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    maxPlayers(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     pause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
-
-    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     playRound(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    playTimeRange(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    playerAddresses(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    players(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     registerForGame(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
-
-    registrationAmount(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    roundId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setCreatorFee(
       _creatorFee: PromiseOrValue<BigNumberish>,
@@ -2181,7 +1717,7 @@ export interface GameV1 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setGameData(
-      _updateGameData: GameV1Interface.UpdateGameDataStruct,
+      _updateGameData: GameInterface.UpdateGameDataStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2224,10 +1760,6 @@ export interface GameV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    treasuryAmount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    treasuryFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     triggerDailyCheckpoint(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -2235,8 +1767,6 @@ export interface GameV1 extends BaseContract {
     unpause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
-
-    version(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     voteToSplitPot(
       overrides?: Overrides & { from?: PromiseOrValue<string> }

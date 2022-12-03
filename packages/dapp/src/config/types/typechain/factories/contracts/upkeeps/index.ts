@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { CronUpkeep__factory } from "./CronUpkeep__factory";
+export { Keeper__factory } from "./Keeper__factory";

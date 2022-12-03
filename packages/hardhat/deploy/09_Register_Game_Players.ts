@@ -31,14 +31,14 @@ const func: DeployFunction = async function ({
   }
 
   const { interface: gameInterface } = await ethers.getContractFactory(
-    'GameV1',
+    'GameV2',
     libraries
   )
 
-  const { address: gameFactoryAddress } = await deployments.get('GameFactory')
+  const { address: gameFactoryAddress } = await deployments.get('GameFactoryV2')
 
   const { interface: gameFactoryInterface } = await ethers.getContractFactory(
-    'GameFactory'
+    'GameFactoryV2'
   )
 
   const gameFactory = new ethers.Contract(
@@ -48,8 +48,9 @@ const func: DeployFunction = async function ({
   )
 
   log('Register 9 players to free game')
-  const { deployedAddress: freeGameDeployedAddress } =
-    await gameFactory.deployedGames('1')
+  const { deployedAddress: freeGameDeployedAddress } = await gameFactory.childs(
+    '1'
+  )
 
   const freeGame = new ethers.Contract(
     freeGameDeployedAddress,
@@ -66,7 +67,7 @@ const func: DeployFunction = async function ({
 
   log('Register 9 players to payable game')
   const { deployedAddress: payableGameDeployedAddress } =
-    await gameFactory.deployedGames('0')
+    await gameFactory.childs('0')
 
   const payableGame = new ethers.Contract(
     payableGameDeployedAddress,

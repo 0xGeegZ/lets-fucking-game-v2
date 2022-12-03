@@ -29,6 +29,7 @@ import type {
 export interface IKeeperInterface extends utils.Interface {
   functions: {
     "pauseKeeper()": FunctionFragment;
+    "registerCronToUpkeep(address)": FunctionFragment;
     "setCronUpkeep(address)": FunctionFragment;
     "setEncodedCron(string)": FunctionFragment;
     "unpauseKeeper()": FunctionFragment;
@@ -37,6 +38,7 @@ export interface IKeeperInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "pauseKeeper"
+      | "registerCronToUpkeep"
       | "setCronUpkeep"
       | "setEncodedCron"
       | "unpauseKeeper"
@@ -45,6 +47,10 @@ export interface IKeeperInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "pauseKeeper",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "registerCronToUpkeep",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "setCronUpkeep",
@@ -61,6 +67,10 @@ export interface IKeeperInterface extends utils.Interface {
 
   decodeFunctionResult(
     functionFragment: "pauseKeeper",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "registerCronToUpkeep",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -140,6 +150,11 @@ export interface IKeeper extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    registerCronToUpkeep(
+      _cronUpkeep: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     setCronUpkeep(
       _cronUpkeep: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -159,6 +174,11 @@ export interface IKeeper extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  registerCronToUpkeep(
+    _cronUpkeep: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   setCronUpkeep(
     _cronUpkeep: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -175,6 +195,11 @@ export interface IKeeper extends BaseContract {
 
   callStatic: {
     pauseKeeper(overrides?: CallOverrides): Promise<void>;
+
+    registerCronToUpkeep(
+      _cronUpkeep: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setCronUpkeep(
       _cronUpkeep: PromiseOrValue<string>,
@@ -214,6 +239,11 @@ export interface IKeeper extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    registerCronToUpkeep(
+      _cronUpkeep: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     setCronUpkeep(
       _cronUpkeep: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -231,6 +261,11 @@ export interface IKeeper extends BaseContract {
 
   populateTransaction: {
     pauseKeeper(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    registerCronToUpkeep(
+      _cronUpkeep: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
