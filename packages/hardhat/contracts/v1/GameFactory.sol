@@ -7,8 +7,8 @@ import "@openzeppelin/contracts/proxy/Clones.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-import { GameV1Interface } from "../interfaces/GameV1Interface.sol";
-import { CronUpkeepInterface } from "../interfaces/CronUpkeepInterface.sol";
+import { GameV1Interface } from "./interfaces/GameV1Interface.sol";
+import { CronUpkeepInterface } from "./interfaces/CronUpkeepInterface.sol";
 
 contract GameFactory is Pausable, Ownable, ReentrancyGuard {
     using Address for address;

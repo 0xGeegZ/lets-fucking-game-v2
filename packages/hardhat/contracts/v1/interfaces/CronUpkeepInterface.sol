@@ -47,11 +47,7 @@ interface CronUpkeepInterface {
      * @param handler the function signature on the target contract to call
      * @param encodedCronSpec abi encoding of a cron spec
      */
-    function createCronJobFromEncodedSpec(
-        address target,
-        bytes memory handler,
-        bytes memory encodedCronSpec
-    ) external;
+    function createCronJobFromEncodedSpec(address target, bytes memory handler, bytes memory encodedCronSpec) external;
 
     /**
      * @notice Updates a cron job from the given encoded spec
@@ -123,13 +119,7 @@ interface CronUpkeepInterface {
              cronString - the string representing the cron job
              nextTick - the timestamp of the next time the cron job will run
    */
-    function getCronJob(uint256 id)
-        external
-        view
-        returns (
-            address target,
-            bytes memory handler,
-            string memory cronString,
-            uint256 nextTick
-        );
+    function getCronJob(
+        uint256 id
+    ) external view returns (address target, bytes memory handler, string memory cronString, uint256 nextTick);
 }

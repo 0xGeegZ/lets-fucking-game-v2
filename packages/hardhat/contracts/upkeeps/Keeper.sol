@@ -6,15 +6,14 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 import { Cron as CronExternal } from "@chainlink/contracts/src/v0.8/libraries/external/Cron.sol";
 
-import { CronUpkeep } from "./CronUpkeep.sol";
-import { IKeeper } from "../interfaces/IKeeper.sol";
+import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 
 contract Keeper is Ownable, Pausable {
     uint256 private constant DEFAULT_CRON_UPKEEP_JOB_ID = 999;
 
     uint256 private cronUpkeepJobId;
 
-    CronUpkeep public cronUpkeep;
+    address public cronUpkeep;
     string public encodedCron;
 
     /**
@@ -30,20 +29,17 @@ contract Keeper is Ownable, Pausable {
      */
     event CronUpkeepUpdated(uint256 jobId, address cronUpkeep);
 
-    constructor(CronUpkeep _cronUpkeep, string memory _encodedCron) {
+    constructor(address _cronUpkeep, string memory _encodedCron) {
         encodedCron = _encodedCron;
         cronUpkeep = _cronUpkeep;
-
-        // cronUpkeep.addDelegator(address(this));
-
-        // _registerCronToUpkeep();
+        _registerCronToUpkeep();
     }
 
     /**
      * @notice Return cronUpkeep
      * @dev Callable by only by owner
      */
-    function getCronUpkeep() external view onlyOwner returns (CronUpkeep _cronUpkeep) {
+    function getCronUpkeep() external view onlyOwner returns (address _cronUpkeep) {
         return cronUpkeep;
     }
 
@@ -60,7 +56,6 @@ contract Keeper is Ownable, Pausable {
      * @dev Callable by only by owner
      */
     function registerCronToUpkeep() external onlyOwner {
-        // function registerCronToUpkeep(CronUpkeep _cronUpkeep) external onlyOwner {
         _registerCronToUpkeep();
         emit CronUpkeepUpdated(cronUpkeepJobId, address(cronUpkeep));
     }
@@ -70,7 +65,7 @@ contract Keeper is Ownable, Pausable {
      * @param _cronUpkeep the new keeper address
      * @dev Callable by only by owner
      */
-    function setCronUpkeep(CronUpkeep _cronUpkeep) external onlyOwner {
+    function setCronUpkeep(address _cronUpkeep) external onlyOwner {
         cronUpkeep = _cronUpkeep;
         _registerCronToUpkeep();
         emit CronUpkeepRegistered(cronUpkeepJobId, address(cronUpkeep));
@@ -90,7 +85,7 @@ contract Keeper is Ownable, Pausable {
      * @dev Callable by only by owner
      */
     function pauseKeeper() external whenNotPaused {
-        cronUpkeep.deleteCronJob(cronUpkeepJobId);
+        ICronUpkeep(cronUpkeep).deleteCronJob(cronUpkeepJobId);
         cronUpkeepJobId = DEFAULT_CRON_UPKEEP_JOB_ID;
     }
 
@@ -113,12 +108,12 @@ contract Keeper is Ownable, Pausable {
     }
 
     function _registerCronToUpkeep() internal onlyOwner {
-        uint256 nextCronJobIDs = cronUpkeep.getNextCronJobIDs();
+        uint256 nextCronJobIDs = ICronUpkeep(cronUpkeep).getNextCronJobIDs();
         cronUpkeepJobId = nextCronJobIDs;
 
         bytes memory encodedCronBytes = CronExternal.toEncodedSpec(encodedCron);
 
-        cronUpkeep.createCronJobFromEncodedSpec(
+        ICronUpkeep(cronUpkeep).createCronJobFromEncodedSpec(
             address(this),
             abi.encodeWithSignature("triggerDailyCheckpoint()"),
             encodedCronBytes

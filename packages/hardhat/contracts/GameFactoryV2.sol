@@ -3,10 +3,13 @@ pragma solidity >=0.8.6;
 
 import "@openzeppelin/contracts/proxy/Clones.sol";
 
-import { GameInterface } from "./interfaces/GameInterface.sol";
-import { CronUpkeepInterface } from "./interfaces/CronUpkeepInterface.sol";
+import { IGame } from "./interfaces/IGame.sol";
+import { ICronUpkeep } from "./interfaces/ICronUpkeep.sol";
+
 import { Factory } from "./abstracts/Factory.sol";
-import { CronUpkeep } from "./upkeeps/CronUpkeep.sol";
+import { Keeper } from "./upkeeps/Keeper.sol";
+
+import "hardhat/console.sol";
 
 contract GameFactoryV2 is Factory {
     uint256[] public authorizedAmounts;
@@ -43,10 +46,11 @@ contract GameFactoryV2 is Factory {
      */
     constructor(
         address _game,
-        CronUpkeep _cronUpkeep,
+        address _cronUpkeep,
         uint256 _gameCreationAmount,
         uint256[] memory _authorizedAmounts
     ) onlyIfAuthorizedAmountsIsNotEmpty(_authorizedAmounts) Factory(_game, _cronUpkeep, _gameCreationAmount) {
+        console.log("GameFactoryV2 constructor");
         for (uint256 i = 0; i < _authorizedAmounts.length; i++) {
             if (!_isExistAuthorizedAmounts(_authorizedAmounts[i])) {
                 authorizedAmounts.push(_authorizedAmounts[i]);
@@ -80,7 +84,7 @@ contract GameFactoryV2 is Factory {
         uint256 _treasuryFee,
         uint256 _creatorFee,
         string memory _encodedCron,
-        GameInterface.Prize[] memory _prizes
+        IGame.Prize[] memory _prizes
     )
         external
         payable
@@ -104,13 +108,18 @@ contract GameFactoryV2 is Factory {
             })
         );
 
-        cronUpkeep.addDelegator(newGameAddress);
+        ICronUpkeep(cronUpkeep).addDelegator(newGameAddress);
+
+        Keeper keeper = new Keeper(cronUpkeep, _encodedCron);
+        // ICronUpkeep(cronUpkeep).addDelegator(address(keeper));
+        // keeperContract.registerCronToUpkeep();
 
         // Declare structure and initialize later to avoid stack too deep exception
-        GameInterface.Initialization memory initialization;
+        IGame.Initialization memory initialization;
         initialization.creator = msg.sender;
         initialization.owner = owner();
         initialization.cronUpkeep = address(cronUpkeep);
+        initialization.keeper = address(keeper);
         initialization.name = _name;
         initialization.version = latestVersionId;
         initialization.id = nextId;
@@ -123,7 +132,7 @@ contract GameFactoryV2 is Factory {
         initialization.prizes = _prizes;
 
         uint256 prizepool = msg.value - childCreationAmount;
-        GameInterface(newGameAddress).initialize{ value: prizepool }(initialization);
+        IGame(newGameAddress).initialize{ value: prizepool }(initialization);
 
         emit GameCreated(nextId, newGameAddress, latestVersionId, msg.sender);
         nextId += 1;

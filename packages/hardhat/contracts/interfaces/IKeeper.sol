@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.6;
 
-// import { ICronUpkeep } from "./ICronUpkeep.sol";
-import { CronUpkeep } from "../upkeeps/CronUpkeep.sol";
-
 interface IKeeper {
+    /**
+     * @notice Called when the creator or admin call registerCronToUpkeep
+     */
+    event CronUpkeepRegistered(uint256 jobId, address cronUpkeep);
     /**
      * @notice Called when the creator or admin update encodedCron
      */
@@ -15,34 +16,46 @@ interface IKeeper {
     event CronUpkeepUpdated(uint256 jobId, address cronUpkeep);
 
     /**
-     * @notice Register the cron to the upkeep contract
-     * @dev Callable by admin or creator or factory
+     * @notice Return cronUpkeep
+     * @dev Callable by only by owner
      */
-    function registerCronToUpkeep(CronUpkeep _cronUpkeep) external;
+    function getCronUpkeep() external view returns (address _cronUpkeep);
+
+    /**
+     * @notice Return encodedCron
+     * @dev Callable by only by owner
+     */
+    function getEncodedCron() external view returns (string memory _encodedCron);
+
+    /**
+     * @notice Register the cron to the upkeep contract
+     * @dev Callable by only by owner
+     */
+    function registerCronToUpkeep() external;
 
     /**
      * @notice Set the keeper address
      * @param _cronUpkeep the new keeper address
-     * @dev Callable by admin or factory
+     * @dev Callable by only by owner
      */
-    function setCronUpkeep(CronUpkeep _cronUpkeep) external;
+    function setCronUpkeep(address _cronUpkeep) external;
 
     /**
      * @notice Set the encoded cron
      * @param _encodedCron the new encoded cron as * * * * *
-     * @dev Callable by admin or creator
+     * @dev Callable by only by owner
      */
     function setEncodedCron(string memory _encodedCron) external;
 
     /**
      * @notice Pause the current keeper and associated keeper job
-     * @dev Callable by admin or creator
+     * @dev Callable by only by owner
      */
     function pauseKeeper() external;
 
     /**
      * @notice Unpause the current keeper and associated keeper job
-     * @dev Callable by admin or creator
+     * @dev Callable by only by owner
      */
     function unpauseKeeper() external;
 }

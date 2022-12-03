@@ -44,7 +44,7 @@ const func: DeployFunction = async function ({
 
   const authorizedAmounts = AUTHORIZED_REGISTRATION_AMOUNTS.map((amount) =>
     ethers.utils.parseEther(`${amount}`)
-  )
+  ).slice(0, 3)
 
   log('Deploying GameFactoryV2 contract')
   const gameFactoryArgs = [
@@ -53,6 +53,10 @@ const func: DeployFunction = async function ({
     gameCreationAmount,
     authorizedAmounts,
   ]
+  console.log(
+    '🚀 ~ file: 06_Deploy_GameFactoryV2.ts:56 ~ gameFactoryArgs',
+    gameFactoryArgs
+  )
   const {
     address: gameFactoryAddress,
     newlyDeployed: gameFactoryNewlyDeployed,

@@ -5,9 +5,6 @@ import "@openzeppelin/contracts/utils/Address.sol";
 
 import { Cron as CronExternal } from "@chainlink/contracts/src/v0.8/libraries/external/Cron.sol";
 
-import { CronUpkeep } from "../upkeeps/CronUpkeep.sol";
-import { GameFactoryV2 } from "../GameFactoryV2.sol";
-
 interface IChild {
     ///STRUCTS
 
@@ -188,7 +185,7 @@ interface IChild {
      * @param _cronUpkeep the new keeper address
      * @dev Callable by admin or factory
      */
-    function setCronUpkeep(CronUpkeep _cronUpkeep) external;
+    function setCronUpkeep(address _cronUpkeep) external;
 
     /**
      * @notice Set the encoded cron
@@ -232,7 +229,7 @@ interface IChild {
      * @param _factory the new factory address
      * @dev Callable by factory
      */
-    function transferFactoryOwnership(GameFactoryV2 _factory) external;
+    function transferFactoryOwnership(address _factory) external;
 
     /**
      * @notice Allow admin to withdraw all funds of smart contract

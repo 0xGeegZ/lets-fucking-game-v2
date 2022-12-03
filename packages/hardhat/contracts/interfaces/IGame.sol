@@ -3,11 +3,10 @@ pragma solidity >=0.8.6;
 
 import "@openzeppelin/contracts/utils/Address.sol";
 
-import { CronUpkeepInterface } from "./CronUpkeepInterface.sol";
 import { Cron as CronExternal } from "@chainlink/contracts/src/v0.8/libraries/external/Cron.sol";
 import { IChild } from "./IChild.sol";
 
-interface GameInterface is IChild {
+interface IGame is IChild {
     ///STRUCTS
 
     /**
@@ -31,6 +30,7 @@ interface GameInterface is IChild {
         address owner;
         address creator;
         address cronUpkeep;
+        address keeper;
         bytes32 name;
         uint256 version;
         uint256 id;

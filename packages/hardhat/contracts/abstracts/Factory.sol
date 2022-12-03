@@ -8,8 +8,8 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 import { IChild } from "../interfaces/IChild.sol";
-import { CronUpkeepInterface } from "../interfaces/CronUpkeepInterface.sol";
-import { CronUpkeep } from "../upkeeps/CronUpkeep.sol";
+import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
+import "hardhat/console.sol";
 
 abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
     using Address for address;
@@ -24,7 +24,7 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
 
     Child[] public childs;
 
-    CronUpkeep public cronUpkeep;
+    address public cronUpkeep;
 
     ///
     ///STRUCTS
@@ -74,12 +74,12 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
      */
     constructor(
         address _child,
-        CronUpkeep _cronUpkeep,
+        address _cronUpkeep,
         uint256 _childCreationAmount
     ) onlyAddressInit(_child) onlyAddressInit(address(_cronUpkeep)) {
+        console.log("Factory constructor");
         cronUpkeep = _cronUpkeep;
         childCreationAmount = _childCreationAmount;
-
         childsVersions.push(ChildVersion({ id: latestVersionId, deployedAddress: _child }));
     }
 
@@ -133,13 +133,13 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
      * @param _cronUpkeep the new keeper address
      * @dev Callable by admin
      */
-    function updateCronUpkeep(CronUpkeep _cronUpkeep) external onlyAdmin onlyAddressInit(address(_cronUpkeep)) {
+    function updateCronUpkeep(address _cronUpkeep) external onlyAdmin onlyAddressInit(address(_cronUpkeep)) {
         cronUpkeep = _cronUpkeep;
         emit CronUpkeepUpdated(address(cronUpkeep));
 
         for (uint256 i = 0; i < childs.length; i++) {
             Child memory child = childs[i];
-            cronUpkeep.addDelegator(child.deployedAddress);
+            ICronUpkeep(cronUpkeep).addDelegator(child.deployedAddress);
 
             IChild(payable(child.deployedAddress)).setCronUpkeep(cronUpkeep);
         }

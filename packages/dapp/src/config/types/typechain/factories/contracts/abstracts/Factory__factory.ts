@@ -191,7 +191,7 @@ const _abi = [
     name: "cronUpkeep",
     outputs: [
       {
-        internalType: "contract CronUpkeep",
+        internalType: "address",
         name: "",
         type: "address",
       },
@@ -368,7 +368,7 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "contract CronUpkeep",
+        internalType: "address",
         name: "_cronUpkeep",
         type: "address",
       },

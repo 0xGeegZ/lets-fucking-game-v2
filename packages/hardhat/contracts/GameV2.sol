@@ -5,17 +5,13 @@ import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
-import { GameInterface } from "./interfaces/GameInterface.sol";
-import { CronUpkeepInterface } from "./interfaces/CronUpkeepInterface.sol";
+import { IGame } from "./interfaces/IGame.sol";
+import { ICronUpkeep } from "./interfaces/ICronUpkeep.sol";
+import { IKeeper } from "./interfaces/IKeeper.sol";
 
 import { Cron as CronExternal } from "@chainlink/contracts/src/v0.8/libraries/external/Cron.sol";
 
-import { Keeper } from "./upkeeps/Keeper.sol";
-
-import { CronUpkeep } from "./upkeeps/CronUpkeep.sol";
-import { GameFactoryV2 } from "./GameFactoryV2.sol";
-
-contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
+contract GameV2 is IGame, ReentrancyGuard, Pausable {
     using Address for address;
 
     bool private _isBase;
@@ -25,8 +21,8 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
     address public owner;
     address public creator;
 
-    GameFactoryV2 public factory;
-    Keeper public keeper;
+    address public factory;
+    address public keeper;
 
     uint256 private cronUpkeepJobId;
 
@@ -105,7 +101,8 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
     {
         owner = _initialization.owner;
         creator = _initialization.creator;
-        factory = GameFactoryV2(payable(msg.sender));
+        factory = msg.sender;
+        keeper = _initialization.keeper;
 
         name = _initialization.name;
 
@@ -136,13 +133,6 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
 
         // Limitation for current version as standard for NFT is not implemented
         require(_isGameAllPrizesStandard(), "This version only allow standard prize");
-
-        // Register the keeper job
-        // keeper = _initialization.keeper;
-        CronUpkeep cronUpkeep = CronUpkeep(_initialization.cronUpkeep);
-        keeper = new Keeper(cronUpkeep, _initialization.encodedCron);
-        cronUpkeep.addDelegator(address(keeper));
-        keeper.registerCronToUpkeep();
     }
 
     /**
@@ -573,7 +563,7 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
 
     function _pauseGame() internal whenNotPaused {
         _pause();
-        keeper.pauseKeeper();
+        IKeeper(keeper).pauseKeeper();
     }
 
     /**
@@ -591,7 +581,7 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
                 player.hasPlayedRound = false;
             }
         }
-        keeper.unpauseKeeper();
+        IKeeper(keeper).unpauseKeeper();
     }
 
     ///
@@ -631,7 +621,7 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
                 isInProgress: isInProgress,
                 creator: creator,
                 admin: owner,
-                encodedCron: keeper.getEncodedCron()
+                encodedCron: IKeeper(keeper).getEncodedCron()
             });
     }
 
@@ -655,8 +645,10 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
         if (_updateGameData.playTimeRange != playTimeRange) playTimeRange = _updateGameData.playTimeRange;
         if (_updateGameData.treasuryFee != treasuryFee) treasuryFee = _updateGameData.treasuryFee;
         if (_updateGameData.creatorFee != creatorFee) creatorFee = _updateGameData.creatorFee;
-        if (keccak256(abi.encodePacked(_updateGameData.encodedCron)) != keccak256(abi.encodePacked(keeper.encodedCron)))
-            keeper.setEncodedCron(_updateGameData.encodedCron);
+        if (
+            keccak256(abi.encodePacked(_updateGameData.encodedCron)) !=
+            keccak256(abi.encodePacked(IKeeper(keeper).getEncodedCron()))
+        ) IKeeper(keeper).setEncodedCron(_updateGameData.encodedCron);
     }
 
     /**
@@ -838,9 +830,9 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
      * @dev Callable by admin or factory
      */
     function setCronUpkeep(
-        CronUpkeep _cronUpkeep
+        address _cronUpkeep
     ) external override whenPaused onlyAdminOrFactory onlyAddressInit(address(_cronUpkeep)) {
-        keeper.setCronUpkeep(_cronUpkeep);
+        IKeeper(keeper).setCronUpkeep(_cronUpkeep);
     }
 
     /**
@@ -849,7 +841,7 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
      * @dev Callable by admin or creator
      */
     function setEncodedCron(string memory _encodedCron) external override whenPaused onlyAdminOrCreator {
-        keeper.setEncodedCron(_encodedCron);
+        IKeeper(keeper).setEncodedCron(_encodedCron);
     }
 
     /**
@@ -905,7 +897,7 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
      * @dev Callable by factory
      */
     function transferFactoryOwnership(
-        GameFactoryV2 _factory
+        address _factory
     ) external override onlyAdminOrFactory onlyAddressInit(address(_factory)) {
         emit FactoryOwnershipTransferred(address(factory), address(_factory));
         factory = _factory;
@@ -998,7 +990,7 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
      */
     modifier onlyAdminOrKeeper() {
         require(
-            msg.sender == address(keeper.getCronUpkeep()) || msg.sender == owner,
+            msg.sender == address(IKeeper(keeper).getCronUpkeep()) || msg.sender == owner,
             "Caller is not the admin or keeper"
         );
         _;
@@ -1016,7 +1008,7 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
      * @notice Modifier that ensure only keeper can access this function
      */
     modifier onlyKeeper() {
-        require(msg.sender == address(keeper.getCronUpkeep()), "Caller is not the keeper");
+        require(msg.sender == address(IKeeper(keeper).getCronUpkeep()), "Caller is not the keeper");
         _;
     }
 
@@ -1032,8 +1024,8 @@ contract GameV2 is GameInterface, ReentrancyGuard, Pausable {
      * @notice Modifier that ensure that keeper data are initialised
      */
     modifier onlyIfKeeperDataInit() {
-        require(address(keeper.getCronUpkeep()) != address(0), "Keeper need to be initialised");
-        require(bytes(keeper.getEncodedCron()).length != 0, "Keeper cron need to be initialised");
+        require(address(IKeeper(keeper).getCronUpkeep()) != address(0), "Keeper need to be initialised");
+        require(bytes(IKeeper(keeper).getEncodedCron()).length != 0, "Keeper cron need to be initialised");
         _;
     }
 

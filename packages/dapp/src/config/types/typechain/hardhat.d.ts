@@ -93,18 +93,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.GameV2__factory>;
     getContractFactory(
-      name: "CronUpkeepInterface",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.CronUpkeepInterface__factory>;
-    getContractFactory(
-      name: "GameInterface",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.GameInterface__factory>;
-    getContractFactory(
-      name: "GameV1Interface",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.GameV1Interface__factory>;
-    getContractFactory(
       name: "IChild",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IChild__factory>;
@@ -112,6 +100,10 @@ declare module "hardhat/types/runtime" {
       name: "ICronUpkeep",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ICronUpkeep__factory>;
+    getContractFactory(
+      name: "IGame",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IGame__factory>;
     getContractFactory(
       name: "IKeeper",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -136,6 +128,14 @@ declare module "hardhat/types/runtime" {
       name: "GameV1",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.GameV1__factory>;
+    getContractFactory(
+      name: "CronUpkeepInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.CronUpkeepInterface__factory>;
+    getContractFactory(
+      name: "GameV1Interface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.GameV1Interface__factory>;
 
     getContractAt(
       name: "ERC677Token",
@@ -238,21 +238,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.GameV2>;
     getContractAt(
-      name: "CronUpkeepInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.CronUpkeepInterface>;
-    getContractAt(
-      name: "GameInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.GameInterface>;
-    getContractAt(
-      name: "GameV1Interface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.GameV1Interface>;
-    getContractAt(
       name: "IChild",
       address: string,
       signer?: ethers.Signer
@@ -262,6 +247,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.ICronUpkeep>;
+    getContractAt(
+      name: "IGame",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IGame>;
     getContractAt(
       name: "IKeeper",
       address: string,
@@ -292,6 +282,16 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.GameV1>;
+    getContractAt(
+      name: "CronUpkeepInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.CronUpkeepInterface>;
+    getContractAt(
+      name: "GameV1Interface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.GameV1Interface>;
 
     // default types
     getContractFactory(

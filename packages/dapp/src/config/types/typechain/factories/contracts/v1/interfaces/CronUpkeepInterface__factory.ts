@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   CronUpkeepInterface,
   CronUpkeepInterfaceInterface,
-} from "../../../contracts/interfaces/CronUpkeepInterface";
+} from "../../../../contracts/v1/interfaces/CronUpkeepInterface";
 
 const _abi = [
   {

@@ -74,7 +74,7 @@ export declare namespace IChild {
   };
 }
 
-export declare namespace GameInterface {
+export declare namespace IGame {
   export type GameDataStruct = {
     id: PromiseOrValue<BigNumberish>;
     versionId: PromiseOrValue<BigNumberish>;
@@ -165,6 +165,7 @@ export declare namespace GameInterface {
     owner: PromiseOrValue<string>;
     creator: PromiseOrValue<string>;
     cronUpkeep: PromiseOrValue<string>;
+    keeper: PromiseOrValue<string>;
     name: PromiseOrValue<BytesLike>;
     version: PromiseOrValue<BigNumberish>;
     id: PromiseOrValue<BigNumberish>;
@@ -182,6 +183,7 @@ export declare namespace GameInterface {
     string,
     string,
     string,
+    string,
     BigNumber,
     BigNumber,
     BigNumber,
@@ -195,6 +197,7 @@ export declare namespace GameInterface {
     owner: string;
     creator: string;
     cronUpkeep: string;
+    keeper: string;
     name: string;
     version: BigNumber;
     id: BigNumber;
@@ -236,7 +239,7 @@ export declare namespace GameInterface {
   };
 }
 
-export interface GameInterfaceInterface extends utils.Interface {
+export interface IGameInterface extends utils.Interface {
   functions: {
     "addPrizes((uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
     "claimCreatorFee()": FunctionFragment;
@@ -248,7 +251,7 @@ export interface GameInterfaceInterface extends utils.Interface {
     "getPrizes(uint256)": FunctionFragment;
     "getRemainingPlayersCount()": FunctionFragment;
     "getWinners(uint256)": FunctionFragment;
-    "initialize((address,address,address,bytes32,uint256,uint256,uint256,uint256,uint256,uint256,uint256,string,(uint256,uint256,uint256,address,uint256)[]))": FunctionFragment;
+    "initialize((address,address,address,address,bytes32,uint256,uint256,uint256,uint256,uint256,uint256,uint256,string,(uint256,uint256,uint256,address,uint256)[]))": FunctionFragment;
     "isAllPlayersSplitOk()": FunctionFragment;
     "isGameAllPrizesStandard()": FunctionFragment;
     "isGamePayable()": FunctionFragment;
@@ -352,7 +355,7 @@ export interface GameInterfaceInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [GameInterface.InitializationStruct]
+    values: [IGame.InitializationStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "isAllPlayersSplitOk",
@@ -386,7 +389,7 @@ export interface GameInterfaceInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setGameData",
-    values: [GameInterface.UpdateGameDataStruct]
+    values: [IGame.UpdateGameDataStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "setMaxPlayers",
@@ -844,12 +847,12 @@ export type VoteToSplitPotEvent = TypedEvent<
 
 export type VoteToSplitPotEventFilter = TypedEventFilter<VoteToSplitPotEvent>;
 
-export interface GameInterface extends BaseContract {
+export interface IGame extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: GameInterfaceInterface;
+  interface: IGameInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -892,18 +895,14 @@ export interface GameInterface extends BaseContract {
     getGameData(
       overrides?: CallOverrides
     ): Promise<
-      [GameInterface.GameDataStructOutput] & {
-        gameData: GameInterface.GameDataStructOutput;
-      }
+      [IGame.GameDataStructOutput] & { gameData: IGame.GameDataStructOutput }
     >;
 
     getPlayer(
       _player: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<
-      [GameInterface.PlayerStructOutput] & {
-        gamePlayer: GameInterface.PlayerStructOutput;
-      }
+      [IGame.PlayerStructOutput] & { gamePlayer: IGame.PlayerStructOutput }
     >;
 
     getPlayerAddresses(
@@ -931,7 +930,7 @@ export interface GameInterface extends BaseContract {
     >;
 
     initialize(
-      _initialization: GameInterface.InitializationStruct,
+      _initialization: IGame.InitializationStruct,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -975,7 +974,7 @@ export interface GameInterface extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setGameData(
-      _updateGameData: GameInterface.UpdateGameDataStruct,
+      _updateGameData: IGame.UpdateGameDataStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -1054,14 +1053,12 @@ export interface GameInterface extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getGameData(
-    overrides?: CallOverrides
-  ): Promise<GameInterface.GameDataStructOutput>;
+  getGameData(overrides?: CallOverrides): Promise<IGame.GameDataStructOutput>;
 
   getPlayer(
     _player: PromiseOrValue<string>,
     overrides?: CallOverrides
-  ): Promise<GameInterface.PlayerStructOutput>;
+  ): Promise<IGame.PlayerStructOutput>;
 
   getPlayerAddresses(overrides?: CallOverrides): Promise<string[]>;
 
@@ -1078,7 +1075,7 @@ export interface GameInterface extends BaseContract {
   ): Promise<IChild.WinnerStructOutput[]>;
 
   initialize(
-    _initialization: GameInterface.InitializationStruct,
+    _initialization: IGame.InitializationStruct,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1116,7 +1113,7 @@ export interface GameInterface extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setGameData(
-    _updateGameData: GameInterface.UpdateGameDataStruct,
+    _updateGameData: IGame.UpdateGameDataStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1191,14 +1188,12 @@ export interface GameInterface extends BaseContract {
 
     claimTreasuryFee(overrides?: CallOverrides): Promise<void>;
 
-    getGameData(
-      overrides?: CallOverrides
-    ): Promise<GameInterface.GameDataStructOutput>;
+    getGameData(overrides?: CallOverrides): Promise<IGame.GameDataStructOutput>;
 
     getPlayer(
       _player: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<GameInterface.PlayerStructOutput>;
+    ): Promise<IGame.PlayerStructOutput>;
 
     getPlayerAddresses(overrides?: CallOverrides): Promise<string[]>;
 
@@ -1215,7 +1210,7 @@ export interface GameInterface extends BaseContract {
     ): Promise<IChild.WinnerStructOutput[]>;
 
     initialize(
-      _initialization: GameInterface.InitializationStruct,
+      _initialization: IGame.InitializationStruct,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1247,7 +1242,7 @@ export interface GameInterface extends BaseContract {
     ): Promise<void>;
 
     setGameData(
-      _updateGameData: GameInterface.UpdateGameDataStruct,
+      _updateGameData: IGame.UpdateGameDataStruct,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1531,7 +1526,7 @@ export interface GameInterface extends BaseContract {
     ): Promise<BigNumber>;
 
     initialize(
-      _initialization: GameInterface.InitializationStruct,
+      _initialization: IGame.InitializationStruct,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1569,7 +1564,7 @@ export interface GameInterface extends BaseContract {
     ): Promise<BigNumber>;
 
     setGameData(
-      _updateGameData: GameInterface.UpdateGameDataStruct,
+      _updateGameData: IGame.UpdateGameDataStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1675,7 +1670,7 @@ export interface GameInterface extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      _initialization: GameInterface.InitializationStruct,
+      _initialization: IGame.InitializationStruct,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1717,7 +1712,7 @@ export interface GameInterface extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setGameData(
-      _updateGameData: GameInterface.UpdateGameDataStruct,
+      _updateGameData: IGame.UpdateGameDataStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
