@@ -32,6 +32,8 @@ export interface KeeperInterface extends utils.Interface {
     "encodedCron()": FunctionFragment;
     "getCronUpkeep()": FunctionFragment;
     "getEncodedCron()": FunctionFragment;
+    "getHandler()": FunctionFragment;
+    "handler()": FunctionFragment;
     "owner()": FunctionFragment;
     "pauseKeeper()": FunctionFragment;
     "paused()": FunctionFragment;
@@ -50,6 +52,8 @@ export interface KeeperInterface extends utils.Interface {
       | "encodedCron"
       | "getCronUpkeep"
       | "getEncodedCron"
+      | "getHandler"
+      | "handler"
       | "owner"
       | "pauseKeeper"
       | "paused"
@@ -78,6 +82,11 @@ export interface KeeperInterface extends utils.Interface {
     functionFragment: "getEncodedCron",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "getHandler",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "handler", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "pauseKeeper",
@@ -126,6 +135,8 @@ export interface KeeperInterface extends utils.Interface {
     functionFragment: "getEncodedCron",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getHandler", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "handler", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "pauseKeeper",
@@ -279,6 +290,12 @@ export interface Keeper extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string] & { _encodedCron: string }>;
 
+    getHandler(
+      overrides?: CallOverrides
+    ): Promise<[string] & { _handler: string }>;
+
+    handler(overrides?: CallOverrides): Promise<[string]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     pauseKeeper(
@@ -328,6 +345,10 @@ export interface Keeper extends BaseContract {
 
   getEncodedCron(overrides?: CallOverrides): Promise<string>;
 
+  getHandler(overrides?: CallOverrides): Promise<string>;
+
+  handler(overrides?: CallOverrides): Promise<string>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   pauseKeeper(
@@ -376,6 +397,10 @@ export interface Keeper extends BaseContract {
     getCronUpkeep(overrides?: CallOverrides): Promise<string>;
 
     getEncodedCron(overrides?: CallOverrides): Promise<string>;
+
+    getHandler(overrides?: CallOverrides): Promise<string>;
+
+    handler(overrides?: CallOverrides): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -463,6 +488,10 @@ export interface Keeper extends BaseContract {
 
     getEncodedCron(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getHandler(overrides?: CallOverrides): Promise<BigNumber>;
+
+    handler(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     pauseKeeper(
@@ -512,6 +541,10 @@ export interface Keeper extends BaseContract {
     getCronUpkeep(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getEncodedCron(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getHandler(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    handler(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

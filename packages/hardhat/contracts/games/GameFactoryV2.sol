@@ -108,7 +108,7 @@ contract GameFactoryV2 is Factory {
 
         ICronUpkeep(cronUpkeep).addDelegator(newGameAddress);
 
-        Keeper keeper = new Keeper(cronUpkeep, _encodedCron);
+        Keeper keeper = new Keeper(cronUpkeep, "triggerDailyCheckpoint()", _encodedCron);
         ICronUpkeep(cronUpkeep).addDelegator(address(keeper));
 
         // Declare structure and initialize later to avoid stack too deep exception

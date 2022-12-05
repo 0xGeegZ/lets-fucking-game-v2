@@ -5,7 +5,10 @@ import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 
+import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
+
 import { Child } from "../abstracts/Child.sol";
+import { Keeper } from "../keepers/Keeper.sol";
 
 import "hardhat/console.sol";
 
@@ -18,6 +21,11 @@ import "hardhat/console.sol";
 
 contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     using Chainlink for Chainlink.Request;
+
+    address public cronUpkeep;
+    address public keeper;
+
+    string encodedCron;
 
     bytes32 public immutable jobId;
     uint256 private immutable fee;
@@ -33,35 +41,42 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         uint256 endTimestamp;
         uint256 retweetCount;
         uint256 retweetMaxCount;
+        bool isEnded;
     }
 
     mapping(uint256 => Giveaway) public giveaways;
     mapping(uint256 => address) public users;
 
     /**
-     * @notice Called when the keeper start the game
+     * @notice Called when a new giveaway is created
      */
-    event GiveawayStarted(uint256 roundId, uint256 userId, uint256 tweetId, uint256 prizesLength);
+    event GiveawayCreated(uint256 roundId, uint256 userId, uint256 tweetId, uint256 prizesLength);
     /**
-     * @notice Called when a player won the game
+     * @notice Called when a winner is added
      */
     event WinnerAdded(uint256 giveawayId, uint256 position, uint256 winnerId, uint256 amount);
     /**
-     * @notice Called when a player won the game
+     * @notice Called when a giveaway is refreshed
+     */
+    event GiveawayRefreshed(uint256 indexed giveawayId, uint256 timestamp);
+    /**
+     * @notice Called when a request to draw winners is made
      */
     event GiveawayWinnerRequested(uint256 indexed giveawayId, bytes32 indexed requestId);
-
     /**
-     * @notice Called when a player won the game
+     * @notice Called when a request to sign up is made
      */
     event SignUpRequested(uint256 indexed userId, bytes32 indexed requestId);
-
     /**
-     * @notice Called when a player won the game
+     * @notice Called when a request to refresh a giveaway is made
+     */
+    event GiveawayRefreshRequested(uint256 indexed userId, bytes32 indexed requestId);
+    /**
+     * @notice Called when perform upkeep is executed
      */
     event PerformUpkeepExecuted(uint256 indexed giveawayId, uint256 timestamp);
     /**
-     * @notice Called when a player won the game
+     * @notice Called when a user signed up
      */
     event SignedUp(uint256 indexed userId, address userAddress);
 
@@ -71,23 +86,28 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
 
     /**
      * @notice Initialize the link token and target oracle
-     * // All testnets config : https://docs.chain.link/any-api/testnet-oracles/
+     * All testnets config : https://docs.chain.link/any-api/testnet-oracles/
      * Goerli Testnet details:
-     * Link Token: 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
-     * Oracle: 0xCC79157eb46F5624204f47AB42b3906cAA40eaB7 (Chainlink DevRel)
-     * jobId: 7223acbd01654282865b678924126013
+     *  - Link Token: 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
+     *  - Oracle: 0xCC79157eb46F5624204f47AB42b3906cAA40eaB7 (Chainlink DevRel)
+     *  - jobId: 7223acbd01654282865b678924126013
      * Mumbai Testnet details :
-     * Link Token: 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
-     * Oracle: 0x816BA5612d744B01c36b0517B32b4FcCb9747009
-     * jobId: 72bd0768b5c84706a548061c75c35ecc
+     *  - Link Token: 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
+     *  - Oracle: 0x816BA5612d744B01c36b0517B32b4FcCb9747009
+     *  - jobId: 72bd0768b5c84706a548061c75c35ecc
      */
     constructor(
         bytes32 _jobId,
         string memory _requestBaseURI,
         address _oracle,
         address _link,
-        uint256 _treasuryFee
-    ) Child() {
+        address _cronUpkeep,
+        uint256 _treasuryFee,
+        string memory _encodedCron
+    )
+        // string memory _encodedCron
+        Child()
+    {
         setChainlinkToken(_link);
         setChainlinkOracle(_oracle);
         jobId = _jobId;
@@ -97,6 +117,14 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         treasuryFee = _treasuryFee;
         requestBaseURI = _requestBaseURI;
         owner = msg.sender;
+
+        // refresh giveaways retweets count from encodedCron (default every hour)
+        encodedCron = _encodedCron;
+        cronUpkeep = _cronUpkeep;
+        Keeper keeperContract = new Keeper(cronUpkeep, "refreshActiveGiveawayStatus()", encodedCron);
+        keeper = address(keeperContract);
+        keeperContract.registerCronToUpkeep();
+        ICronUpkeep(cronUpkeep).addDelegator(address(keeper));
     }
 
     ///
@@ -104,8 +132,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     ///
 
     /**
-     * @notice Function that allow players to register for a game
-     * @dev Creator cannot register for his own game
+     * @notice Function that create a new giveway
      */
     function createGiveaway(
         string calldata _name,
@@ -125,7 +152,8 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
             tweetId: _tweetId,
             endTimestamp: _endTimestamp,
             retweetCount: 0,
-            retweetMaxCount: _retweetMaxCount
+            retweetMaxCount: _retweetMaxCount,
+            isEnded: false
         });
         // Setup prizes structure
         _checkIfPrizeAmountIfNeeded(_prizes);
@@ -134,14 +162,13 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         // Limitation for current version as standard for NFT is not implemented
         require(_isChildAllPrizesStandard(), "This version only allow standard prize");
 
-        emit GiveawayStarted(roundId, _userId, _tweetId, _prizes.length);
+        emit GiveawayCreated(roundId, _userId, _tweetId, _prizes.length);
 
         roundId += 1;
     }
 
     /**
-     * @notice Function that allow players to register for a game
-     * @dev Creator cannot register for his own game
+     * @notice Function that allow user to sign up to giveaway and claim wonned giveaways
      */
     function signUp(uint256 _userId) external {
         console.log("Sign up for user %s and address %s", _userId, msg.sender);
@@ -151,8 +178,8 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     }
 
     /**
-     * @notice Function that allow players to register for a game
-     * @dev Creator cannot register for his own game
+     * @notice Check if user has signed up
+     * @param _userId - twitter user id
      */
     function isSignedUp(uint256 _userId) external view returns (bool) {
         return users[_userId] != address(0);
@@ -163,33 +190,39 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     ///
 
     /**
-     * @notice Receives the response in the form of winner and giveaway
+     * @notice Fulfill Giveaway Winner request
      *
      * @param _requestId - id of the request
-     * @param _giveawayId - winner address
-     * @param _payload - giveaway id
+     * @param _giveawayId - id of the giveaway
+     * @param _payload - payload that represent list of winners with positions
      */
-    function fulfillGiveaway(
+    function fulfillGiveawayWinner(
         bytes32 _requestId,
         uint256 _giveawayId,
         bytes calldata _payload
     ) public recordChainlinkFulfillment(_requestId) {
         (uint256[] memory winnersIds, uint256[] memory winnersPositions) = abi.decode(_payload, (uint256[], uint256[]));
-        console.log("fulfillGiveaway winnersIds %s winnersPositions %s", winnersIds.length, winnersPositions.length);
+        console.log(
+            "fulfillGiveawayWinner winnersIds %s winnersPositions %s",
+            winnersIds.length,
+            winnersPositions.length
+        );
 
         for (uint256 i = 0; i < winnersIds.length; i++) {
-            Prize memory prize = getPrizeForPosition(_giveawayId, winnersPositions[i]);
+            Prize memory prize = _getPrizeForPosition(_giveawayId, winnersPositions[i]);
             address winnerAddress = users[winnersIds[i]] != address(0) ? users[winnersIds[i]] : address(0);
             _addWinner(_giveawayId, winnersPositions[i], winnersIds[i], winnerAddress, prize.amount);
         }
+
+        giveaways[_giveawayId].isEnded = true;
     }
 
     /**
-     * @notice Receives the response in the form of winner and giveaway
+     * @notice Fulfill Sign Up request
      *
      * @param _requestId - id of the request
-     * @param _userId - user id
-     * @param _isValidate - giveaway id
+     * @param _userId - twitter user id
+     * @param _isValidate - true if  twitter userId match msg.sender address
      */
     function fulfillSignUp(
         bytes32 _requestId,
@@ -204,26 +237,53 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
                 if (winners[round][idx].userId == _userId) winners[round][idx].playerAddress = users[_userId];
     }
 
+    /**
+     * @notice Fulfill Refresh Giveaway request
+     *
+     * @param _requestId - id of the request
+     * @param _giveawayId - id of the giveaway
+     * @param _retweetCount - updated retweet count
+     */
+    function fulfillRefreshGiveaway(
+        bytes32 _requestId,
+        uint256 _giveawayId,
+        uint256 _retweetCount
+    ) public recordChainlinkFulfillment(_requestId) {
+        console.log("fulfillRefreshGiveway %s _giveawayId %s _retweetCount %s", _giveawayId, _retweetCount);
+        giveaways[_giveawayId].retweetCount = _retweetCount;
+        if (_isGiveawayCouldEnded(giveaways[_giveawayId])) _performGiveawayWinner(_giveawayId);
+    }
+
     ///
     /// KEEPER FUNCTIONS
-    ///
+    ///s
     /**
-     * @notice Executes the cron job with id encoded in performData
-     * @param _performData abi encoding of cron job ID and the cron job's next run-at datetime
+     * @notice Refresh all active giveaways retweet count
+     */
+    function refreshActiveGiveawayStatus() external whenNotPaused {
+        console.log("refreshActiveGiveawayStatus rounds %s", roundId);
+        for (uint256 round = 0; round < roundId; round++)
+            if (!giveaways[round].isEnded) {
+                _requestRefreshGiveaway(round);
+                emit GiveawayRefreshed(round, block.timestamp);
+            }
+    }
+
+    /**
+     * @notice Launched by upkeep when condition match
+     * @param _performData abi encoding of giveawayId
      */
     function performUpkeep(bytes calldata _performData) external override whenNotPaused {
         uint256 giveawayId = abi.decode(_performData, (uint256));
         console.log("performUpkeep giveawayId %s", giveawayId);
-        _validate(giveawayId);
-        _requestGiveawayWinner(giveawayId);
-        emit PerformUpkeepExecuted(giveawayId, block.timestamp);
+        _performGiveawayWinner(giveawayId);
     }
 
     /**
-     * @notice Get the id of an eligible cron job
+     * @notice Get the id of an eligible giveaway
      * @return _upkeepNeeded signals if upkeep is needed, performData is an abi encoding
      * @return _payload signals if upkeep is needed, performData is an abi encoding
-     * of the id and "next tick" of the eligible cron job
+     * of giveawayId
      */
     function checkUpkeep(
         bytes memory _calldata
@@ -231,10 +291,10 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         uint256 startIdx = block.number % roundId;
         bool result;
         bytes memory payload;
-        (result, payload) = _checkInRange(startIdx, roundId);
+        (result, payload) = _checkInBatch(startIdx, roundId);
         if (result) return (result, payload);
 
-        (result, payload) = _checkInRange(0, startIdx);
+        (result, payload) = _checkInBatch(0, startIdx);
         if (result) return (result, payload);
 
         return (false, bytes(""));
@@ -245,7 +305,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     ///
 
     /**
-     * @notice Function that is called by the keeper when game is ready to start
+     * @notice Return URI for giveaway endpoint
      */
     function getGiveawayURI(uint256 _giveawayId) public view returns (string memory _giveawayURI) {
         console.log("getGiveawayURI requestBaseURI %s _giveawayId %s", requestBaseURI, _giveawayId);
@@ -256,7 +316,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     }
 
     /**
-     * @notice Function that is called by the keeper when game is ready to start
+     * @notice Return URI for sign up endpoint
      */
     function getSignUpURI(uint256 _userId) public view returns (string memory _signUpURI) {
         console.log("getSignUpURI requestBaseURI %s _userId %s", requestBaseURI, _userId);
@@ -305,11 +365,11 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     }
 
     /**
-     * @notice Function that will set a winner for a giveaway
-     * @dev Creator cannot register for his own game
+     * @notice Create request to get giveaway winner
+     * @dev only admin can call this function
      */
-    function _requestGiveawayWinner(uint256 _giveawayId) private onlyAdmin returns (bytes32 _requestId) {
-        Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfillGiveaway.selector);
+    function _requestGiveawayWinner(uint256 _giveawayId) private returns (bytes32 _requestId) {
+        Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfillGiveawayWinner.selector);
         req.add("get", getGiveawayURI(_giveawayId));
         // https://docs.chain.link/any-api/testnet-oracles/
         req.add("path", "payload");
@@ -319,10 +379,10 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     }
 
     /**
-     * @notice Function that will set a winner for a giveaway
-     * @dev Creator cannot register for his own game
+     * @notice Create request to sign up user
+     * @dev only admin can call this function
      */
-    function _requestSignUp(uint256 _userId) private onlyAdmin returns (bytes32 _requestId) {
+    function _requestSignUp(uint256 _userId) private returns (bytes32 _requestId) {
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfillSignUp.selector);
         req.add("get", getSignUpURI(_userId));
         // https://docs.chain.link/any-api/testnet-oracles/
@@ -333,6 +393,34 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     }
 
     /**
+     * @notice Create request to refresh giveaway
+     * @dev only admin can call this function
+     */
+    function _requestRefreshGiveaway(uint256 _giveawayId) private returns (bytes32 _requestId) {
+        Chainlink.Request memory req = buildChainlinkRequest(
+            jobId,
+            address(this),
+            this.fulfillRefreshGiveaway.selector
+        );
+        req.add("get", getGiveawayURI(_giveawayId));
+        // https://docs.chain.link/any-api/testnet-oracles/
+        req.add("path", "retweetCount");
+        bytes32 requestId = sendChainlinkRequest(req, fee);
+        emit GiveawayRefreshRequested(_giveawayId, requestId);
+        return requestId;
+    }
+
+    /**
+     * @notice Perform _requestGiveawayWinner for needed giveaway
+     * @param _giveawayId the giveaway id
+     */
+    function _performGiveawayWinner(uint256 _giveawayId) private whenNotPaused {
+        _validate(_giveawayId);
+        _requestGiveawayWinner(_giveawayId);
+        emit PerformUpkeepExecuted(_giveawayId, block.timestamp);
+    }
+
+    /**
      * @notice checks the cron jobs in a given range
      * @param start the starting id to check (inclusive)
      * @param end the ending id to check (exclusive)
@@ -340,29 +428,37 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @return _payload signals if upkeep is needed, performData is an abi encoding
      * of the id and "next tick" of the eligible cron job
      */
-    function _checkInRange(
+    function _checkInBatch(
         uint256 start,
         uint256 end
     ) private view returns (bool _upkeepNeeded, bytes memory _payload) {
         for (uint256 idx = start; idx < end; idx++) {
-            if (
-                giveaways[idx].retweetCount >= giveaways[idx].retweetMaxCount ||
-                block.timestamp >= giveaways[idx].endTimestamp
-            ) return (true, abi.encode(idx));
+            if (_isGiveawayCouldEnded(giveaways[idx])) return (true, abi.encode(idx));
         }
     }
 
+    function _isGiveawayCouldEnded(Giveaway memory _giveaway) private view returns (bool _isCouldEnded) {
+        return _giveaway.retweetCount >= _giveaway.retweetMaxCount || block.timestamp >= _giveaway.endTimestamp;
+    }
+
     /**
-     * @notice Refresh players status for remaining players
+     * @notice get prize for given giveaway and current position
+     * @param _giveawayId giveaway id
+     * @param _position position of prize
      */
-    function getPrizeForPosition(uint256 _giveawayId, uint256 _position) private view returns (Prize memory _prize) {
+    function _getPrizeForPosition(uint256 _giveawayId, uint256 _position) private view returns (Prize memory _prize) {
         for (uint256 idx = 0; idx < prizes[_giveawayId].length; idx++) {
             if (prizes[_giveawayId][idx].position == _position) return prizes[_giveawayId][idx];
         }
     }
 
     /**
-     * @notice Add winner
+     * @notice Add winner for given giveaway
+     * @param _giveawayId giveaway id
+     * @param _position position of winner
+     * @param _winnerId twitter id of winner
+     * @param _winnerAddress winner address
+     * @param _amount amount won
      */
     function _addWinner(
         uint256 _giveawayId,

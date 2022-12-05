@@ -77,27 +77,33 @@ export declare namespace IChild {
   };
 }
 
-export interface GivewayV1Interface extends utils.Interface {
+export interface GiveawayV1Interface extends utils.Interface {
   functions: {
     "MAX_TREASURY_FEE()": FunctionFragment;
     "addPrizes((uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
+    "cancelRequest(bytes32,uint256,bytes4,uint256)": FunctionFragment;
     "checkUpkeep(bytes)": FunctionFragment;
     "claimPrize(uint256)": FunctionFragment;
     "claimTreasuryFee()": FunctionFragment;
-    "createGiveway(string,string,uint256,uint256,uint256,uint256,(uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
+    "createGiveaway(string,string,uint256,uint256,uint256,uint256,(uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
+    "cronUpkeep()": FunctionFragment;
     "factory()": FunctionFragment;
-    "fulfillGiveway(bytes32,uint256,bytes)": FunctionFragment;
+    "fulfillGiveawayWinner(bytes32,uint256,bytes)": FunctionFragment;
+    "fulfillRefreshGiveaway(bytes32,uint256,uint256)": FunctionFragment;
     "fulfillSignUp(bytes32,uint256,bool)": FunctionFragment;
+    "getGiveawayURI(uint256)": FunctionFragment;
     "getPrizes(uint256)": FunctionFragment;
-    "getRequestURI(uint256)": FunctionFragment;
     "getSignUpURI(uint256)": FunctionFragment;
     "getWinners(uint256)": FunctionFragment;
     "giveaways(uint256)": FunctionFragment;
+    "isSignedUp(uint256)": FunctionFragment;
     "jobId()": FunctionFragment;
+    "keeper()": FunctionFragment;
     "owner()": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "performUpkeep(bytes)": FunctionFragment;
+    "refreshActiveGiveawayStatus()": FunctionFragment;
     "requestBaseURI()": FunctionFragment;
     "roundId()": FunctionFragment;
     "setTreasuryFee(uint256)": FunctionFragment;
@@ -116,23 +122,29 @@ export interface GivewayV1Interface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "MAX_TREASURY_FEE"
       | "addPrizes"
+      | "cancelRequest"
       | "checkUpkeep"
       | "claimPrize"
       | "claimTreasuryFee"
-      | "createGiveway"
+      | "createGiveaway"
+      | "cronUpkeep"
       | "factory"
-      | "fulfillGiveway"
+      | "fulfillGiveawayWinner"
+      | "fulfillRefreshGiveaway"
       | "fulfillSignUp"
+      | "getGiveawayURI"
       | "getPrizes"
-      | "getRequestURI"
       | "getSignUpURI"
       | "getWinners"
       | "giveaways"
+      | "isSignedUp"
       | "jobId"
+      | "keeper"
       | "owner"
       | "pause"
       | "paused"
       | "performUpkeep"
+      | "refreshActiveGiveawayStatus"
       | "requestBaseURI"
       | "roundId"
       | "setTreasuryFee"
@@ -156,6 +168,15 @@ export interface GivewayV1Interface extends utils.Interface {
     values: [IChild.PrizeStruct[]]
   ): string;
   encodeFunctionData(
+    functionFragment: "cancelRequest",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "checkUpkeep",
     values: [PromiseOrValue<BytesLike>]
   ): string;
@@ -168,7 +189,7 @@ export interface GivewayV1Interface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "createGiveway",
+    functionFragment: "createGiveaway",
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
@@ -179,13 +200,25 @@ export interface GivewayV1Interface extends utils.Interface {
       IChild.PrizeStruct[]
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "cronUpkeep",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "factory", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "fulfillGiveway",
+    functionFragment: "fulfillGiveawayWinner",
     values: [
       PromiseOrValue<BytesLike>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "fulfillRefreshGiveaway",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
     ]
   ): string;
   encodeFunctionData(
@@ -197,11 +230,11 @@ export interface GivewayV1Interface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "getPrizes",
+    functionFragment: "getGiveawayURI",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getRequestURI",
+    functionFragment: "getPrizes",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -216,13 +249,22 @@ export interface GivewayV1Interface extends utils.Interface {
     functionFragment: "giveaways",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "isSignedUp",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(functionFragment: "jobId", values?: undefined): string;
+  encodeFunctionData(functionFragment: "keeper", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "performUpkeep",
     values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "refreshActiveGiveawayStatus",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "requestBaseURI",
@@ -273,6 +315,10 @@ export interface GivewayV1Interface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "addPrizes", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "cancelRequest",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "checkUpkeep",
     data: BytesLike
   ): Result;
@@ -282,35 +328,46 @@ export interface GivewayV1Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "createGiveway",
+    functionFragment: "createGiveaway",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "cronUpkeep", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "factory", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "fulfillGiveway",
+    functionFragment: "fulfillGiveawayWinner",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "fulfillRefreshGiveaway",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "fulfillSignUp",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "getPrizes", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getRequestURI",
+    functionFragment: "getGiveawayURI",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getPrizes", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getSignUpURI",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getWinners", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "giveaways", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isSignedUp", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "jobId", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "keeper", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "performUpkeep",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "refreshActiveGiveawayStatus",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -363,8 +420,10 @@ export interface GivewayV1Interface extends utils.Interface {
     "FactoryOwnershipTransferred(address,address)": EventFragment;
     "FailedTransfer(address,uint256)": EventFragment;
     "GamePrizeClaimed(address,uint256,uint256)": EventFragment;
-    "GivewayStarted(uint256,uint256,uint256,uint256)": EventFragment;
-    "GivewayWinnerRequested(uint256,bytes32)": EventFragment;
+    "GiveawayRefreshRequested(uint256,bytes32)": EventFragment;
+    "GiveawayRefreshed(uint256,uint256)": EventFragment;
+    "GiveawayStarted(uint256,uint256,uint256,uint256)": EventFragment;
+    "GiveawayWinnerRequested(uint256,bytes32)": EventFragment;
     "Paused(address)": EventFragment;
     "PerformUpkeepExecuted(uint256,uint256)": EventFragment;
     "PrizeAdded(uint256,uint256,uint256,uint256,address,uint256)": EventFragment;
@@ -393,8 +452,10 @@ export interface GivewayV1Interface extends utils.Interface {
   ): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FailedTransfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GamePrizeClaimed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "GivewayStarted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "GivewayWinnerRequested"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GiveawayRefreshRequested"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GiveawayRefreshed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GiveawayStarted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GiveawayWinnerRequested"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PerformUpkeepExecuted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PrizeAdded"): EventFragment;
@@ -550,30 +611,54 @@ export type GamePrizeClaimedEvent = TypedEvent<
 export type GamePrizeClaimedEventFilter =
   TypedEventFilter<GamePrizeClaimedEvent>;
 
-export interface GivewayStartedEventObject {
+export interface GiveawayRefreshRequestedEventObject {
+  userId: BigNumber;
+  requestId: string;
+}
+export type GiveawayRefreshRequestedEvent = TypedEvent<
+  [BigNumber, string],
+  GiveawayRefreshRequestedEventObject
+>;
+
+export type GiveawayRefreshRequestedEventFilter =
+  TypedEventFilter<GiveawayRefreshRequestedEvent>;
+
+export interface GiveawayRefreshedEventObject {
+  giveawayId: BigNumber;
+  timestamp: BigNumber;
+}
+export type GiveawayRefreshedEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  GiveawayRefreshedEventObject
+>;
+
+export type GiveawayRefreshedEventFilter =
+  TypedEventFilter<GiveawayRefreshedEvent>;
+
+export interface GiveawayStartedEventObject {
   roundId: BigNumber;
   userId: BigNumber;
   tweetId: BigNumber;
   prizesLength: BigNumber;
 }
-export type GivewayStartedEvent = TypedEvent<
+export type GiveawayStartedEvent = TypedEvent<
   [BigNumber, BigNumber, BigNumber, BigNumber],
-  GivewayStartedEventObject
+  GiveawayStartedEventObject
 >;
 
-export type GivewayStartedEventFilter = TypedEventFilter<GivewayStartedEvent>;
+export type GiveawayStartedEventFilter = TypedEventFilter<GiveawayStartedEvent>;
 
-export interface GivewayWinnerRequestedEventObject {
-  givewayId: BigNumber;
+export interface GiveawayWinnerRequestedEventObject {
+  giveawayId: BigNumber;
   requestId: string;
 }
-export type GivewayWinnerRequestedEvent = TypedEvent<
+export type GiveawayWinnerRequestedEvent = TypedEvent<
   [BigNumber, string],
-  GivewayWinnerRequestedEventObject
+  GiveawayWinnerRequestedEventObject
 >;
 
-export type GivewayWinnerRequestedEventFilter =
-  TypedEventFilter<GivewayWinnerRequestedEvent>;
+export type GiveawayWinnerRequestedEventFilter =
+  TypedEventFilter<GiveawayWinnerRequestedEvent>;
 
 export interface PausedEventObject {
   account: string;
@@ -583,7 +668,7 @@ export type PausedEvent = TypedEvent<[string], PausedEventObject>;
 export type PausedEventFilter = TypedEventFilter<PausedEvent>;
 
 export interface PerformUpkeepExecutedEventObject {
-  givewayId: BigNumber;
+  giveawayId: BigNumber;
   timestamp: BigNumber;
 }
 export type PerformUpkeepExecutedEvent = TypedEvent<
@@ -672,7 +757,7 @@ export type UnpausedEvent = TypedEvent<[string], UnpausedEventObject>;
 export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
 
 export interface WinnerAddedEventObject {
-  givewayId: BigNumber;
+  giveawayId: BigNumber;
   position: BigNumber;
   winnerId: BigNumber;
   amount: BigNumber;
@@ -684,12 +769,12 @@ export type WinnerAddedEvent = TypedEvent<
 
 export type WinnerAddedEventFilter = TypedEventFilter<WinnerAddedEvent>;
 
-export interface GivewayV1 extends BaseContract {
+export interface GiveawayV1 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: GivewayV1Interface;
+  interface: GiveawayV1Interface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -718,10 +803,20 @@ export interface GivewayV1 extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    cancelRequest(
+      _requestId: PromiseOrValue<BytesLike>,
+      _payment: PromiseOrValue<BigNumberish>,
+      _callbackFunctionId: PromiseOrValue<BytesLike>,
+      _expiration: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     checkUpkeep(
       _calldata: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[boolean, string]>;
+    ): Promise<
+      [boolean, string] & { _upkeepNeeded: boolean; _payload: string }
+    >;
 
     claimPrize(
       _roundId: PromiseOrValue<BigNumberish>,
@@ -732,7 +827,7 @@ export interface GivewayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    createGiveway(
+    createGiveaway(
       _name: PromiseOrValue<string>,
       _image: PromiseOrValue<string>,
       _userId: PromiseOrValue<BigNumberish>,
@@ -743,12 +838,21 @@ export interface GivewayV1 extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    cronUpkeep(overrides?: CallOverrides): Promise<[string]>;
+
     factory(overrides?: CallOverrides): Promise<[string]>;
 
-    fulfillGiveway(
+    fulfillGiveawayWinner(
       _requestId: PromiseOrValue<BytesLike>,
-      _givewayId: PromiseOrValue<BigNumberish>,
-      _winnersIds: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _payload: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    fulfillRefreshGiveaway(
+      _requestId: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _retweetCount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -759,6 +863,11 @@ export interface GivewayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    getGiveawayURI(
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string] & { _giveawayURI: string }>;
+
     getPrizes(
       _roundId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -766,15 +875,10 @@ export interface GivewayV1 extends BaseContract {
       [IChild.PrizeStructOutput[]] & { childPrizes: IChild.PrizeStructOutput[] }
     >;
 
-    getRequestURI(
-      _givewayId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
     getSignUpURI(
       _userId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string]>;
+    ): Promise<[string] & { _signUpURI: string }>;
 
     getWinners(
       _roundId: PromiseOrValue<BigNumberish>,
@@ -797,7 +901,8 @@ export interface GivewayV1 extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
-        BigNumber
+        BigNumber,
+        boolean
       ] & {
         name: string;
         image: string;
@@ -807,10 +912,18 @@ export interface GivewayV1 extends BaseContract {
         endTimestamp: BigNumber;
         retweetCount: BigNumber;
         retweetMaxCount: BigNumber;
+        isEnded: boolean;
       }
     >;
 
+    isSignedUp(
+      _userId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     jobId(overrides?: CallOverrides): Promise<[string]>;
+
+    keeper(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -822,6 +935,10 @@ export interface GivewayV1 extends BaseContract {
 
     performUpkeep(
       _performData: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    refreshActiveGiveawayStatus(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -879,10 +996,18 @@ export interface GivewayV1 extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  cancelRequest(
+    _requestId: PromiseOrValue<BytesLike>,
+    _payment: PromiseOrValue<BigNumberish>,
+    _callbackFunctionId: PromiseOrValue<BytesLike>,
+    _expiration: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   checkUpkeep(
     _calldata: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
-  ): Promise<[boolean, string]>;
+  ): Promise<[boolean, string] & { _upkeepNeeded: boolean; _payload: string }>;
 
   claimPrize(
     _roundId: PromiseOrValue<BigNumberish>,
@@ -893,7 +1018,7 @@ export interface GivewayV1 extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  createGiveway(
+  createGiveaway(
     _name: PromiseOrValue<string>,
     _image: PromiseOrValue<string>,
     _userId: PromiseOrValue<BigNumberish>,
@@ -904,12 +1029,21 @@ export interface GivewayV1 extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  cronUpkeep(overrides?: CallOverrides): Promise<string>;
+
   factory(overrides?: CallOverrides): Promise<string>;
 
-  fulfillGiveway(
+  fulfillGiveawayWinner(
     _requestId: PromiseOrValue<BytesLike>,
-    _givewayId: PromiseOrValue<BigNumberish>,
-    _winnersIds: PromiseOrValue<BytesLike>,
+    _giveawayId: PromiseOrValue<BigNumberish>,
+    _payload: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  fulfillRefreshGiveaway(
+    _requestId: PromiseOrValue<BytesLike>,
+    _giveawayId: PromiseOrValue<BigNumberish>,
+    _retweetCount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -920,15 +1054,15 @@ export interface GivewayV1 extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  getGiveawayURI(
+    _giveawayId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   getPrizes(
     _roundId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<IChild.PrizeStructOutput[]>;
-
-  getRequestURI(
-    _givewayId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
 
   getSignUpURI(
     _userId: PromiseOrValue<BigNumberish>,
@@ -952,7 +1086,8 @@ export interface GivewayV1 extends BaseContract {
       BigNumber,
       BigNumber,
       BigNumber,
-      BigNumber
+      BigNumber,
+      boolean
     ] & {
       name: string;
       image: string;
@@ -962,10 +1097,18 @@ export interface GivewayV1 extends BaseContract {
       endTimestamp: BigNumber;
       retweetCount: BigNumber;
       retweetMaxCount: BigNumber;
+      isEnded: boolean;
     }
   >;
 
+  isSignedUp(
+    _userId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   jobId(overrides?: CallOverrides): Promise<string>;
+
+  keeper(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -977,6 +1120,10 @@ export interface GivewayV1 extends BaseContract {
 
   performUpkeep(
     _performData: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  refreshActiveGiveawayStatus(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1034,10 +1181,20 @@ export interface GivewayV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    cancelRequest(
+      _requestId: PromiseOrValue<BytesLike>,
+      _payment: PromiseOrValue<BigNumberish>,
+      _callbackFunctionId: PromiseOrValue<BytesLike>,
+      _expiration: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     checkUpkeep(
       _calldata: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[boolean, string]>;
+    ): Promise<
+      [boolean, string] & { _upkeepNeeded: boolean; _payload: string }
+    >;
 
     claimPrize(
       _roundId: PromiseOrValue<BigNumberish>,
@@ -1046,7 +1203,7 @@ export interface GivewayV1 extends BaseContract {
 
     claimTreasuryFee(overrides?: CallOverrides): Promise<void>;
 
-    createGiveway(
+    createGiveaway(
       _name: PromiseOrValue<string>,
       _image: PromiseOrValue<string>,
       _userId: PromiseOrValue<BigNumberish>,
@@ -1057,12 +1214,21 @@ export interface GivewayV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    cronUpkeep(overrides?: CallOverrides): Promise<string>;
+
     factory(overrides?: CallOverrides): Promise<string>;
 
-    fulfillGiveway(
+    fulfillGiveawayWinner(
       _requestId: PromiseOrValue<BytesLike>,
-      _givewayId: PromiseOrValue<BigNumberish>,
-      _winnersIds: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _payload: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    fulfillRefreshGiveaway(
+      _requestId: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _retweetCount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1073,15 +1239,15 @@ export interface GivewayV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    getGiveawayURI(
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     getPrizes(
       _roundId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<IChild.PrizeStructOutput[]>;
-
-    getRequestURI(
-      _givewayId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     getSignUpURI(
       _userId: PromiseOrValue<BigNumberish>,
@@ -1105,7 +1271,8 @@ export interface GivewayV1 extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
-        BigNumber
+        BigNumber,
+        boolean
       ] & {
         name: string;
         image: string;
@@ -1115,10 +1282,18 @@ export interface GivewayV1 extends BaseContract {
         endTimestamp: BigNumber;
         retweetCount: BigNumber;
         retweetMaxCount: BigNumber;
+        isEnded: boolean;
       }
     >;
 
+    isSignedUp(
+      _userId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     jobId(overrides?: CallOverrides): Promise<string>;
+
+    keeper(overrides?: CallOverrides): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -1130,6 +1305,8 @@ export interface GivewayV1 extends BaseContract {
       _performData: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    refreshActiveGiveawayStatus(overrides?: CallOverrides): Promise<void>;
 
     requestBaseURI(overrides?: CallOverrides): Promise<string>;
 
@@ -1272,37 +1449,55 @@ export interface GivewayV1 extends BaseContract {
       amountClaimed?: null
     ): GamePrizeClaimedEventFilter;
 
-    "GivewayStarted(uint256,uint256,uint256,uint256)"(
-      roundId?: null,
-      userId?: null,
-      tweetId?: null,
-      prizesLength?: null
-    ): GivewayStartedEventFilter;
-    GivewayStarted(
-      roundId?: null,
-      userId?: null,
-      tweetId?: null,
-      prizesLength?: null
-    ): GivewayStartedEventFilter;
+    "GiveawayRefreshRequested(uint256,bytes32)"(
+      userId?: PromiseOrValue<BigNumberish> | null,
+      requestId?: PromiseOrValue<BytesLike> | null
+    ): GiveawayRefreshRequestedEventFilter;
+    GiveawayRefreshRequested(
+      userId?: PromiseOrValue<BigNumberish> | null,
+      requestId?: PromiseOrValue<BytesLike> | null
+    ): GiveawayRefreshRequestedEventFilter;
 
-    "GivewayWinnerRequested(uint256,bytes32)"(
-      givewayId?: PromiseOrValue<BigNumberish> | null,
+    "GiveawayRefreshed(uint256,uint256)"(
+      giveawayId?: PromiseOrValue<BigNumberish> | null,
+      timestamp?: null
+    ): GiveawayRefreshedEventFilter;
+    GiveawayRefreshed(
+      giveawayId?: PromiseOrValue<BigNumberish> | null,
+      timestamp?: null
+    ): GiveawayRefreshedEventFilter;
+
+    "GiveawayStarted(uint256,uint256,uint256,uint256)"(
+      roundId?: null,
+      userId?: null,
+      tweetId?: null,
+      prizesLength?: null
+    ): GiveawayStartedEventFilter;
+    GiveawayStarted(
+      roundId?: null,
+      userId?: null,
+      tweetId?: null,
+      prizesLength?: null
+    ): GiveawayStartedEventFilter;
+
+    "GiveawayWinnerRequested(uint256,bytes32)"(
+      giveawayId?: PromiseOrValue<BigNumberish> | null,
       requestId?: PromiseOrValue<BytesLike> | null
-    ): GivewayWinnerRequestedEventFilter;
-    GivewayWinnerRequested(
-      givewayId?: PromiseOrValue<BigNumberish> | null,
+    ): GiveawayWinnerRequestedEventFilter;
+    GiveawayWinnerRequested(
+      giveawayId?: PromiseOrValue<BigNumberish> | null,
       requestId?: PromiseOrValue<BytesLike> | null
-    ): GivewayWinnerRequestedEventFilter;
+    ): GiveawayWinnerRequestedEventFilter;
 
     "Paused(address)"(account?: null): PausedEventFilter;
     Paused(account?: null): PausedEventFilter;
 
     "PerformUpkeepExecuted(uint256,uint256)"(
-      givewayId?: PromiseOrValue<BigNumberish> | null,
+      giveawayId?: PromiseOrValue<BigNumberish> | null,
       timestamp?: null
     ): PerformUpkeepExecutedEventFilter;
     PerformUpkeepExecuted(
-      givewayId?: PromiseOrValue<BigNumberish> | null,
+      giveawayId?: PromiseOrValue<BigNumberish> | null,
       timestamp?: null
     ): PerformUpkeepExecutedEventFilter;
 
@@ -1361,13 +1556,13 @@ export interface GivewayV1 extends BaseContract {
     Unpaused(account?: null): UnpausedEventFilter;
 
     "WinnerAdded(uint256,uint256,uint256,uint256)"(
-      givewayId?: null,
+      giveawayId?: null,
       position?: null,
       winnerId?: null,
       amount?: null
     ): WinnerAddedEventFilter;
     WinnerAdded(
-      givewayId?: null,
+      giveawayId?: null,
       position?: null,
       winnerId?: null,
       amount?: null
@@ -1380,6 +1575,14 @@ export interface GivewayV1 extends BaseContract {
     addPrizes(
       _prizes: IChild.PrizeStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    cancelRequest(
+      _requestId: PromiseOrValue<BytesLike>,
+      _payment: PromiseOrValue<BigNumberish>,
+      _callbackFunctionId: PromiseOrValue<BytesLike>,
+      _expiration: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     checkUpkeep(
@@ -1396,7 +1599,7 @@ export interface GivewayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    createGiveway(
+    createGiveaway(
       _name: PromiseOrValue<string>,
       _image: PromiseOrValue<string>,
       _userId: PromiseOrValue<BigNumberish>,
@@ -1407,12 +1610,21 @@ export interface GivewayV1 extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    cronUpkeep(overrides?: CallOverrides): Promise<BigNumber>;
+
     factory(overrides?: CallOverrides): Promise<BigNumber>;
 
-    fulfillGiveway(
+    fulfillGiveawayWinner(
       _requestId: PromiseOrValue<BytesLike>,
-      _givewayId: PromiseOrValue<BigNumberish>,
-      _winnersIds: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _payload: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    fulfillRefreshGiveaway(
+      _requestId: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _retweetCount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1423,13 +1635,13 @@ export interface GivewayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+    getGiveawayURI(
+      _giveawayId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getRequestURI(
-      _givewayId: PromiseOrValue<BigNumberish>,
+    getPrizes(
+      _roundId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1448,7 +1660,14 @@ export interface GivewayV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    isSignedUp(
+      _userId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     jobId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    keeper(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1460,6 +1679,10 @@ export interface GivewayV1 extends BaseContract {
 
     performUpkeep(
       _performData: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    refreshActiveGiveawayStatus(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1518,6 +1741,14 @@ export interface GivewayV1 extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    cancelRequest(
+      _requestId: PromiseOrValue<BytesLike>,
+      _payment: PromiseOrValue<BigNumberish>,
+      _callbackFunctionId: PromiseOrValue<BytesLike>,
+      _expiration: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     checkUpkeep(
       _calldata: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -1532,7 +1763,7 @@ export interface GivewayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    createGiveway(
+    createGiveaway(
       _name: PromiseOrValue<string>,
       _image: PromiseOrValue<string>,
       _userId: PromiseOrValue<BigNumberish>,
@@ -1543,12 +1774,21 @@ export interface GivewayV1 extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    cronUpkeep(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     factory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    fulfillGiveway(
+    fulfillGiveawayWinner(
       _requestId: PromiseOrValue<BytesLike>,
-      _givewayId: PromiseOrValue<BigNumberish>,
-      _winnersIds: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _payload: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    fulfillRefreshGiveaway(
+      _requestId: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _retweetCount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1559,13 +1799,13 @@ export interface GivewayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+    getGiveawayURI(
+      _giveawayId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getRequestURI(
-      _givewayId: PromiseOrValue<BigNumberish>,
+    getPrizes(
+      _roundId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1584,7 +1824,14 @@ export interface GivewayV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    isSignedUp(
+      _userId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     jobId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    keeper(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1596,6 +1843,10 @@ export interface GivewayV1 extends BaseContract {
 
     performUpkeep(
       _performData: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    refreshActiveGiveawayStatus(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

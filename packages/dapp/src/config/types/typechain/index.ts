@@ -74,8 +74,8 @@ export type { CronUpkeepInterface } from "./contracts/games/v1/interfaces/CronUp
 export { CronUpkeepInterface__factory } from "./factories/contracts/games/v1/interfaces/CronUpkeepInterface__factory";
 export type { GameV1Interface } from "./contracts/games/v1/interfaces/GameV1Interface";
 export { GameV1Interface__factory } from "./factories/contracts/games/v1/interfaces/GameV1Interface__factory";
-export type { GivewayV1 } from "./contracts/giveways/GivewayV1";
-export { GivewayV1__factory } from "./factories/contracts/giveways/GivewayV1__factory";
+export type { GiveawayV1 } from "./contracts/giveways/GiveawayV1";
+export { GiveawayV1__factory } from "./factories/contracts/giveways/GiveawayV1__factory";
 export type { IChild } from "./contracts/interfaces/IChild";
 export { IChild__factory } from "./factories/contracts/interfaces/IChild__factory";
 export type { ICronUpkeep } from "./contracts/interfaces/ICronUpkeep";

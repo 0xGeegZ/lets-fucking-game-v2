@@ -145,9 +145,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.GameV1Interface__factory>;
     getContractFactory(
-      name: "GivewayV1",
+      name: "GiveawayV1",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.GivewayV1__factory>;
+    ): Promise<Contracts.GiveawayV1__factory>;
     getContractFactory(
       name: "IChild",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -343,10 +343,10 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.GameV1Interface>;
     getContractAt(
-      name: "GivewayV1",
+      name: "GiveawayV1",
       address: string,
       signer?: ethers.Signer
-    ): Promise<Contracts.GivewayV1>;
+    ): Promise<Contracts.GiveawayV1>;
     getContractAt(
       name: "IChild",
       address: string,
