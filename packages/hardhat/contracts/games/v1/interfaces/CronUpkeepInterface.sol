@@ -24,7 +24,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
     3) Cron job is running :)
 */
 
-interface ICronUpkeep {
+interface CronUpkeepInterface {
     event CronJobExecuted(uint256 indexed id, uint256 timestamp);
     event CronJobCreated(uint256 indexed id, address target, bytes handler);
     event CronJobUpdated(uint256 indexed id, address target, bytes handler);

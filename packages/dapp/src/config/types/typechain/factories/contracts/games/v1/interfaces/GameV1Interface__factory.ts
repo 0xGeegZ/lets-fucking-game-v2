@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
 import type {
-  IGame,
-  IGameInterface,
-} from "../../../contracts/interfaces/IGame";
+  GameV1Interface,
+  GameV1InterfaceInterface,
+} from "../../../../../contracts/games/v1/interfaces/GameV1Interface";
 
 const _abi = [
   {
@@ -27,31 +27,6 @@ const _abi = [
       },
     ],
     name: "AdminOwnershipTransferred",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "claimer",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "roundId",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amountClaimed",
-        type: "uint256",
-      },
-    ],
-    name: "ChildPrizeClaimed",
     type: "event",
   },
   {
@@ -471,6 +446,10 @@ const _abi = [
     type: "event",
   },
   {
+    stateMutability: "payable",
+    type: "fallback",
+  },
+  {
     inputs: [
       {
         components: [
@@ -500,7 +479,7 @@ const _abi = [
             type: "uint256",
           },
         ],
-        internalType: "struct IChild.Prize[]",
+        internalType: "struct GameV1Interface.Prize[]",
         name: "_prizes",
         type: "tuple[]",
       },
@@ -624,7 +603,7 @@ const _abi = [
             type: "string",
           },
         ],
-        internalType: "struct IGame.GameData",
+        internalType: "struct GameV1Interface.GameData",
         name: "gameData",
         type: "tuple",
       },
@@ -685,7 +664,7 @@ const _abi = [
             type: "bool",
           },
         ],
-        internalType: "struct IGame.Player",
+        internalType: "struct GameV1Interface.Player",
         name: "gamePlayer",
         type: "tuple",
       },
@@ -744,8 +723,8 @@ const _abi = [
             type: "uint256",
           },
         ],
-        internalType: "struct IChild.Prize[]",
-        name: "childPrizes",
+        internalType: "struct GameV1Interface.Prize[]",
+        name: "gamePrizes",
         type: "tuple[]",
       },
     ],
@@ -803,8 +782,8 @@ const _abi = [
             type: "bool",
           },
         ],
-        internalType: "struct IChild.Winner[]",
-        name: "childWinners",
+        internalType: "struct GameV1Interface.Winner[]",
+        name: "gameWinners",
         type: "tuple[]",
       },
     ],
@@ -828,11 +807,6 @@ const _abi = [
           {
             internalType: "address",
             name: "cronUpkeep",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "keeper",
             type: "address",
           },
           {
@@ -908,12 +882,12 @@ const _abi = [
                 type: "uint256",
               },
             ],
-            internalType: "struct IChild.Prize[]",
+            internalType: "struct GameV1Interface.Prize[]",
             name: "prizes",
             type: "tuple[]",
           },
         ],
-        internalType: "struct IGame.Initialization",
+        internalType: "struct GameV1Interface.Initialization",
         name: "_initialization",
         type: "tuple",
       },
@@ -1062,7 +1036,7 @@ const _abi = [
             type: "string",
           },
         ],
-        internalType: "struct IGame.UpdateGameData",
+        internalType: "struct GameV1Interface.UpdateGameData",
         name: "_updateGameData",
         type: "tuple",
       },
@@ -1204,14 +1178,21 @@ const _abi = [
     stateMutability: "nonpayable",
     type: "function",
   },
+  {
+    stateMutability: "payable",
+    type: "receive",
+  },
 ];
 
-export class IGame__factory {
+export class GameV1Interface__factory {
   static readonly abi = _abi;
-  static createInterface(): IGameInterface {
-    return new utils.Interface(_abi) as IGameInterface;
+  static createInterface(): GameV1InterfaceInterface {
+    return new utils.Interface(_abi) as GameV1InterfaceInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): IGame {
-    return new Contract(address, _abi, signerOrProvider) as IGame;
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): GameV1Interface {
+    return new Contract(address, _abi, signerOrProvider) as GameV1Interface;
   }
 }

@@ -42,11 +42,11 @@ describe('GameFactoryContract', function () {
     })
   })
 
-  context('GameFactory setNewGameV1', function () {
+  context('GameFactory setNewChild', function () {
     describe('when called by non admin', function () {
       it('should revert with correct message', async function () {
         await expectRevert(
-          this.gameFactory.connect(this.alice).setNewGameV1(this.game.address),
+          this.gameFactory.connect(this.alice).setNewChild(this.game.address),
           'Caller is not the admin'
         )
       })
@@ -56,15 +56,17 @@ describe('GameFactoryContract', function () {
       it('should add the new implementation version to games', async function () {
         await this.gameFactory
           .connect(this.owner)
-          .setNewGameV1(this.secondGameV1.address)
-        const responseGameV1s1 = await this.gameFactory.games('0')
-        const responseGameV1s2 = await this.gameFactory.games('1')
+          .setNewChild(this.secondGameV1.address)
+        const responseGameV1s1 = await this.gameFactory.childs('0')
+        const responseGameV1s2 = await this.gameFactory.childs('1')
 
         expect(responseGameV1s1.id).to.be.equal('0')
-        expect(responseGameV1s1.deployedAddress).to.be.equal(this.game.address)
+        expect(responseGameV1s1.deployedAddress).to.be.equal(
+          this.deployedPayableGame.address
+        )
         expect(responseGameV1s2.id).to.be.equal('1')
         expect(responseGameV1s2.deployedAddress).to.be.equal(
-          this.secondGameV1.address
+          this.deployedFreeGame.address
         )
       })
     })
@@ -146,7 +148,7 @@ describe('GameFactoryContract', function () {
       it('should update keeper address for the factory and all games and associated keeper job', async function () {
         const newCronUpkeep = this.cronUpkeepSecondary.address
         this.cronUpkeepSecondary.addDelegator(this.gameFactory.address)
-        await this.gameFactory.connect(this.owner).pauseAllGamesAndFactory()
+        await this.gameFactory.connect(this.owner).pauseAll()
         await expect(
           this.gameFactory.connect(this.owner).updateCronUpkeep(newCronUpkeep)
         )
@@ -154,7 +156,7 @@ describe('GameFactoryContract', function () {
           .withArgs(newCronUpkeep)
         const updatedFactoryCronUpkeep = await this.gameFactory.cronUpkeep()
         const updatedGameCronUpkeep =
-          await this.deployedPayableGame.cronUpkeep()
+          await this.deployedPayableGame.getCronUpkeep()
         expect(updatedFactoryCronUpkeep).to.be.equal(newCronUpkeep)
         expect(updatedGameCronUpkeep).to.be.equal(newCronUpkeep)
       })
@@ -176,82 +178,79 @@ describe('GameFactoryContract', function () {
     })
   })
 
-  context(
-    'GameFactory pauseAllGamesAndFactory & resumeAllGamesAndFactory',
-    function () {
-      describe('when called by non admin', function () {
-        it('should revert with correct message', async function () {
-          await expectRevert(
-            this.gameFactory.connect(this.bob).pauseAllGamesAndFactory(),
-            'Caller is not the admin'
-          )
-          await expectRevert(
-            this.gameFactory.connect(this.bob).resumeAllGamesAndFactory(),
-            'Caller is not the admin'
-          )
-        })
+  context('GameFactory pauseAll & resumeAll', function () {
+    describe('when called by non admin', function () {
+      it('should revert with correct message', async function () {
+        await expectRevert(
+          this.gameFactory.connect(this.bob).pauseAll(),
+          'Caller is not the admin'
+        )
+        await expectRevert(
+          this.gameFactory.connect(this.bob).resumeAll(),
+          'Caller is not the admin'
+        )
       })
+    })
 
-      describe('when called by admin', function () {
-        it('should pause the factory and all games and associated keeper job', async function () {
-          await this.gameFactory.connect(this.owner).pauseAllGamesAndFactory()
+    describe('when called by admin', function () {
+      it('should pause the factory and all games and associated keeper job', async function () {
+        await this.gameFactory.connect(this.owner).pauseAll()
 
-          await expectRevert(
-            this.gameFactory
-              .connect(this.owner)
-              .createNewGame(
-                this.name,
-                this.maxPlayers,
-                this.playTimeRange,
-                this.correctRegistrationAmount,
-                this.treasuryFee,
-                this.creatorFee,
-                this.encodedCron,
-                this.prizes,
-                { value: this.gameCreationAmount }
-              ),
-            'Pausable: paused'
-          )
-        })
-
-        it('should resume the factory and all games and associated keeper job', async function () {
-          await this.gameFactory.connect(this.owner).pauseAllGamesAndFactory()
-          await this.gameFactory.connect(this.owner).resumeAllGamesAndFactory()
-
-          const registrationAmount =
-            this.authorizedAmounts[this.authorizedAmounts.length - 1]
-
-          const updatedPrizes = this.prizes
-          updatedPrizes[0].amount = registrationAmount.mul(this.maxPlayers)
-
-          await this.gameFactory
+        await expectRevert(
+          this.gameFactory
             .connect(this.owner)
             .createNewGame(
               this.name,
               this.maxPlayers,
               this.playTimeRange,
-              registrationAmount,
+              this.correctRegistrationAmount,
               this.treasuryFee,
               this.creatorFee,
               this.encodedCron,
-              updatedPrizes,
+              this.prizes,
               { value: this.gameCreationAmount }
-            )
-        })
-
-        it('should revert if call resumeAllGamesAndFactory before pauseAllGamesAndFactory', async function () {
-          await expectRevert(
-            this.gameFactory.connect(this.owner).resumeAllGamesAndFactory(),
-            'Pausable: not paused'
-          )
-          await this.gameFactory.connect(this.owner).pauseAllGamesAndFactory()
-
-          await expectRevert(
-            this.gameFactory.connect(this.owner).pauseAllGamesAndFactory(),
-            'Pausable: paused'
-          )
-        })
+            ),
+          'Pausable: paused'
+        )
       })
-    }
-  )
+
+      it('should resume the factory and all games and associated keeper job', async function () {
+        await this.gameFactory.connect(this.owner).pauseAll()
+        await this.gameFactory.connect(this.owner).resumeAll()
+
+        const registrationAmount =
+          this.authorizedAmounts[this.authorizedAmounts.length - 1]
+
+        const updatedPrizes = this.prizes
+        updatedPrizes[0].amount = registrationAmount.mul(this.maxPlayers)
+
+        await this.gameFactory
+          .connect(this.owner)
+          .createNewGame(
+            this.name,
+            this.maxPlayers,
+            this.playTimeRange,
+            registrationAmount,
+            this.treasuryFee,
+            this.creatorFee,
+            this.encodedCron,
+            updatedPrizes,
+            { value: this.gameCreationAmount }
+          )
+      })
+
+      it('should revert if call resumeAll before pauseAll', async function () {
+        await expectRevert(
+          this.gameFactory.connect(this.owner).resumeAll(),
+          'Pausable: not paused'
+        )
+        await this.gameFactory.connect(this.owner).pauseAll()
+
+        await expectRevert(
+          this.gameFactory.connect(this.owner).pauseAll(),
+          'Pausable: paused'
+        )
+      })
+    })
+  })
 })

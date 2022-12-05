@@ -2,9 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as abstracts from "./abstracts";
+export * as games from "./games";
 export * as interfaces from "./interfaces";
+export * as keepers from "./keepers";
 export * as multicall from "./multicall";
-export * as upkeeps from "./upkeeps";
-export * as v1 from "./v1";
-export { GameFactoryV2__factory } from "./GameFactoryV2__factory";
-export { GameV2__factory } from "./GameV2__factory";

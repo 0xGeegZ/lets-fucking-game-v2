@@ -995,7 +995,7 @@ describe('GameV1Contract - Mecanism', function () {
           this.deployedPayableGame
             .connect(this.players[impostorIndex])
             .claimPrize(existantId),
-          'Player did not win this game'
+          'Player did not win this round'
         )
       })
     })
@@ -1020,7 +1020,7 @@ describe('GameV1Contract - Mecanism', function () {
           this.deployedPayableGame
             .connect(this.players[winnerIndex])
             .claimPrize(existantId),
-          'Prize for this game already claimed'
+          'Prize for this round already claimed'
         )
       })
     })
@@ -1078,17 +1078,22 @@ describe('GameV1Contract - Mecanism', function () {
           mockKeeper: this.mockKeeper,
         })
 
+        // await expect(
+        //   this.deployedPayableGame
+        //     .connect(this.players[winnerIndex])
+        //     .claimPrize(existantId)
+        // )
+        //   .to.emit(this.deployedPayableGame, 'GamePrizeClaimed')
+        //   .withArgs(
+        //     this.players[winnerIndex].address,
+        //     existantId,
+        //     this.prizeAmount
+        //   )
         await expect(
           this.deployedPayableGame
             .connect(this.players[winnerIndex])
             .claimPrize(existantId)
-        )
-          .to.emit(this.deployedPayableGame, 'GamePrizeClaimed')
-          .withArgs(
-            this.players[winnerIndex].address,
-            existantId,
-            this.prizeAmount
-          )
+        ).to.changeEtherBalance(this.players[winnerIndex], this.prizeAmount)
       })
     })
   })
@@ -1177,31 +1182,46 @@ describe('GameV1Contract - Mecanism', function () {
           .connect(this.mockKeeper)
           .triggerDailyCheckpoint()
 
-        // TODO ensure that address have receive right amount
+        // await expect(
+        //   this.deployedFreeGame
+        //     .connect(this.players[finalistIndex])
+        //     .claimPrize(roundId)
+        // )
+        //   .to.emit(this.deployedFreeGame, 'GamePrizeClaimed')
+        //   .withArgs(
+        //     this.players[finalistIndex].address,
+        //     roundId,
+        //     this.freeGamePrizeAmount / 2
+        //   )
+
         await expect(
           this.deployedFreeGame
             .connect(this.players[finalistIndex])
             .claimPrize(roundId)
+        ).to.changeEtherBalance(
+          this.players[finalistIndex],
+          this.freeGamePrizeAmount / 2
         )
-          .to.emit(this.deployedFreeGame, 'GamePrizeClaimed')
-          .withArgs(
-            this.players[finalistIndex].address,
-            roundId,
-            this.freeGamePrizeAmount / 2
-          )
 
-        // TODO ensure that address have receive right amount
+        // await expect(
+        //   this.deployedFreeGame
+        //     .connect(this.players[secondFinalistIndex])
+        //     .claimPrize(roundId)
+        // )
+        //   .to.emit(this.deployedFreeGame, 'GamePrizeClaimed')
+        //   .withArgs(
+        //     this.players[secondFinalistIndex].address,
+        //     roundId,
+        //     this.freeGamePrizeAmount / 2
+        //   )
         await expect(
           this.deployedFreeGame
             .connect(this.players[secondFinalistIndex])
             .claimPrize(roundId)
+        ).to.changeEtherBalance(
+          this.players[secondFinalistIndex],
+          this.freeGamePrizeAmount / 2
         )
-          .to.emit(this.deployedFreeGame, 'GamePrizeClaimed')
-          .withArgs(
-            this.players[secondFinalistIndex].address,
-            roundId,
-            this.freeGamePrizeAmount / 2
-          )
       })
 
       it('should claim prize', async function () {
@@ -1223,29 +1243,44 @@ describe('GameV1Contract - Mecanism', function () {
           .connect(this.mockKeeper)
           .triggerDailyCheckpoint()
 
+        // await expect(
+        //   this.deployedPayableGame
+        //     .connect(this.players[finalistIndex])
+        //     .claimPrize(roundId)
+        // )
+        //   .to.emit(this.deployedPayableGame, 'GamePrizeClaimed')
+        //   .withArgs(
+        //     this.players[finalistIndex].address,
+        //     roundId,
+        //     this.prizeAmount / 2
+        //   )
         await expect(
           this.deployedPayableGame
             .connect(this.players[finalistIndex])
             .claimPrize(roundId)
+        ).to.changeEtherBalance(
+          this.players[finalistIndex],
+          this.prizeAmount / 2
         )
-          .to.emit(this.deployedPayableGame, 'GamePrizeClaimed')
-          .withArgs(
-            this.players[finalistIndex].address,
-            roundId,
-            this.prizeAmount / 2
-          )
-
+        // await expect(
+        //   this.deployedPayableGame
+        //     .connect(this.players[secondFinalistIndex])
+        //     .claimPrize(roundId)
+        // )
+        //   .to.emit(this.deployedPayableGame, 'GamePrizeClaimed')
+        //   .withArgs(
+        //     this.players[secondFinalistIndex].address,
+        //     roundId,
+        //     this.prizeAmount / 2
+        //   )
         await expect(
           this.deployedPayableGame
             .connect(this.players[secondFinalistIndex])
             .claimPrize(roundId)
+        ).to.changeEtherBalance(
+          this.players[secondFinalistIndex],
+          this.prizeAmount / 2
         )
-          .to.emit(this.deployedPayableGame, 'GamePrizeClaimed')
-          .withArgs(
-            this.players[secondFinalistIndex].address,
-            roundId,
-            this.prizeAmount / 2
-          )
       })
 
       it('should revert if loosing player vote to split pot', async function () {

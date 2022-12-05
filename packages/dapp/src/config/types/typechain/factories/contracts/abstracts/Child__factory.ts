@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  IChild,
-  IChildInterface,
-} from "../../../contracts/interfaces/IChild";
+import type { Child, ChildInterface } from "../../../contracts/abstracts/Child";
 
 const _abi = [
   {
@@ -192,6 +189,19 @@ const _abi = [
     inputs: [
       {
         indexed: false,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "Paused",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
         internalType: "uint256",
         name: "roundId",
         type: "uint256",
@@ -276,6 +286,32 @@ const _abi = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "Unpaused",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "MAX_TREASURY_FEE",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         components: [
@@ -333,6 +369,19 @@ const _abi = [
     name: "claimTreasuryFee",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "factory",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -429,9 +478,48 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "pause",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "paused",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "roundId",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -475,6 +563,32 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "treasuryAmount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "treasuryFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "unpause",
     outputs: [],
     stateMutability: "nonpayable",
@@ -495,12 +609,12 @@ const _abi = [
   },
 ];
 
-export class IChild__factory {
+export class Child__factory {
   static readonly abi = _abi;
-  static createInterface(): IChildInterface {
-    return new utils.Interface(_abi) as IChildInterface;
+  static createInterface(): ChildInterface {
+    return new utils.Interface(_abi) as ChildInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): IChild {
-    return new Contract(address, _abi, signerOrProvider) as IChild;
+  static connect(address: string, signerOrProvider: Signer | Provider): Child {
+    return new Contract(address, _abi, signerOrProvider) as Child;
   }
 }

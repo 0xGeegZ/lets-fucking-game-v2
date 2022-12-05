@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat'
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
+import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { gameConfig } from '../config/gameConfig'
 import { delay } from '../helpers/delay'
@@ -44,7 +44,7 @@ const func: DeployFunction = async function ({
 
   const authorizedAmounts = AUTHORIZED_REGISTRATION_AMOUNTS.map((amount) =>
     ethers.utils.parseEther(`${amount}`)
-  ).slice(0, 3)
+  )
 
   log('Deploying GameFactoryV2 contract')
   const gameFactoryArgs = [
@@ -53,16 +53,14 @@ const func: DeployFunction = async function ({
     gameCreationAmount,
     authorizedAmounts,
   ]
-  console.log(
-    '🚀 ~ file: 06_Deploy_GameFactoryV2.ts:56 ~ gameFactoryArgs',
-    gameFactoryArgs
-  )
+
   const {
     address: gameFactoryAddress,
     newlyDeployed: gameFactoryNewlyDeployed,
     receipt: { gasUsed: gameFactoryGasUsed },
   } = await deploy('GameFactoryV2', {
     ...options,
+    ...libraries,
     args: gameFactoryArgs,
   })
 

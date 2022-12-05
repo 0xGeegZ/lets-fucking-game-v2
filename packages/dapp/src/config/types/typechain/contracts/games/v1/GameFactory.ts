@@ -9,6 +9,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -25,18 +26,52 @@ import type {
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../common";
+} from "../../../common";
 
-export declare namespace Factory {
-  export type ChildStruct = {
+export declare namespace GameV1Interface {
+  export type PrizeStruct = {
+    position: PromiseOrValue<BigNumberish>;
+    amount: PromiseOrValue<BigNumberish>;
+    standard: PromiseOrValue<BigNumberish>;
+    contractAddress: PromiseOrValue<string>;
+    tokenId: PromiseOrValue<BigNumberish>;
+  };
+
+  export type PrizeStructOutput = [
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    string,
+    BigNumber
+  ] & {
+    position: BigNumber;
+    amount: BigNumber;
+    standard: BigNumber;
+    contractAddress: string;
+    tokenId: BigNumber;
+  };
+}
+
+export declare namespace GameFactory {
+  export type AuthorizedAmountStruct = {
+    amount: PromiseOrValue<BigNumberish>;
+    isUsed: PromiseOrValue<boolean>;
+  };
+
+  export type AuthorizedAmountStructOutput = [BigNumber, boolean] & {
+    amount: BigNumber;
+    isUsed: boolean;
+  };
+
+  export type GameStruct = {
     id: PromiseOrValue<BigNumberish>;
     versionId: PromiseOrValue<BigNumberish>;
     creator: PromiseOrValue<string>;
     deployedAddress: PromiseOrValue<string>;
-    childCreationAmount: PromiseOrValue<BigNumberish>;
+    gameCreationAmount: PromiseOrValue<BigNumberish>;
   };
 
-  export type ChildStructOutput = [
+  export type GameStructOutput = [
     BigNumber,
     BigNumber,
     string,
@@ -47,74 +82,115 @@ export declare namespace Factory {
     versionId: BigNumber;
     creator: string;
     deployedAddress: string;
-    childCreationAmount: BigNumber;
+    gameCreationAmount: BigNumber;
   };
 }
 
-export interface FactoryInterface extends utils.Interface {
+export interface GameFactoryInterface extends utils.Interface {
   functions: {
-    "childCreationAmount()": FunctionFragment;
-    "childs(uint256)": FunctionFragment;
-    "childsVersions(uint256)": FunctionFragment;
+    "addAuthorizedAmounts(uint256[])": FunctionFragment;
+    "authorizedAmounts(uint256)": FunctionFragment;
+    "createNewGame(bytes32,uint256,uint256,uint256,uint256,uint256,string,(uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
     "cronUpkeep()": FunctionFragment;
-    "getDeployedChilds()": FunctionFragment;
+    "deployedGames(uint256)": FunctionFragment;
+    "gameCreationAmount()": FunctionFragment;
+    "games(uint256)": FunctionFragment;
+    "getAuthorizedAmount(uint256)": FunctionFragment;
+    "getAuthorizedAmounts()": FunctionFragment;
+    "getDeployedGames()": FunctionFragment;
     "latestVersionId()": FunctionFragment;
     "nextId()": FunctionFragment;
     "owner()": FunctionFragment;
     "pause()": FunctionFragment;
-    "pauseAll()": FunctionFragment;
+    "pauseAllGamesAndFactory()": FunctionFragment;
     "paused()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "resumeAll()": FunctionFragment;
-    "setNewChild(address)": FunctionFragment;
+    "resumeAllGamesAndFactory()": FunctionFragment;
+    "setNewGameV1(address)": FunctionFragment;
     "transferAdminOwnership(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unpause()": FunctionFragment;
     "updateCronUpkeep(address)": FunctionFragment;
+    "usedAuthorizedAmounts(uint256)": FunctionFragment;
     "withdrawFunds()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "childCreationAmount"
-      | "childs"
-      | "childsVersions"
+      | "addAuthorizedAmounts"
+      | "authorizedAmounts"
+      | "createNewGame"
       | "cronUpkeep"
-      | "getDeployedChilds"
+      | "deployedGames"
+      | "gameCreationAmount"
+      | "games"
+      | "getAuthorizedAmount"
+      | "getAuthorizedAmounts"
+      | "getDeployedGames"
       | "latestVersionId"
       | "nextId"
       | "owner"
       | "pause"
-      | "pauseAll"
+      | "pauseAllGamesAndFactory"
       | "paused"
       | "renounceOwnership"
-      | "resumeAll"
-      | "setNewChild"
+      | "resumeAllGamesAndFactory"
+      | "setNewGameV1"
       | "transferAdminOwnership"
       | "transferOwnership"
       | "unpause"
       | "updateCronUpkeep"
+      | "usedAuthorizedAmounts"
       | "withdrawFunds"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "childCreationAmount",
-    values?: undefined
+    functionFragment: "addAuthorizedAmounts",
+    values: [PromiseOrValue<BigNumberish>[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "childs",
+    functionFragment: "authorizedAmounts",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "childsVersions",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "createNewGame",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      GameV1Interface.PrizeStruct[]
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "cronUpkeep",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getDeployedChilds",
+    functionFragment: "deployedGames",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "gameCreationAmount",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "games",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAuthorizedAmount",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAuthorizedAmounts",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getDeployedGames",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -124,15 +200,21 @@ export interface FactoryInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "nextId", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "pauseAll", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "pauseAllGamesAndFactory",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "resumeAll", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "setNewChild",
+    functionFragment: "resumeAllGamesAndFactory",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setNewGameV1",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -149,22 +231,46 @@ export interface FactoryInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "usedAuthorizedAmounts",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdrawFunds",
     values?: undefined
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "childCreationAmount",
+    functionFragment: "addAuthorizedAmounts",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "childs", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "childsVersions",
+    functionFragment: "authorizedAmounts",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "createNewGame",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "cronUpkeep", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getDeployedChilds",
+    functionFragment: "deployedGames",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "gameCreationAmount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "games", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getAuthorizedAmount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getAuthorizedAmounts",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getDeployedGames",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -174,15 +280,21 @@ export interface FactoryInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "nextId", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pauseAll", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "pauseAllGamesAndFactory",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "resumeAll", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setNewChild",
+    functionFragment: "resumeAllGamesAndFactory",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setNewGameV1",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -199,6 +311,10 @@ export interface FactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "usedAuthorizedAmounts",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "withdrawFunds",
     data: BytesLike
   ): Result;
@@ -206,6 +322,7 @@ export interface FactoryInterface extends utils.Interface {
   events: {
     "CronUpkeepUpdated(address)": EventFragment;
     "FailedTransfer(address,uint256)": EventFragment;
+    "GameCreated(uint256,address,uint256,address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Paused(address)": EventFragment;
     "Received(address,uint256)": EventFragment;
@@ -214,6 +331,7 @@ export interface FactoryInterface extends utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "CronUpkeepUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FailedTransfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GameCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Received"): EventFragment;
@@ -241,6 +359,19 @@ export type FailedTransferEvent = TypedEvent<
 >;
 
 export type FailedTransferEventFilter = TypedEventFilter<FailedTransferEvent>;
+
+export interface GameCreatedEventObject {
+  nextId: BigNumber;
+  gameAddress: string;
+  implementationVersion: BigNumber;
+  creatorAddress: string;
+}
+export type GameCreatedEvent = TypedEvent<
+  [BigNumber, string, BigNumber, string],
+  GameCreatedEventObject
+>;
+
+export type GameCreatedEventFilter = TypedEventFilter<GameCreatedEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -279,12 +410,12 @@ export type UnpausedEvent = TypedEvent<[string], UnpausedEventObject>;
 
 export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
 
-export interface Factory extends BaseContract {
+export interface GameFactory extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: FactoryInterface;
+  interface: GameFactoryInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -306,9 +437,31 @@ export interface Factory extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    childCreationAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
+    addAuthorizedAmounts(
+      _authorizedAmounts: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-    childs(
+    authorizedAmounts(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    createNewGame(
+      _name: PromiseOrValue<BytesLike>,
+      _maxPlayers: PromiseOrValue<BigNumberish>,
+      _playTimeRange: PromiseOrValue<BigNumberish>,
+      _registrationAmount: PromiseOrValue<BigNumberish>,
+      _treasuryFee: PromiseOrValue<BigNumberish>,
+      _creatorFee: PromiseOrValue<BigNumberish>,
+      _encodedCron: PromiseOrValue<string>,
+      _prizes: GameV1Interface.PrizeStruct[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    cronUpkeep(overrides?: CallOverrides): Promise<[string]>;
+
+    deployedGames(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
@@ -317,23 +470,38 @@ export interface Factory extends BaseContract {
         versionId: BigNumber;
         creator: string;
         deployedAddress: string;
-        childCreationAmount: BigNumber;
+        gameCreationAmount: BigNumber;
       }
     >;
 
-    childsVersions(
+    gameCreationAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    games(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, string] & { id: BigNumber; deployedAddress: string }
     >;
 
-    cronUpkeep(overrides?: CallOverrides): Promise<[string]>;
-
-    getDeployedChilds(
+    getAuthorizedAmount(
+      _authorizedAmount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [Factory.ChildStructOutput[]] & { allChilds: Factory.ChildStructOutput[] }
+      [GameFactory.AuthorizedAmountStructOutput] & {
+        gameAuthorisedAmount: GameFactory.AuthorizedAmountStructOutput;
+      }
+    >;
+
+    getAuthorizedAmounts(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]] & { gameAuthorisedAmounts: BigNumber[] }>;
+
+    getDeployedGames(
+      overrides?: CallOverrides
+    ): Promise<
+      [GameFactory.GameStructOutput[]] & {
+        allGames: GameFactory.GameStructOutput[];
+      }
     >;
 
     latestVersionId(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -346,7 +514,7 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    pauseAll(
+    pauseAllGamesAndFactory(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -356,12 +524,12 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    resumeAll(
+    resumeAllGamesAndFactory(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    setNewChild(
-      _child: PromiseOrValue<string>,
+    setNewGameV1(
+      _game: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -384,14 +552,41 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    usedAuthorizedAmounts(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, boolean] & { amount: BigNumber; isUsed: boolean }>;
+
     withdrawFunds(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
 
-  childCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
+  addAuthorizedAmounts(
+    _authorizedAmounts: PromiseOrValue<BigNumberish>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  childs(
+  authorizedAmounts(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  createNewGame(
+    _name: PromiseOrValue<BytesLike>,
+    _maxPlayers: PromiseOrValue<BigNumberish>,
+    _playTimeRange: PromiseOrValue<BigNumberish>,
+    _registrationAmount: PromiseOrValue<BigNumberish>,
+    _treasuryFee: PromiseOrValue<BigNumberish>,
+    _creatorFee: PromiseOrValue<BigNumberish>,
+    _encodedCron: PromiseOrValue<string>,
+    _prizes: GameV1Interface.PrizeStruct[],
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  cronUpkeep(overrides?: CallOverrides): Promise<string>;
+
+  deployedGames(
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
@@ -400,20 +595,27 @@ export interface Factory extends BaseContract {
       versionId: BigNumber;
       creator: string;
       deployedAddress: string;
-      childCreationAmount: BigNumber;
+      gameCreationAmount: BigNumber;
     }
   >;
 
-  childsVersions(
+  gameCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
+
+  games(
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<[BigNumber, string] & { id: BigNumber; deployedAddress: string }>;
 
-  cronUpkeep(overrides?: CallOverrides): Promise<string>;
-
-  getDeployedChilds(
+  getAuthorizedAmount(
+    _authorizedAmount: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<Factory.ChildStructOutput[]>;
+  ): Promise<GameFactory.AuthorizedAmountStructOutput>;
+
+  getAuthorizedAmounts(overrides?: CallOverrides): Promise<BigNumber[]>;
+
+  getDeployedGames(
+    overrides?: CallOverrides
+  ): Promise<GameFactory.GameStructOutput[]>;
 
   latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -425,7 +627,7 @@ export interface Factory extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  pauseAll(
+  pauseAllGamesAndFactory(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -435,12 +637,12 @@ export interface Factory extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  resumeAll(
+  resumeAllGamesAndFactory(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  setNewChild(
-    _child: PromiseOrValue<string>,
+  setNewGameV1(
+    _game: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -463,14 +665,41 @@ export interface Factory extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  usedAuthorizedAmounts(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, boolean] & { amount: BigNumber; isUsed: boolean }>;
+
   withdrawFunds(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    childCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
+    addAuthorizedAmounts(
+      _authorizedAmounts: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    childs(
+    authorizedAmounts(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    createNewGame(
+      _name: PromiseOrValue<BytesLike>,
+      _maxPlayers: PromiseOrValue<BigNumberish>,
+      _playTimeRange: PromiseOrValue<BigNumberish>,
+      _registrationAmount: PromiseOrValue<BigNumberish>,
+      _treasuryFee: PromiseOrValue<BigNumberish>,
+      _creatorFee: PromiseOrValue<BigNumberish>,
+      _encodedCron: PromiseOrValue<string>,
+      _prizes: GameV1Interface.PrizeStruct[],
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    cronUpkeep(overrides?: CallOverrides): Promise<string>;
+
+    deployedGames(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
@@ -479,22 +708,29 @@ export interface Factory extends BaseContract {
         versionId: BigNumber;
         creator: string;
         deployedAddress: string;
-        childCreationAmount: BigNumber;
+        gameCreationAmount: BigNumber;
       }
     >;
 
-    childsVersions(
+    gameCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    games(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, string] & { id: BigNumber; deployedAddress: string }
     >;
 
-    cronUpkeep(overrides?: CallOverrides): Promise<string>;
-
-    getDeployedChilds(
+    getAuthorizedAmount(
+      _authorizedAmount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<Factory.ChildStructOutput[]>;
+    ): Promise<GameFactory.AuthorizedAmountStructOutput>;
+
+    getAuthorizedAmounts(overrides?: CallOverrides): Promise<BigNumber[]>;
+
+    getDeployedGames(
+      overrides?: CallOverrides
+    ): Promise<GameFactory.GameStructOutput[]>;
 
     latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -504,16 +740,16 @@ export interface Factory extends BaseContract {
 
     pause(overrides?: CallOverrides): Promise<void>;
 
-    pauseAll(overrides?: CallOverrides): Promise<void>;
+    pauseAllGamesAndFactory(overrides?: CallOverrides): Promise<void>;
 
     paused(overrides?: CallOverrides): Promise<boolean>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    resumeAll(overrides?: CallOverrides): Promise<void>;
+    resumeAllGamesAndFactory(overrides?: CallOverrides): Promise<void>;
 
-    setNewChild(
-      _child: PromiseOrValue<string>,
+    setNewGameV1(
+      _game: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -534,6 +770,11 @@ export interface Factory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    usedAuthorizedAmounts(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, boolean] & { amount: BigNumber; isUsed: boolean }>;
+
     withdrawFunds(overrides?: CallOverrides): Promise<void>;
   };
 
@@ -548,6 +789,19 @@ export interface Factory extends BaseContract {
       amount?: null
     ): FailedTransferEventFilter;
     FailedTransfer(receiver?: null, amount?: null): FailedTransferEventFilter;
+
+    "GameCreated(uint256,address,uint256,address)"(
+      nextId?: null,
+      gameAddress?: null,
+      implementationVersion?: null,
+      creatorAddress?: null
+    ): GameCreatedEventFilter;
+    GameCreated(
+      nextId?: null,
+      gameAddress?: null,
+      implementationVersion?: null,
+      creatorAddress?: null
+    ): GameCreatedEventFilter;
 
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,
@@ -572,21 +826,50 @@ export interface Factory extends BaseContract {
   };
 
   estimateGas: {
-    childCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
+    addAuthorizedAmounts(
+      _authorizedAmounts: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
-    childs(
+    authorizedAmounts(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    childsVersions(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+    createNewGame(
+      _name: PromiseOrValue<BytesLike>,
+      _maxPlayers: PromiseOrValue<BigNumberish>,
+      _playTimeRange: PromiseOrValue<BigNumberish>,
+      _registrationAmount: PromiseOrValue<BigNumberish>,
+      _treasuryFee: PromiseOrValue<BigNumberish>,
+      _creatorFee: PromiseOrValue<BigNumberish>,
+      _encodedCron: PromiseOrValue<string>,
+      _prizes: GameV1Interface.PrizeStruct[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     cronUpkeep(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getDeployedChilds(overrides?: CallOverrides): Promise<BigNumber>;
+    deployedGames(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    gameCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    games(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getAuthorizedAmount(
+      _authorizedAmount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getAuthorizedAmounts(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getDeployedGames(overrides?: CallOverrides): Promise<BigNumber>;
 
     latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -598,7 +881,7 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    pauseAll(
+    pauseAllGamesAndFactory(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -608,12 +891,12 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    resumeAll(
+    resumeAllGamesAndFactory(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    setNewChild(
-      _child: PromiseOrValue<string>,
+    setNewGameV1(
+      _game: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -636,29 +919,65 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    usedAuthorizedAmounts(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     withdrawFunds(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    childCreationAmount(
-      overrides?: CallOverrides
+    addAuthorizedAmounts(
+      _authorizedAmounts: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    childs(
+    authorizedAmounts(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    childsVersions(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+    createNewGame(
+      _name: PromiseOrValue<BytesLike>,
+      _maxPlayers: PromiseOrValue<BigNumberish>,
+      _playTimeRange: PromiseOrValue<BigNumberish>,
+      _registrationAmount: PromiseOrValue<BigNumberish>,
+      _treasuryFee: PromiseOrValue<BigNumberish>,
+      _creatorFee: PromiseOrValue<BigNumberish>,
+      _encodedCron: PromiseOrValue<string>,
+      _prizes: GameV1Interface.PrizeStruct[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     cronUpkeep(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getDeployedChilds(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    deployedGames(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    gameCreationAmount(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    games(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getAuthorizedAmount(
+      _authorizedAmount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getAuthorizedAmounts(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getDeployedGames(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     latestVersionId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -670,7 +989,7 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    pauseAll(
+    pauseAllGamesAndFactory(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -680,12 +999,12 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    resumeAll(
+    resumeAllGamesAndFactory(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    setNewChild(
-      _child: PromiseOrValue<string>,
+    setNewGameV1(
+      _game: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -706,6 +1025,11 @@ export interface Factory extends BaseContract {
     updateCronUpkeep(
       _cronUpkeep: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    usedAuthorizedAmounts(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdrawFunds(

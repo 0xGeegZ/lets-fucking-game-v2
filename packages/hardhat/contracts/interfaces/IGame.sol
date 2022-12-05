@@ -3,7 +3,6 @@ pragma solidity >=0.8.6;
 
 import "@openzeppelin/contracts/utils/Address.sol";
 
-import { Cron as CronExternal } from "@chainlink/contracts/src/v0.8/libraries/external/Cron.sol";
 import { IChild } from "./IChild.sol";
 
 interface IGame is IChild {
@@ -132,8 +131,8 @@ interface IGame is IChild {
      *  @param _initialization.treasuryFee the treasury fee in percent
      *  @param _initialization.creatorFee creator fee in percent
      *  @param _initialization.encodedCron the cron string
-     *  @param _initialization.prizes the prizes list
-     * @dev TODO NEXT VERSION Remove _isGameAllPrizesStandard limitation to include other prize typ
+     *  @param _initialization.prizes the cron string
+     * @dev TODO NEXT VERSION Remove _isChildAllPrizesStandard limitation to include other prize typ
      * @dev TODO NEXT VERSION Make it only accessible to factory
      */
     function initialize(Initialization calldata _initialization) external payable;
@@ -164,7 +163,7 @@ interface IGame is IChild {
     /**
      * @notice Function that is called by the keeper based on the keeper cron
      * @dev Callable by admin or keeper
-     * @dev TODO NEXT VERSION Update triggerDailyCheckpoint to mae it only callable by keeper
+     * @dev TODO NEXT VERSION Update triggerDailyCheckpoint to make it only callable by keeper
      */
     function triggerDailyCheckpoint() external;
 
@@ -271,4 +270,43 @@ interface IGame is IChild {
      * @dev Callable by admin or creator
      */
     function setMaxPlayers(uint256 _maxPlayers) external;
+
+    /**
+     * @notice Set the creator fee for the game
+     * @param _creatorFee the new creator fee in %
+     * @dev Callable by admin or creator
+     * @dev Callable when game if not in progress
+     */
+    function setCreatorFee(uint256 _creatorFee) external;
+
+    /**
+     * @notice Set the keeper address
+     * @param _cronUpkeep the new keeper address
+     * @dev Callable by admin or factory
+     */
+    function setCronUpkeep(address _cronUpkeep) external;
+
+    /**
+     * @notice Set the encoded cron
+     * @param _encodedCron the new encoded cron as * * * * *
+     * @dev Callable by admin or creator
+     */
+    function setEncodedCron(string memory _encodedCron) external;
+
+    /**
+     * @notice Allow creator to withdraw his fee
+     * @dev Callable by admin
+     */
+    function claimCreatorFee() external;
+
+    ///
+    /// EMERGENCY
+    ///
+
+    /**
+     * @notice Transfert Creator Ownership
+     * @param _creator the new creator address
+     * @dev Callable by creator
+     */
+    function transferCreatorOwnership(address _creator) external;
 }

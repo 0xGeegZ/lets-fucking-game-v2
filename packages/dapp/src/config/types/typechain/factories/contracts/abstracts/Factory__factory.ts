@@ -287,7 +287,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "pauseAllChildsAndFactory",
+    name: "pauseAll",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -314,7 +314,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "resumeAllChildsAndFactory",
+    name: "resumeAll",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

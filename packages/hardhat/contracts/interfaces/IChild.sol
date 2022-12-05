@@ -3,8 +3,6 @@ pragma solidity >=0.8.6;
 
 import "@openzeppelin/contracts/utils/Address.sol";
 
-import { Cron as CronExternal } from "@chainlink/contracts/src/v0.8/libraries/external/Cron.sol";
-
 interface IChild {
     ///STRUCTS
 
@@ -148,20 +146,6 @@ interface IChild {
     /// SETTERS FUNCTIONS
     ///
 
-    /**
-     * @notice Set the creator fee for the child
-     * @param _creatorFee the new creator fee in %
-     * @dev Callable by admin or creator
-     * @dev Callable when child if not in progress
-     */
-    function setCreatorFee(uint256 _creatorFee) external;
-
-    /**
-     * @notice Allow creator to withdraw his fee
-     * @dev Callable by admin
-     */
-    function claimCreatorFee() external;
-
     ///
     /// ADMIN FUNCTIONS
     ///
@@ -181,27 +165,13 @@ interface IChild {
     function setTreasuryFee(uint256 _treasuryFee) external;
 
     /**
-     * @notice Set the keeper address
-     * @param _cronUpkeep the new keeper address
-     * @dev Callable by admin or factory
-     */
-    function setCronUpkeep(address _cronUpkeep) external;
-
-    /**
-     * @notice Set the encoded cron
-     * @param _encodedCron the new encoded cron as * * * * *
-     * @dev Callable by admin or creator
-     */
-    function setEncodedCron(string memory _encodedCron) external;
-
-    /**
-     * @notice Pause the current child and associated keeper job
+     * @notice Pause the current game and associated keeper job
      * @dev Callable by admin or creator
      */
     function pause() external;
 
     /**
-     * @notice Unpause the current child and associated keeper job
+     * @notice Unpause the current game and associated keeper job
      * @dev Callable by admin or creator
      */
     function unpause() external;
@@ -218,13 +188,6 @@ interface IChild {
     function transferAdminOwnership(address _adminAddress) external;
 
     /**
-     * @notice Transfert Creator Ownership
-     * @param _creator the new creator address
-     * @dev Callable by creator
-     */
-    function transferCreatorOwnership(address _creator) external;
-
-    /**
      * @notice Transfert Factory Ownership
      * @param _factory the new factory address
      * @dev Callable by factory
@@ -237,18 +200,17 @@ interface IChild {
      * @dev Callable by admin or factory
      */
     function withdrawFunds(address _receiver) external;
-
     ///
     /// FALLBACK FUNCTIONS
     ///
 
-    /**
-     * @notice Called for empty calldata (and any value)
-     */
-    receive() external payable;
+    // /**
+    //  * @notice Called for empty calldata (and any value)
+    //  */
+    // receive() external payable;
 
-    /**
-     * @notice Called when no other function matches (not even the receive function). Optionally payable
-     */
-    fallback() external payable;
+    // /**
+    //  * @notice Called when no other function matches (not even the receive function). Optionally payable
+    //  */
+    // fallback() external payable;
 }

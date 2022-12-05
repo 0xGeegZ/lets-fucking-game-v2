@@ -57,7 +57,8 @@ const setupTest = deployments.createFixture(
       ...libraries,
     })
 
-    const gameInterface = await ethers.getContractFactory('GameV2', libraries)
+    // const gameInterface = await ethers.getContractFactory('GameV1', libraries)
+    const gameInterface = await ethers.getContractFactory('GameV2')
 
     const secondGameV1 = new ethers.Contract(
       secondGameV1Contract.address,
@@ -82,8 +83,13 @@ const setupTest = deployments.createFixture(
       deployer
     )
 
+    //  const gameFactoryInterface = await ethers.getContractFactory(
+    //    'GameFactory'
+    //  )
+
     const gameFactoryInterface = await ethers.getContractFactory(
-      'GameFactoryV2'
+      'GameFactoryV2',
+      libraries
     )
 
     const gameFactory = new ethers.Contract(
@@ -114,9 +120,15 @@ const setupTest = deployments.createFixture(
       deployer
     )
 
-    const GameFactoryContract = await ethers.getContractFactory('GameFactoryV2')
+    // const GameFactoryContract = await ethers.getContractFactory('GameFactory')
 
-    const GameV1Contract = await ethers.getContractFactory('GameV2', libraries)
+    const GameFactoryContract = await ethers.getContractFactory(
+      'GameFactoryV2',
+      libraries
+    )
+
+    // const GameV1Contract = await ethers.getContractFactory('GameV1', libraries)
+    const GameV1Contract = await ethers.getContractFactory('GameV2')
 
     return {
       deployer,

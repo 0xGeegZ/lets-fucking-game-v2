@@ -86,7 +86,8 @@ describe('GameFactoryContract', function () {
       it('should set the correct values to state variables', async function () {
         const responseLatestGameV1VersionId =
           await this.gameFactory.latestVersionId()
-        const responseGameV1 = await this.gameFactory.games(
+
+        const responseGameV1 = await this.gameFactory.childs(
           responseLatestGameV1VersionId
         )
         const responseOwner = await this.gameFactory.owner()
@@ -96,7 +97,9 @@ describe('GameFactoryContract', function () {
 
         expect(responseOwner).to.be.equal(this.owner.address)
         expect(responseLatestGameV1VersionId).to.be.equal('0')
-        expect(responseGameV1.deployedAddress).to.be.equal(this.game.address)
+        expect(responseGameV1.deployedAddress).to.be.equal(
+          this.deployedPayableGame.address
+        )
         expect(responseAuthorizedAmounts.toString()).to.be.equal(
           this.authorizedAmounts.toString()
         )

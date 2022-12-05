@@ -9,6 +9,8 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 import { IChild } from "../interfaces/IChild.sol";
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
+import { IKeeper } from "../interfaces/IKeeper.sol";
+
 import "hardhat/console.sol";
 
 abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
@@ -76,7 +78,7 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
         address _child,
         address _cronUpkeep,
         uint256 _childCreationAmount
-    ) onlyAddressInit(_child) onlyAddressInit(address(_cronUpkeep)) {
+    ) onlyAddressInit(_child) onlyAddressInit(_cronUpkeep) {
         console.log("Factory constructor");
         cronUpkeep = _cronUpkeep;
         childCreationAmount = _childCreationAmount;
@@ -133,15 +135,14 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
      * @param _cronUpkeep the new keeper address
      * @dev Callable by admin
      */
-    function updateCronUpkeep(address _cronUpkeep) external onlyAdmin onlyAddressInit(address(_cronUpkeep)) {
+    function updateCronUpkeep(address _cronUpkeep) external onlyAdmin onlyAddressInit(_cronUpkeep) {
         cronUpkeep = _cronUpkeep;
-        emit CronUpkeepUpdated(address(cronUpkeep));
+        emit CronUpkeepUpdated(cronUpkeep);
 
         for (uint256 i = 0; i < childs.length; i++) {
             Child memory child = childs[i];
             ICronUpkeep(cronUpkeep).addDelegator(child.deployedAddress);
-
-            IChild(payable(child.deployedAddress)).setCronUpkeep(cronUpkeep);
+            IKeeper(payable(child.deployedAddress)).setCronUpkeep(cronUpkeep);
         }
     }
 
@@ -149,7 +150,7 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
      * @notice Pause the factory and all childsVersions and associated keeper job
      * @dev Callable by admin
      */
-    function pauseAllChildsAndFactory() external onlyAdmin whenNotPaused {
+    function pauseAll() external onlyAdmin whenNotPaused {
         // pause first to ensure no more interaction with contract
         _pause();
         for (uint256 i = 0; i < childs.length; i++) {
@@ -162,7 +163,7 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
      * @notice Resume the factory and all childsVersions and associated keeper job
      * @dev Callable by admin
      */
-    function resumeAllChildsAndFactory() external onlyAdmin whenPaused {
+    function resumeAll() external onlyAdmin whenPaused {
         // unpause last to ensure that everything is ok
         _unpause();
 

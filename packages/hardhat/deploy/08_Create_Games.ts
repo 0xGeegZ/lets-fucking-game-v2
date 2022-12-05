@@ -20,6 +20,13 @@ const func: DeployFunction = async function ({
   if (!currentGameConfig)
     throw new Error('No game config found for chain id', chainId)
 
+  const { address: cronExternalAddress } = await deployments.get('CronExternal')
+  const libraries = {
+    libraries: {
+      Cron: cronExternalAddress,
+    },
+  }
+
   const name = formatBytes32String(currentGameConfig.NAME_DEFAULT)
   const gameCreationAmount = currentGameConfig.GAME_CREATION_AMOUNT
   const maxPlayers = currentGameConfig.PLAYERS_DEFAULT
@@ -56,8 +63,13 @@ const func: DeployFunction = async function ({
 
   const { address: gameFactoryAddress } = await deployments.get('GameFactoryV2')
 
+  // const { interface: gameFactoryInterface } = await ethers.getContractFactory(
+  //   'GameFactory'
+  // )
+
   const { interface: gameFactoryInterface } = await ethers.getContractFactory(
-    'GameFactoryV2'
+    'GameFactoryV2',
+    libraries
   )
 
   const gameFactory = new ethers.Contract(
