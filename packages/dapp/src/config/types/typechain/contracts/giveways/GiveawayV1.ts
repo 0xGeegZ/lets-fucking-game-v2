@@ -33,7 +33,7 @@ export declare namespace IChild {
     position: PromiseOrValue<BigNumberish>;
     amount: PromiseOrValue<BigNumberish>;
     standard: PromiseOrValue<BigNumberish>;
-    token: PromiseOrValue<string>;
+    contractAddress: PromiseOrValue<string>;
     tokenId: PromiseOrValue<BigNumberish>;
   };
 
@@ -47,7 +47,7 @@ export declare namespace IChild {
     position: BigNumber;
     amount: BigNumber;
     standard: BigNumber;
-    token: string;
+    contractAddress: string;
     tokenId: BigNumber;
   };
 
@@ -420,9 +420,9 @@ export interface GiveawayV1Interface extends utils.Interface {
     "FactoryOwnershipTransferred(address,address)": EventFragment;
     "FailedTransfer(address,uint256)": EventFragment;
     "GamePrizeClaimed(address,uint256,uint256)": EventFragment;
+    "GiveawayCreated(uint256,uint256,uint256,uint256)": EventFragment;
     "GiveawayRefreshRequested(uint256,bytes32)": EventFragment;
     "GiveawayRefreshed(uint256,uint256)": EventFragment;
-    "GiveawayStarted(uint256,uint256,uint256,uint256)": EventFragment;
     "GiveawayWinnerRequested(uint256,bytes32)": EventFragment;
     "Paused(address)": EventFragment;
     "PerformUpkeepExecuted(uint256,uint256)": EventFragment;
@@ -452,9 +452,9 @@ export interface GiveawayV1Interface extends utils.Interface {
   ): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FailedTransfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GamePrizeClaimed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GiveawayCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GiveawayRefreshRequested"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GiveawayRefreshed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "GiveawayStarted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GiveawayWinnerRequested"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PerformUpkeepExecuted"): EventFragment;
@@ -611,6 +611,19 @@ export type GamePrizeClaimedEvent = TypedEvent<
 export type GamePrizeClaimedEventFilter =
   TypedEventFilter<GamePrizeClaimedEvent>;
 
+export interface GiveawayCreatedEventObject {
+  roundId: BigNumber;
+  userId: BigNumber;
+  tweetId: BigNumber;
+  prizesLength: BigNumber;
+}
+export type GiveawayCreatedEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber, BigNumber],
+  GiveawayCreatedEventObject
+>;
+
+export type GiveawayCreatedEventFilter = TypedEventFilter<GiveawayCreatedEvent>;
+
 export interface GiveawayRefreshRequestedEventObject {
   userId: BigNumber;
   requestId: string;
@@ -634,19 +647,6 @@ export type GiveawayRefreshedEvent = TypedEvent<
 
 export type GiveawayRefreshedEventFilter =
   TypedEventFilter<GiveawayRefreshedEvent>;
-
-export interface GiveawayStartedEventObject {
-  roundId: BigNumber;
-  userId: BigNumber;
-  tweetId: BigNumber;
-  prizesLength: BigNumber;
-}
-export type GiveawayStartedEvent = TypedEvent<
-  [BigNumber, BigNumber, BigNumber, BigNumber],
-  GiveawayStartedEventObject
->;
-
-export type GiveawayStartedEventFilter = TypedEventFilter<GiveawayStartedEvent>;
 
 export interface GiveawayWinnerRequestedEventObject {
   giveawayId: BigNumber;
@@ -1449,6 +1449,19 @@ export interface GiveawayV1 extends BaseContract {
       amountClaimed?: null
     ): GamePrizeClaimedEventFilter;
 
+    "GiveawayCreated(uint256,uint256,uint256,uint256)"(
+      roundId?: null,
+      userId?: null,
+      tweetId?: null,
+      prizesLength?: null
+    ): GiveawayCreatedEventFilter;
+    GiveawayCreated(
+      roundId?: null,
+      userId?: null,
+      tweetId?: null,
+      prizesLength?: null
+    ): GiveawayCreatedEventFilter;
+
     "GiveawayRefreshRequested(uint256,bytes32)"(
       userId?: PromiseOrValue<BigNumberish> | null,
       requestId?: PromiseOrValue<BytesLike> | null
@@ -1466,19 +1479,6 @@ export interface GiveawayV1 extends BaseContract {
       giveawayId?: PromiseOrValue<BigNumberish> | null,
       timestamp?: null
     ): GiveawayRefreshedEventFilter;
-
-    "GiveawayStarted(uint256,uint256,uint256,uint256)"(
-      roundId?: null,
-      userId?: null,
-      tweetId?: null,
-      prizesLength?: null
-    ): GiveawayStartedEventFilter;
-    GiveawayStarted(
-      roundId?: null,
-      userId?: null,
-      tweetId?: null,
-      prizesLength?: null
-    ): GiveawayStartedEventFilter;
 
     "GiveawayWinnerRequested(uint256,bytes32)"(
       giveawayId?: PromiseOrValue<BigNumberish> | null,

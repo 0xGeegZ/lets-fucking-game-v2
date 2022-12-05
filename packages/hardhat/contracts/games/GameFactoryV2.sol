@@ -9,8 +9,6 @@ import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 import { Factory } from "../abstracts/Factory.sol";
 import { Keeper } from "../keepers/Keeper.sol";
 
-import "hardhat/console.sol";
-
 contract GameFactoryV2 is Factory {
     uint256[] public authorizedAmounts;
     mapping(uint256 => AuthorizedAmount) public usedAuthorizedAmounts;

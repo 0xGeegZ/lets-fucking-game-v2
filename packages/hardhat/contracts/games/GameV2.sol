@@ -8,8 +8,6 @@ import { IKeeper } from "../interfaces/IKeeper.sol";
 
 import { Child } from "../abstracts/Child.sol";
 
-import "hardhat/console.sol";
-
 contract GameV2 is Child, IGame {
     bool private _isBase;
 
@@ -201,7 +199,6 @@ contract GameV2 is Child, IGame {
      * @dev TODO NEXT VERSION Update triggerDailyCheckpoint to make it only callable by keeper
      */
     function triggerDailyCheckpoint() external override onlyAdminOrKeeper whenNotPaused {
-        console.log("triggerDailyCheckpoint for game");
         if (isInProgress) {
             _refreshPlayerStatus();
             _checkIfGameEnded();

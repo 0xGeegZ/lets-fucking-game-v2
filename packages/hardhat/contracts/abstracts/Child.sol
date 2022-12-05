@@ -10,8 +10,6 @@ import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 import { IKeeper } from "../interfaces/IKeeper.sol";
 import { IChild } from "../interfaces/IChild.sol";
 
-import "hardhat/console.sol";
-
 abstract contract Child is IChild, ReentrancyGuard, Pausable {
     using Address for address;
     using Counters for Counters.Counter;
@@ -49,21 +47,16 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
      * @dev TODO NEXT VERSION Update claim process according to prize type
      */
     function claimPrize(uint256 _roundId) external override onlyIfRoundId(_roundId) {
-        console.log("claimPrize");
         for (uint256 i = 0; i < winners[_roundId].length; i++)
             if (winners[_roundId][i].playerAddress == msg.sender) {
                 require(!winners[_roundId][i].prizeClaimed, "Prize for this round already claimed");
                 require(address(this).balance >= winners[_roundId][i].amountWon, "Not enough funds in contract");
 
                 winners[_roundId][i].prizeClaimed = true;
-                console.log("claimPrize OK");
                 emit ChildPrizeClaimed(msg.sender, _roundId, winners[_roundId][i].amountWon);
                 _safeTransfert(msg.sender, winners[_roundId][i].amountWon);
                 return;
             }
-
-        console.log("claimPrize KO");
-
         require(false, "Player did not win this round");
     }
 
@@ -104,7 +97,14 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
      */
     function _addPrize(Prize memory _prize) internal {
         prizes[roundId].push(_prize);
-        emit PrizeAdded(roundId, _prize.position, _prize.amount, _prize.standard, _prize.token, _prize.tokenId);
+        emit PrizeAdded(
+            roundId,
+            _prize.position,
+            _prize.amount,
+            _prize.standard,
+            _prize.contractAddress,
+            _prize.tokenId
+        );
     }
 
     /**

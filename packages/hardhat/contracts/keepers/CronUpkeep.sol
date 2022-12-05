@@ -30,8 +30,6 @@ import { Cron as CronExternal } from "@chainlink/contracts/src/v0.8/libraries/ex
 
 import { getRevertMsg } from "@chainlink/contracts/src/v0.8/utils/utils.sol";
 
-import "hardhat/console.sol";
-
 /**
  * @title The CronUpkeep contract
  * @notice A keeper-compatible contract that runs various tasks on cron schedules.
@@ -96,8 +94,6 @@ contract CronUpkeep is KeeperCompatibleInterface, KeeperBase, ConfirmedOwner, Pa
 
         validate(id, tickTime, target, handler);
         s_lastRuns[id] = block.timestamp;
-
-        console.log("performUpkeep for target %s", target);
 
         (bool success, bytes memory payload) = target.call(handler);
 

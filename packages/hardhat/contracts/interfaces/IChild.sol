@@ -43,7 +43,7 @@ interface IChild {
          * 3 - ERC1155
          */
         uint256 standard;
-        address token;
+        address contractAddress;
         uint256 tokenId;
     }
 

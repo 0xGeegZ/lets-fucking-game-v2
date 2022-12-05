@@ -11,8 +11,6 @@ import { IChild } from "../interfaces/IChild.sol";
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 import { IKeeper } from "../interfaces/IKeeper.sol";
 
-import "hardhat/console.sol";
-
 abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
     using Address for address;
 
@@ -79,7 +77,6 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
         address _cronUpkeep,
         uint256 _childCreationAmount
     ) onlyAddressInit(_child) onlyAddressInit(_cronUpkeep) {
-        console.log("Factory constructor");
         cronUpkeep = _cronUpkeep;
         childCreationAmount = _childCreationAmount;
         childsVersions.push(ChildVersion({ id: latestVersionId, deployedAddress: _child }));

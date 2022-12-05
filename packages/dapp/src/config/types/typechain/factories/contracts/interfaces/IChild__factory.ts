@@ -296,7 +296,7 @@ const _abi = [
           },
           {
             internalType: "address",
-            name: "token",
+            name: "contractAddress",
             type: "address",
           },
           {
@@ -364,7 +364,7 @@ const _abi = [
           },
           {
             internalType: "address",
-            name: "token",
+            name: "contractAddress",
             type: "address",
           },
           {

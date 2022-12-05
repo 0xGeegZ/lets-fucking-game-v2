@@ -8,8 +8,6 @@ import { Cron as CronExternal } from "@chainlink/contracts/src/v0.8/libraries/ex
 
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 
-import "hardhat/console.sol";
-
 contract Keeper is Ownable, Pausable {
     uint256 private constant DEFAULT_CRON_UPKEEP_JOB_ID = 999;
 
@@ -135,7 +133,6 @@ contract Keeper is Ownable, Pausable {
 
         bytes memory encodedCronBytes = CronExternal.toEncodedSpec(encodedCron);
 
-        console.log("_registerCronToUpkeep for target %s", _target);
         ICronUpkeep(cronUpkeep).createCronJobFromEncodedSpec(
             _target,
             abi.encodeWithSignature(handler),
