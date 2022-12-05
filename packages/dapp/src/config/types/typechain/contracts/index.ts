@@ -5,6 +5,8 @@ import type * as abstracts from "./abstracts";
 export type { abstracts };
 import type * as games from "./games";
 export type { games };
+import type * as giveways from "./giveways";
+export type { giveways };
 import type * as interfaces from "./interfaces";
 export type { interfaces };
 import type * as keepers from "./keepers";

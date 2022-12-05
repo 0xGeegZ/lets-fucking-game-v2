@@ -11,6 +11,7 @@ interface IChild {
      */
     struct Winner {
         uint256 roundId;
+        uint256 userId;
         address playerAddress;
         uint256 amountWon;
         uint256 position;
@@ -42,7 +43,7 @@ interface IChild {
          * 3 - ERC1155
          */
         uint256 standard;
-        address contractAddress;
+        address token;
         uint256 tokenId;
     }
 

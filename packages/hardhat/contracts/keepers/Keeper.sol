@@ -34,7 +34,6 @@ contract Keeper is Ownable, Pausable {
     constructor(address _cronUpkeep, string memory _encodedCron) {
         encodedCron = _encodedCron;
         cronUpkeep = _cronUpkeep;
-        // _registerCronToUpkeep();
     }
 
     /**

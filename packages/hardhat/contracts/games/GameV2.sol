@@ -374,6 +374,7 @@ contract GameV2 is Child, IGame {
             Winner({
                 roundId: roundId,
                 position: _position,
+                userId: 0,
                 playerAddress: _playerAddress,
                 amountWon: _amount,
                 prizeClaimed: false

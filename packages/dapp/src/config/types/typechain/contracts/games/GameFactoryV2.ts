@@ -33,7 +33,7 @@ export declare namespace IChild {
     position: PromiseOrValue<BigNumberish>;
     amount: PromiseOrValue<BigNumberish>;
     standard: PromiseOrValue<BigNumberish>;
-    contractAddress: PromiseOrValue<string>;
+    token: PromiseOrValue<string>;
     tokenId: PromiseOrValue<BigNumberish>;
   };
 
@@ -47,7 +47,7 @@ export declare namespace IChild {
     position: BigNumber;
     amount: BigNumber;
     standard: BigNumber;
-    contractAddress: string;
+    token: string;
     tokenId: BigNumber;
   };
 }

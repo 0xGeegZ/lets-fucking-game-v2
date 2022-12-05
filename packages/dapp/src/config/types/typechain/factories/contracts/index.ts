@@ -3,6 +3,7 @@
 /* eslint-disable */
 export * as abstracts from "./abstracts";
 export * as games from "./games";
+export * as giveways from "./giveways";
 export * as interfaces from "./interfaces";
 export * as keepers from "./keepers";
 export * as multicall from "./multicall";

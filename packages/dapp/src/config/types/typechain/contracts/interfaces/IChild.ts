@@ -33,7 +33,7 @@ export declare namespace IChild {
     position: PromiseOrValue<BigNumberish>;
     amount: PromiseOrValue<BigNumberish>;
     standard: PromiseOrValue<BigNumberish>;
-    contractAddress: PromiseOrValue<string>;
+    token: PromiseOrValue<string>;
     tokenId: PromiseOrValue<BigNumberish>;
   };
 
@@ -47,12 +47,13 @@ export declare namespace IChild {
     position: BigNumber;
     amount: BigNumber;
     standard: BigNumber;
-    contractAddress: string;
+    token: string;
     tokenId: BigNumber;
   };
 
   export type WinnerStruct = {
     roundId: PromiseOrValue<BigNumberish>;
+    userId: PromiseOrValue<BigNumberish>;
     playerAddress: PromiseOrValue<string>;
     amountWon: PromiseOrValue<BigNumberish>;
     position: PromiseOrValue<BigNumberish>;
@@ -61,12 +62,14 @@ export declare namespace IChild {
 
   export type WinnerStructOutput = [
     BigNumber,
+    BigNumber,
     string,
     BigNumber,
     BigNumber,
     boolean
   ] & {
     roundId: BigNumber;
+    userId: BigNumber;
     playerAddress: string;
     amountWon: BigNumber;
     position: BigNumber;

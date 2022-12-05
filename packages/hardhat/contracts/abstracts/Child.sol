@@ -4,6 +4,7 @@ pragma solidity >=0.8.6;
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 import { IKeeper } from "../interfaces/IKeeper.sol";
@@ -13,8 +14,11 @@ import "hardhat/console.sol";
 
 abstract contract Child is IChild, ReentrancyGuard, Pausable {
     using Address for address;
+    using Counters for Counters.Counter;
 
     uint256 public roundId; // roundId gets incremented every time the child restarts
+    // TODO use counter for roundId
+    // Counters.Counter public roundId;
 
     address public owner;
     address public factory;
@@ -100,14 +104,7 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
      */
     function _addPrize(Prize memory _prize) internal {
         prizes[roundId].push(_prize);
-        emit PrizeAdded(
-            roundId,
-            _prize.position,
-            _prize.amount,
-            _prize.standard,
-            _prize.contractAddress,
-            _prize.tokenId
-        );
+        emit PrizeAdded(roundId, _prize.position, _prize.amount, _prize.standard, _prize.token, _prize.tokenId);
     }
 
     /**

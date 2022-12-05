@@ -61,12 +61,12 @@ const func: DeployFunction = async function ({
 
   const freeGamePrizes = updatedPrizes
 
-  const { address: gameFactoryAddress } = await deployments.get('GameFactoryV2')
-
+  // const { address: gameFactoryAddress } = await deployments.get('GameFactory')
   // const { interface: gameFactoryInterface } = await ethers.getContractFactory(
   //   'GameFactory'
   // )
 
+  const { address: gameFactoryAddress } = await deployments.get('GameFactoryV2')
   const { interface: gameFactoryInterface } = await ethers.getContractFactory(
     'GameFactoryV2',
     libraries

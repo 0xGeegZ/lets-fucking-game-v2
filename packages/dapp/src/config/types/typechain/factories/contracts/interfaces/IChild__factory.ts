@@ -296,7 +296,7 @@ const _abi = [
           },
           {
             internalType: "address",
-            name: "contractAddress",
+            name: "token",
             type: "address",
           },
           {
@@ -364,7 +364,7 @@ const _abi = [
           },
           {
             internalType: "address",
-            name: "contractAddress",
+            name: "token",
             type: "address",
           },
           {
@@ -396,6 +396,11 @@ const _abi = [
           {
             internalType: "uint256",
             name: "roundId",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "userId",
             type: "uint256",
           },
           {
