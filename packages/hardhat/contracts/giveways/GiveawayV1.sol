@@ -223,14 +223,13 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
             winnersIds.length,
             winnersPositions.length
         );
+        giveaways[_giveawayId].isEnded = true;
 
         for (uint256 i = 0; i < winnersIds.length; i++) {
             Prize memory prize = _getPrizeForPosition(_giveawayId, winnersPositions[i]);
             address winnerAddress = users[winnersIds[i]] != address(0) ? users[winnersIds[i]] : address(0);
             _addWinner(_giveawayId, winnersPositions[i], winnersIds[i], winnerAddress, prize);
         }
-
-        giveaways[_giveawayId].isEnded = true;
     }
 
     /**
@@ -325,10 +324,37 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      */
     function getGiveawayURI(uint256 _giveawayId) public view returns (string memory _giveawayURI) {
         console.log("getGiveawayURI requestBaseURI %s _giveawayId %s", requestBaseURI, _giveawayId);
-        string memory baseURI = string(abi.encodePacked(requestBaseURI, "giveaways/"));
-        string memory baseGiveawayURI = string(abi.encodePacked(baseURI, Strings.toString(_giveawayId)));
-        string memory paramsURI = string(abi.encodePacked("?prizes=", Strings.toString(prizes[_giveawayId].length)));
-        return string(abi.encodePacked(baseGiveawayURI, paramsURI));
+        return
+            string(
+                abi.encodePacked(
+                    requestBaseURI,
+                    "/giveaways/",
+                    Strings.toString(_giveawayId),
+                    "/winners",
+                    "?prizes=",
+                    Strings.toString(prizes[_giveawayId].length),
+                    "&tweetId",
+                    Strings.toString(giveaways[_giveawayId].tweetId)
+                )
+            );
+    }
+
+    /**
+     * @notice Return URI for giveaway endpoint
+     */
+    function getGiveawayRefreshURI(uint256 _giveawayId) public view returns (string memory _giveawayURI) {
+        console.log("getGiveawayRefreshURI requestBaseURI %s _giveawayId %s", requestBaseURI, _giveawayId);
+        return
+            string(
+                abi.encodePacked(
+                    requestBaseURI,
+                    "/giveaways/",
+                    Strings.toString(_giveawayId),
+                    "/refresh",
+                    "?tweetId",
+                    Strings.toString(giveaways[_giveawayId].tweetId)
+                )
+            );
     }
 
     /**
@@ -336,8 +362,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      */
     function getSignUpURI(uint256 _userId) public view returns (string memory _signUpURI) {
         console.log("getSignUpURI requestBaseURI %s _userId %s", requestBaseURI, _userId);
-        string memory baseURI = string(abi.encodePacked(requestBaseURI, "users/"));
-        return string(abi.encodePacked(baseURI, Strings.toString(_userId)));
+        return string(abi.encodePacked(requestBaseURI, "/users/", Strings.toString(_userId)));
     }
 
     ///
@@ -378,6 +403,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      */
     function _validate(uint256 _giveawayId) private view {
         require(winners[_giveawayId].length == 0, "Giveaway winners already requesteds");
+        require(!giveaways[_giveawayId].isEnded, "Giveaway already ended");
     }
 
     /**
@@ -418,7 +444,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
             address(this),
             this.fulfillRefreshGiveaway.selector
         );
-        req.add("get", getGiveawayURI(_giveawayId));
+        req.add("get", getGiveawayRefreshURI(_giveawayId));
         // https://docs.chain.link/any-api/testnet-oracles/
         req.add("path", "retweetCount");
         bytes32 requestId = sendChainlinkRequest(req, fee);
@@ -432,6 +458,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      */
     function _performGiveawayWinner(uint256 _giveawayId) private onlyAdmin whenNotPaused {
         _validate(_giveawayId);
+        _requestRefreshGiveaway(_giveawayId);
         _requestGiveawayWinner(_giveawayId);
         emit PerformUpkeepExecuted(_giveawayId, block.timestamp);
     }
