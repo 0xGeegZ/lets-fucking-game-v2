@@ -15,6 +15,9 @@ interface IChild {
         address playerAddress;
         uint256 amountWon;
         uint256 position;
+        uint256 standard;
+        address contractAddress;
+        uint256 tokenId;
         bool prizeClaimed;
     }
 
@@ -37,7 +40,7 @@ interface IChild {
         /*
          * This will return a single integer between 0 and 5.
          * The numbers represent different ‘states’ a name is currently in.
-         * 0 - STANDARD
+         * 0 - NATIVE
          * 1 - ERC20
          * 2 - ERC721
          * 3 - ERC1155

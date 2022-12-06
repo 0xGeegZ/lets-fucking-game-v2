@@ -14,6 +14,9 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@pancakeswap/sdk": ["../../packages/swap-sdk/src/index.ts"]
+    }
   }
 }

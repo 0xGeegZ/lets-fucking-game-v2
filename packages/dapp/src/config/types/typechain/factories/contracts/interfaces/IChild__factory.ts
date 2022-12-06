@@ -419,6 +419,21 @@ const _abi = [
             type: "uint256",
           },
           {
+            internalType: "uint256",
+            name: "standard",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "contractAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "tokenId",
+            type: "uint256",
+          },
+          {
             internalType: "bool",
             name: "prizeClaimed",
             type: "bool",

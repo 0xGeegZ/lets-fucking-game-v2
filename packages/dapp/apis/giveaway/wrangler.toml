@@ -1,33 +1,31 @@
-compatibility_date = "2022-05-20"
-kv_namespaces = [
-  {binding = "FARMS", id = "d8c9b05a13174eb59574425beceb2574", preview_id = "4ac09dba355c44fa858a67a22a9a63f1"},
-]
+compatibility_date = "2022-12-05"
 main = "src/index.ts"
-name = "farms-dev"
+type = "webpack"
+workers_dev = true
+node_compat = true 
+
+[build]
+command = "yarn"
+[build.upload]
+format = "service-worker"
+
+
+name = "giveaways-dev"
 node_compat = true
 [vars]
-FORCE_UPDATE_KEY = "force"
-KV_CACHE = false
-[triggers]
-crons = []
+TWITER_API_KEY="JUy0DpggZ8FUsFA7nZfoXnLJy"
+TWITER_API_SECRET="pML9OL7GlJvAjvqvlVhe8oJbrele7ptU1K2cTGj3kXDy9h3Df5"
+TWITTER_BEARER_TOKEN="AAAAAAAAAAAAAAAAAAAAANtckAEAAAAAAv6njkro3%2Bd%2BNyqbJp%2FXOVqgZfY%3DW1AjriFqkvRIFre8RzMbzIZC4QDEVSiPqFjUz8DKeMxW9irdoY"
+TWITTER_APP_ID=26238171
+TWITTER_BASE_URL="https://api.twitter.com/2/tweets/"
+WORKER_BASE_URL="https://giveaway.lfgames.workers.dev/"
 
 [env.staging]
-kv_namespaces = [
-  {binding = "FARMS", id = "f734a2405aa3476bbf173d5c9664d0b7"},
-]
-name = "farms-staging"
+name = "giveaways-staging"
 [env.staging.vars]
-KV_CACHE = true
-[env.staging.triggers]
-crons = ["0 0 * * *", "*/2 * * * *"]
 
 [env.production]
-kv_namespaces = [
-  {binding = "FARMS", id = "e67e7b9d27784f64a1c65af5e8eb1509"},
-]
-name = "farms"
+name = "giveaways"
 node_compat = true
 [env.production.vars]
-KV_CACHE = true
-[env.production.triggers]
-crons = ["0 0 * * *", "*/1 * * * *"]
+

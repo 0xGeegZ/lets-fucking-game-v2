@@ -1,33 +1,58 @@
 import { Obj } from 'itty-router'
 import { error } from 'itty-router-extras'
-import { createFarmFetcher } from '@pancakeswap/farms'
 import { createMulticall } from '@pancakeswap/multicall'
-import { bscProvider, bscTestnetProvider, goerliProvider } from './provider'
 
-export const getProvider = ({ chainId }: { chainId?: number }) => {
-  switch (chainId) {
-    case 56:
-      return bscProvider
-    case 97:
-      return bscTestnetProvider
-    case 5:
-      return goerliProvider
-    default:
-      return null
-  }
-}
-
-const multicall = createMulticall(getProvider)
-
-export const farmFetcher = createFarmFetcher(multicall.multicallv2)
-
-export function requireChainId(params: Obj | undefined) {
+export function requireTweetId(params: Obj | undefined) {
   if (!params) {
     return error(400, 'Invalid params')
   }
-  const { chainId } = params
-  if (!chainId || !farmFetcher.isChainSupported(+chainId)) {
-    return error(400, 'Invalid chain id')
+  const { tweetId } = params
+  if (!tweetId) {
+    return error(400, 'Invalid tweet id')
+  }
+  return null
+}
+
+export function requireUserId(params: Obj | undefined) {
+  if (!params) {
+    return error(400, 'Invalid params')
+  }
+  const { userId } = params
+  if (!userId) {
+    return error(400, 'Invalid user id')
+  }
+  return null
+}
+
+export function requireUserAddress(params: Obj | undefined) {
+  if (!params) {
+    return error(400, 'Invalid params')
+  }
+  const { userAddress } = params
+  if (!userAddress) {
+    return error(400, 'Invalid user address')
+  }
+  return null
+}
+
+export function requireGiveawayId(params: Obj | undefined) {
+  if (!params) {
+    return error(400, 'Invalid params')
+  }
+  const { giveawayId } = params
+  if (!giveawayId) {
+    return error(400, 'Invalid giveaway id')
+  }
+  return null
+}
+
+export function requirePrizes(params: Obj | undefined) {
+  if (!params) {
+    return error(400, 'Invalid params')
+  }
+  const { prizes } = params
+  if (!prizes) {
+    return error(400, 'Invalid prizes count')
   }
   return null
 }
@@ -80,7 +105,11 @@ export const handleCors = (allowedOrigin: any) => (request: Request) => {
   })
 }
 
-export const wrapCorsHeader = (request: Request, response: Response, options: any = {}) => {
+export const wrapCorsHeader = (
+  request: Request,
+  response: Response,
+  options: any = {}
+) => {
   const { allowedOrigin = '*' } = options
   const reqOrigin = request.headers.get('origin')
   const isAllowed = isOriginAllowed(reqOrigin, allowedOrigin)

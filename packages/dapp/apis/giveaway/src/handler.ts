@@ -1,145 +1,97 @@
-import { FixedNumber } from '@ethersproject/bignumber'
-import { Contract } from '@ethersproject/contracts'
-import { getFarmCakeRewardApr, SerializedFarmConfig } from '@pancakeswap/farms'
-import { ChainId, CurrencyAmount, Pair } from '@pancakeswap/sdk'
-import { BUSD, CAKE } from '@pancakeswap/tokens'
-import { farmFetcher } from './helper'
-import { FarmKV, FarmResult } from './kv'
-import { updateLPsAPR } from './lpApr'
-import { bscProvider, bscTestnetProvider } from './provider'
+/* eslint-disable camelcase */
+// import needle from 'needle'
+// import { webcrypto } from 'crypto'
 
-const pairAbi = [
-  {
-    inputs: [],
-    name: 'getReserves',
-    outputs: [
-      {
-        internalType: 'uint112',
-        name: 'reserve0',
-        type: 'uint112',
-      },
-      {
-        internalType: 'uint112',
-        name: 'reserve1',
-        type: 'uint112',
-      },
-      {
-        internalType: 'uint32',
-        name: 'blockTimestampLast',
-        type: 'uint32',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-]
+const token = process.env.TWITTER_BEARER_TOKEN
+const baseUri = process.env.TWITTER_BASE_URL
 
-const cakeBusdPairMap = {
-  [ChainId.BSC]: {
-    address: Pair.getAddress(CAKE[ChainId.BSC], BUSD[ChainId.BSC]),
-    tokenA: CAKE[ChainId.BSC],
-    tokenB: BUSD[ChainId.BSC],
-  },
-  [ChainId.BSC_TESTNET]: {
-    address: Pair.getAddress(CAKE[ChainId.BSC_TESTNET], BUSD[ChainId.BSC_TESTNET]),
-    tokenA: CAKE[ChainId.BSC_TESTNET],
-    tokenB: BUSD[ChainId.BSC_TESTNET],
-  },
+export const getRetweets = async (tweetId: string, pagination_token = '') => {
+  console.log('🚀 ~ getRetweets tweetId', tweetId)
+
+  const endpointURL = `${baseUri}${tweetId}/retweeted_by`
+
+  // These are the parameters for the API request
+  // by default, only the Tweet ID and text are returned
+  const params = {
+    'user.fields': 'id,profile_image_url,username',
+    max_results: 100,
+  }
+
+  if (pagination_token) params.pagination_token = pagination_token
+
+  // this is the HTTP header that adds bearer token authentication
+  const res = await fetch('get', endpointURL, params, {
+    headers: {
+      'User-Agent': 'v2RetweetedByUsersJS',
+      authorization: `Bearer ${token}`,
+    },
+  })
+
+  if (res.body) {
+    return res.body
+  }
+  throw new Error('Unsuccessful request')
 }
 
-const getCakePrice = async (isTestnet: boolean) => {
-  const pairConfig = cakeBusdPairMap[isTestnet ? ChainId.BSC_TESTNET : ChainId.BSC]
-  const pairContract = new Contract(pairConfig.address, pairAbi, isTestnet ? bscTestnetProvider : bscProvider)
-  const reserves = await pairContract.getReserves()
-  const { reserve0, reserve1 } = reserves
-  const { tokenA, tokenB } = pairConfig
+export const getTweet = async (tweetId: string) => {
+  console.log('🚀 ~ getTweet tweetId', tweetId)
 
-  const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
+  const endpointURL = `${baseUri}${tweetId}`
+  // These are the parameters for the API request
+  // by default, only the Tweet ID and text are returned
+  const params = {}
 
-  const pair = new Pair(
-    CurrencyAmount.fromRawAmount(token0, reserve0.toString()),
-    CurrencyAmount.fromRawAmount(token1, reserve1.toString()),
+  // this is the HTTP header that adds bearer token authentication
+  const res = await fetch('get', endpointURL, params, {
+    headers: {
+      'User-Agent': 'v2TweetJS',
+      authorization: `Bearer ${token}`,
+    },
+  })
+
+  if (res.body) {
+    return res.body
+  }
+  throw new Error('Unsuccessful request')
+}
+
+export const signUp = async (userId: string, userAddress: string) => {
+  console.log('🚀 ~ signUp userId', userId, 'userAddress', userAddress)
+
+  // TODO : save on Redis user data if not already sign up
+  throw new Error('Unsuccessful request')
+}
+
+export const checkUserSignUp = async (userId: string) => {
+  console.log('🚀 ~ checkUserSignUp userId', userId)
+  // TODO : check on Redis if we have data for userId and user address
+  // If found, return true
+  // If not found, return false
+  throw new Error('Unsuccessful request')
+}
+
+export const drawWinners = async (
+  giveawayId: string,
+  tweetId: string,
+  prizes: number
+) => {
+  console.log(
+    '🚀 ~ drawWinners giveawayId',
+    giveawayId,
+    'tweetId',
+    tweetId,
+    'prizes',
+    prizes
   )
+  // TODO check in Redis if winners already created
+  // If already created, throw error
+  // If not, draw winners
 
-  return pair.priceOf(tokenA)
-}
+  const retweets = getRetweets(tweetId)
+  console.log('🚀 ~ file: handler.ts:80 ~ drawWinners ~ retweets', retweets)
+  // const crypto = webcrypto as unknown as Crypto
+  // const random = crypto.getRandomValues(new Uint32Array(1))
+  // console.log('🚀 ~ file: handler.ts:75 ~ drawWinners ~ random', random)
 
-const farmConfigApi = 'https://farms-config.pages.dev'
-
-export async function saveFarms(chainId: number, event: ScheduledEvent | FetchEvent) {
-  try {
-    const isTestnet = farmFetcher.isTestnet(chainId)
-    const farmsConfig = await (await fetch(`${farmConfigApi}/${chainId}.json`)).json<SerializedFarmConfig[]>()
-    let lpPriceHelpers: SerializedFarmConfig[] = []
-    try {
-      lpPriceHelpers = await (
-        await fetch(`${farmConfigApi}/priceHelperLps/${chainId}.json`)
-      ).json<SerializedFarmConfig[]>()
-    } catch (error) {
-      console.error('Get LP price helpers error', error)
-    }
-
-    if (!farmsConfig) {
-      throw new Error(`Farms config not found ${chainId}`)
-    }
-    const { farmsWithPrice, poolLength, regularCakePerBlock } = await farmFetcher.fetchFarms({
-      chainId,
-      isTestnet,
-      farms: farmsConfig.filter((f) => f.pid !== 0).concat(lpPriceHelpers),
-    })
-
-    const cakeBusdPrice = await getCakePrice(isTestnet)
-    const lpAprs = await handleLpAprs(chainId, farmsConfig)
-
-    const finalFarm = farmsWithPrice.map((f) => {
-      return {
-        ...f,
-        lpApr: lpAprs?.[f.lpAddress.toLowerCase()] || 0,
-        cakeApr: getFarmCakeRewardApr(f, FixedNumber.from(cakeBusdPrice.toSignificant(3)), regularCakePerBlock),
-      }
-    }) as FarmResult
-
-    const savedFarms = {
-      updatedAt: new Date().toISOString(),
-      poolLength,
-      regularCakePerBlock,
-      data: finalFarm,
-    }
-
-    event.waitUntil(FarmKV.saveFarms(chainId, savedFarms))
-
-    return savedFarms
-  } catch (error) {
-    console.error('[ERROR] fetching farms', error)
-    throw error
-  }
-}
-
-export async function handleLpAprs(chainId: number, farmsConfig?: SerializedFarmConfig[]) {
-  let lpAprs = await FarmKV.getApr(chainId)
-  if (!lpAprs) {
-    lpAprs = await saveLPsAPR(chainId, farmsConfig)
-  }
-  return lpAprs || {}
-}
-
-export async function saveLPsAPR(chainId: number, farmsConfig?: SerializedFarmConfig[]) {
-  // TODO: add other chains
-  if (chainId === 56) {
-    let data = farmsConfig
-    if (!data) {
-      const value = await FarmKV.getFarms(chainId)
-      if (value && value.data) {
-        // eslint-disable-next-line prefer-destructuring
-        data = value.data
-      }
-    }
-    if (data) {
-      const aprMap = (await updateLPsAPR(chainId, data)) || null
-      FarmKV.saveApr(chainId, aprMap)
-      return aprMap || null
-    }
-    return null
-  }
-  return null
+  throw new Error('Unsuccessful request')
 }

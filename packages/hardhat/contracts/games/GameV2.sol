@@ -367,6 +367,7 @@ contract GameV2 is Child, IGame {
     }
 
     function _addWinner(uint256 _position, address _playerAddress, uint256 _amount) internal {
+        Prize memory prize = _getPrizeForPosition(roundId, _position);
         winners[roundId].push(
             Winner({
                 roundId: roundId,
@@ -374,6 +375,9 @@ contract GameV2 is Child, IGame {
                 userId: 0,
                 playerAddress: _playerAddress,
                 amountWon: _amount,
+                standard: prize.standard,
+                contractAddress: prize.contractAddress,
+                tokenId: prize.tokenId,
                 prizeClaimed: false
             })
         );

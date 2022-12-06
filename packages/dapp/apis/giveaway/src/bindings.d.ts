@@ -1,7 +1,6 @@
 export {}
 
 declare global {
-  const FARMS: KVNamespace
-  const KV_CACHE: boolean
-  const FORCE_UPDATE_KEY: string
+  const TWITTER_BEARER_TOKEN: string
+  const TWITTER_BASE_URL: string
 }

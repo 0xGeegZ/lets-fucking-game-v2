@@ -57,6 +57,9 @@ export declare namespace IChild {
     playerAddress: PromiseOrValue<string>;
     amountWon: PromiseOrValue<BigNumberish>;
     position: PromiseOrValue<BigNumberish>;
+    standard: PromiseOrValue<BigNumberish>;
+    contractAddress: PromiseOrValue<string>;
+    tokenId: PromiseOrValue<BigNumberish>;
     prizeClaimed: PromiseOrValue<boolean>;
   };
 
@@ -66,6 +69,9 @@ export declare namespace IChild {
     string,
     BigNumber,
     BigNumber,
+    BigNumber,
+    string,
+    BigNumber,
     boolean
   ] & {
     roundId: BigNumber;
@@ -73,6 +79,9 @@ export declare namespace IChild {
     playerAddress: string;
     amountWon: BigNumber;
     position: BigNumber;
+    standard: BigNumber;
+    contractAddress: string;
+    tokenId: BigNumber;
     prizeClaimed: boolean;
   };
 }

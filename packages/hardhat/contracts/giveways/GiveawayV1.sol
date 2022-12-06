@@ -4,8 +4,10 @@ pragma solidity >=0.8.6;
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
+import { IKeeper } from "../interfaces/IKeeper.sol";
 
 import { Child } from "../abstracts/Child.sol";
 import { Keeper } from "../keepers/Keeper.sol";
@@ -22,10 +24,10 @@ import "hardhat/console.sol";
 contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     using Chainlink for Chainlink.Request;
 
-    address public cronUpkeep;
-    address public keeper;
+    // address public cronUpkeep;
+    // address public keeper;
 
-    string encodedCron;
+    // string encodedCron;
 
     bytes32 public immutable jobId;
     uint256 private immutable fee;
@@ -39,7 +41,9 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         uint256 userId;
         uint256 tweetId;
         uint256 endTimestamp;
+        // will be refreshed periodically with upkeep
         uint256 retweetCount;
+        // should be zero if no retweetMaxCount
         uint256 retweetMaxCount;
         bool isEnded;
     }
@@ -54,7 +58,14 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     /**
      * @notice Called when a winner is added
      */
-    event WinnerAdded(uint256 giveawayId, uint256 position, uint256 winnerId, uint256 amount);
+    event WinnerAdded(
+        uint256 giveawayId,
+        uint256 position,
+        uint256 winnerId,
+        address contractAddress,
+        uint256 amount,
+        uint256 tokenId
+    );
     /**
      * @notice Called when a giveaway is refreshed
      */
@@ -101,13 +112,11 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         string memory _requestBaseURI,
         address _oracle,
         address _link,
-        address _cronUpkeep,
-        uint256 _treasuryFee,
-        string memory _encodedCron
-    )
+        // address _cronUpkeep,
+        // address _keeper,
         // string memory _encodedCron
-        Child()
-    {
+        uint256 _treasuryFee
+    ) Child() {
         setChainlinkToken(_link);
         setChainlinkOracle(_oracle);
         jobId = _jobId;
@@ -119,12 +128,18 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         owner = msg.sender;
 
         // refresh giveaways retweets count from encodedCron (default every hour)
-        encodedCron = _encodedCron;
-        cronUpkeep = _cronUpkeep;
-        Keeper keeperContract = new Keeper(cronUpkeep, "refreshActiveGiveawayStatus()", encodedCron);
-        keeper = address(keeperContract);
-        keeperContract.registerCronToUpkeep();
-        ICronUpkeep(cronUpkeep).addDelegator(address(keeper));
+        // encodedCron = _encodedCron;
+        // cronUpkeep = _cronUpkeep;
+
+        // V1
+        // keeper = _keeper;
+        // IKeeper(keeper).registerCronToUpkeep();
+
+        // V0
+        // Keeper keeperContract = new Keeper(cronUpkeep, "refreshActiveGiveawayStatus()", encodedCron);
+        // keeper = address(keeperContract);
+        // ICronUpkeep(cronUpkeep).addDelegator(address(keeper));
+        // keeperContract.registerCronToUpkeep();
     }
 
     ///
@@ -155,6 +170,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
             retweetMaxCount: _retweetMaxCount,
             isEnded: false
         });
+
         // Setup prizes structure
         _checkIfPrizeAmountIfNeeded(_prizes);
         _addPrizes(_prizes);
@@ -211,7 +227,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         for (uint256 i = 0; i < winnersIds.length; i++) {
             Prize memory prize = _getPrizeForPosition(_giveawayId, winnersPositions[i]);
             address winnerAddress = users[winnersIds[i]] != address(0) ? users[winnersIds[i]] : address(0);
-            _addWinner(_giveawayId, winnersPositions[i], winnersIds[i], winnerAddress, prize.amount);
+            _addWinner(_giveawayId, winnersPositions[i], winnersIds[i], winnerAddress, prize);
         }
 
         giveaways[_giveawayId].isEnded = true;
@@ -309,7 +325,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      */
     function getGiveawayURI(uint256 _giveawayId) public view returns (string memory _giveawayURI) {
         console.log("getGiveawayURI requestBaseURI %s _giveawayId %s", requestBaseURI, _giveawayId);
-        string memory baseURI = string(abi.encodePacked(requestBaseURI, "giveaway/"));
+        string memory baseURI = string(abi.encodePacked(requestBaseURI, "giveaways/"));
         string memory baseGiveawayURI = string(abi.encodePacked(baseURI, Strings.toString(_giveawayId)));
         string memory paramsURI = string(abi.encodePacked("?prizes=", Strings.toString(prizes[_giveawayId].length)));
         return string(abi.encodePacked(baseGiveawayURI, paramsURI));
@@ -320,7 +336,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      */
     function getSignUpURI(uint256 _userId) public view returns (string memory _signUpURI) {
         console.log("getSignUpURI requestBaseURI %s _userId %s", requestBaseURI, _userId);
-        string memory baseURI = string(abi.encodePacked(requestBaseURI, "user/"));
+        string memory baseURI = string(abi.encodePacked(requestBaseURI, "users/"));
         return string(abi.encodePacked(baseURI, Strings.toString(_userId)));
     }
 
@@ -368,7 +384,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Create request to get giveaway winner
      * @dev only admin can call this function
      */
-    function _requestGiveawayWinner(uint256 _giveawayId) private returns (bytes32 _requestId) {
+    function _requestGiveawayWinner(uint256 _giveawayId) private onlyAdmin whenNotPaused returns (bytes32 _requestId) {
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfillGiveawayWinner.selector);
         req.add("get", getGiveawayURI(_giveawayId));
         // https://docs.chain.link/any-api/testnet-oracles/
@@ -382,7 +398,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Create request to sign up user
      * @dev only admin can call this function
      */
-    function _requestSignUp(uint256 _userId) private returns (bytes32 _requestId) {
+    function _requestSignUp(uint256 _userId) private onlyAdmin whenNotPaused returns (bytes32 _requestId) {
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfillSignUp.selector);
         req.add("get", getSignUpURI(_userId));
         // https://docs.chain.link/any-api/testnet-oracles/
@@ -396,7 +412,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Create request to refresh giveaway
      * @dev only admin can call this function
      */
-    function _requestRefreshGiveaway(uint256 _giveawayId) private returns (bytes32 _requestId) {
+    function _requestRefreshGiveaway(uint256 _giveawayId) private onlyAdmin whenNotPaused returns (bytes32 _requestId) {
         Chainlink.Request memory req = buildChainlinkRequest(
             jobId,
             address(this),
@@ -414,7 +430,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Perform _requestGiveawayWinner for needed giveaway
      * @param _giveawayId the giveaway id
      */
-    function _performGiveawayWinner(uint256 _giveawayId) private whenNotPaused {
+    function _performGiveawayWinner(uint256 _giveawayId) private onlyAdmin whenNotPaused {
         _validate(_giveawayId);
         _requestGiveawayWinner(_giveawayId);
         emit PerformUpkeepExecuted(_giveawayId, block.timestamp);
@@ -438,18 +454,9 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     }
 
     function _isGiveawayCouldEnded(Giveaway memory _giveaway) private view returns (bool _isCouldEnded) {
-        return _giveaway.retweetCount >= _giveaway.retweetMaxCount || block.timestamp >= _giveaway.endTimestamp;
-    }
-
-    /**
-     * @notice get prize for given giveaway and current position
-     * @param _giveawayId giveaway id
-     * @param _position position of prize
-     */
-    function _getPrizeForPosition(uint256 _giveawayId, uint256 _position) private view returns (Prize memory _prize) {
-        for (uint256 idx = 0; idx < prizes[_giveawayId].length; idx++) {
-            if (prizes[_giveawayId][idx].position == _position) return prizes[_giveawayId][idx];
-        }
+        return
+            (_giveaway.retweetMaxCount != 0 && _giveaway.retweetCount >= _giveaway.retweetMaxCount) ||
+            block.timestamp >= _giveaway.endTimestamp;
     }
 
     /**
@@ -458,25 +465,28 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @param _position position of winner
      * @param _winnerId twitter id of winner
      * @param _winnerAddress winner address
-     * @param _amount amount won
+     * @param _prize prize
      */
     function _addWinner(
         uint256 _giveawayId,
         uint256 _position,
         uint256 _winnerId,
         address _winnerAddress,
-        uint256 _amount
+        Prize memory _prize
     ) private {
         winners[_giveawayId].push(
             Winner({
                 roundId: _giveawayId,
-                position: _position,
                 userId: _winnerId,
                 playerAddress: _winnerAddress,
-                amountWon: _amount,
+                amountWon: _prize.amount,
+                position: _position,
+                standard: _prize.standard,
+                contractAddress: _prize.contractAddress,
+                tokenId: _prize.tokenId,
                 prizeClaimed: false
             })
         );
-        emit WinnerAdded(_giveawayId, _position, _winnerId, _amount);
+        emit WinnerAdded(_giveawayId, _position, _winnerId, _prize.contractAddress, _prize.amount, _prize.tokenId);
     }
 }

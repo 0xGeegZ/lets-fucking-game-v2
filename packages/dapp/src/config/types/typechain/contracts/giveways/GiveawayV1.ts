@@ -57,6 +57,9 @@ export declare namespace IChild {
     playerAddress: PromiseOrValue<string>;
     amountWon: PromiseOrValue<BigNumberish>;
     position: PromiseOrValue<BigNumberish>;
+    standard: PromiseOrValue<BigNumberish>;
+    contractAddress: PromiseOrValue<string>;
+    tokenId: PromiseOrValue<BigNumberish>;
     prizeClaimed: PromiseOrValue<boolean>;
   };
 
@@ -66,6 +69,9 @@ export declare namespace IChild {
     string,
     BigNumber,
     BigNumber,
+    BigNumber,
+    string,
+    BigNumber,
     boolean
   ] & {
     roundId: BigNumber;
@@ -73,6 +79,9 @@ export declare namespace IChild {
     playerAddress: string;
     amountWon: BigNumber;
     position: BigNumber;
+    standard: BigNumber;
+    contractAddress: string;
+    tokenId: BigNumber;
     prizeClaimed: boolean;
   };
 }
@@ -433,7 +442,7 @@ export interface GiveawayV1Interface extends utils.Interface {
     "TreasuryFeeClaimed(uint256)": EventFragment;
     "TreasuryFeeClaimedByFactory(uint256)": EventFragment;
     "Unpaused(address)": EventFragment;
-    "WinnerAdded(uint256,uint256,uint256,uint256)": EventFragment;
+    "WinnerAdded(uint256,uint256,uint256,address,uint256,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "AdminOwnershipTransferred"): EventFragment;
@@ -760,10 +769,12 @@ export interface WinnerAddedEventObject {
   giveawayId: BigNumber;
   position: BigNumber;
   winnerId: BigNumber;
+  contractAddress: string;
   amount: BigNumber;
+  tokenId: BigNumber;
 }
 export type WinnerAddedEvent = TypedEvent<
-  [BigNumber, BigNumber, BigNumber, BigNumber],
+  [BigNumber, BigNumber, BigNumber, string, BigNumber, BigNumber],
   WinnerAddedEventObject
 >;
 
@@ -1555,17 +1566,21 @@ export interface GiveawayV1 extends BaseContract {
     "Unpaused(address)"(account?: null): UnpausedEventFilter;
     Unpaused(account?: null): UnpausedEventFilter;
 
-    "WinnerAdded(uint256,uint256,uint256,uint256)"(
+    "WinnerAdded(uint256,uint256,uint256,address,uint256,uint256)"(
       giveawayId?: null,
       position?: null,
       winnerId?: null,
-      amount?: null
+      contractAddress?: null,
+      amount?: null,
+      tokenId?: null
     ): WinnerAddedEventFilter;
     WinnerAdded(
       giveawayId?: null,
       position?: null,
       winnerId?: null,
-      amount?: null
+      contractAddress?: null,
+      amount?: null,
+      tokenId?: null
     ): WinnerAddedEventFilter;
   };
 
