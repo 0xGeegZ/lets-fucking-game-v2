@@ -10,6 +10,7 @@ kv_namespaces = [
 name = "giveaways-dev"
 [vars]
 KV_CACHE = false
+WORKER_BASE_URL="http://127.0.0.1:8787" 
 
 
 [env.staging]
@@ -19,6 +20,7 @@ kv_namespaces = [
 name = "giveaways-staging"
 [env.staging.vars]
 KV_CACHE = true
+WORKER_BASE_URL="http://127.0.0.1:8787" 
 
 
 [env.production]
@@ -28,4 +30,5 @@ kv_namespaces = [
 name = "giveaways"
 [env.production.vars]
 KV_CACHE = true
+WORKER_BASE_URL="http://127.0.0.1:8787" 
 

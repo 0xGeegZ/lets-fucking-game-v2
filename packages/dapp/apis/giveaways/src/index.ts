@@ -19,7 +19,7 @@
 // WORKER SIGN IN EXAMPLE :  https://github.com/vonadz/newsletter-oauth-registration-cfw
 
 import { Router } from "itty-router";
-import { error, json, missing } from "itty-router-extras";
+import { error, json, missing, status } from "itty-router-extras";
 import {
 	handleCors,
 	wrapCorsHeader,
@@ -37,6 +37,8 @@ import {
 	signUp,
 	drawWinners,
 } from "./handler";
+
+import { twitterAuth, twitterCallback } from "./twitter";
 
 const router = Router();
 
@@ -99,7 +101,7 @@ router.get("/giveaway/:giveawayId/refresh", async ({ params, query }) => {
 	const isQueryTweetIdError = requireTweetId(query);
 	if (isQueryTweetIdError) return isQueryTweetIdError;
 
-	const { giveawayId } = params;
+	// const { giveawayId } = params;
 	// TODO : those data should be loaded via multicall and on chain request
 	const { tweetId } = query;
 
@@ -134,19 +136,34 @@ router.post("/users", async ({ query }) => {
 	const isQueryAddressError = requireUserAddress(query);
 	if (isQueryAddressError) return isQueryAddressError;
 
-	const { userId, userAddress } = query;
+	// TODO FOR accessToken
+	// const isQueryAddressError = requireUserAddress(query);
+	// if (isQueryAddressError) return isQueryAddressError;
+
+	const { userId, userAddress, accessToken } = query;
 
 	try {
-		return json(await signUp(userId, userAddress));
+		return json(await signUp(userId, userAddress, accessToken));
 	} catch (err) {
 		return error(500, { error: { message: err.message } });
 	}
 });
 
-router.get("/auth/twitter", async ({ query }, event) => {
+router.get("/auth/twitter", async () => {
 	try {
-		// TODO merge this endpoint with /users POST endpoint
-		return json(await twitterAuth(event.request));
+		const redirectUrl = await twitterAuth();
+		console.log("🚀  ~ redirectUrl", redirectUrl);
+		return Response.redirect(redirectUrl, 302);
+	} catch (err) {
+		return error(500, { error: { message: err.message } });
+	}
+});
+
+router.get("/callback", async ({ query }) => {
+	try {
+		const { code, state } = query;
+
+		return json(await twitterCallback(code, state));
 	} catch (err) {
 		return error(500, { error: { message: err.message } });
 	}

@@ -8,6 +8,8 @@ describe("Giveaway worker testing", () => {
 		},
 	};
 	const workerUri = "http://127.0.0.1:8787";
+	// const workerUri = WORKER_BASE_URL;
+
 	const tweetId = "1598053432232796160";
 	const userId = "3779781136";
 
@@ -30,7 +32,22 @@ describe("Giveaway worker testing", () => {
 	});
 
 	describe("Giveaway endpoints", () => {
-		it("Should draw winner for not already drawn giveaway", async () => {
+		it("Should draw 1 winners for not already drawn giveaway", async () => {
+			return fetch(
+				`${workerUri}/giveaway/1/winners?tweetId=${tweetId}&prizes=1`,
+				fetchParams
+			)
+				.then((res) => res.json())
+				.then((json: any) => {
+					expect(json).toBeDefined();
+					expect(json.winners).toBeDefined();
+					expect(json.positions).toBeDefined();
+					expect(json.winners.length).toEqual(1);
+					expect(json.winners.length).toEqual(json.positions.length);
+				});
+		});
+
+		it("Should draw 2 winners for not already drawn giveaway", async () => {
 			return fetch(
 				`${workerUri}/giveaway/1/winners?tweetId=${tweetId}&prizes=2`,
 				fetchParams
@@ -40,6 +57,7 @@ describe("Giveaway worker testing", () => {
 					expect(json).toBeDefined();
 					expect(json.winners).toBeDefined();
 					expect(json.positions).toBeDefined();
+					expect(json.winners.length).toEqual(2);
 					expect(json.winners.length).toEqual(json.positions.length);
 				});
 		});

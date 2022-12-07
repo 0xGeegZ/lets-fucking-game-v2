@@ -30,7 +30,7 @@ export const getAllRetweets = async (tweetId: string) => {
 export const getRetweets = async (tweetId: string, pagination_token = "") => {
 	if (!tweetId) throw new Error("tweet id is needed");
 
-	const endpointURL = `${baseUri}/${tweetId}/retweeted_by`;
+	const endpointURL = `${baseUri}/2/tweets/${tweetId}/retweeted_by`;
 
 	const params = {
 		"user.fields": "id,profile_image_url,username",
@@ -51,7 +51,7 @@ export const getRetweets = async (tweetId: string, pagination_token = "") => {
 export const getTweet = async (tweetId: string) => {
 	if (!tweetId) throw new Error("tweet id is needed");
 
-	const endpointURL = `${baseUri}/${tweetId}`;
+	const endpointURL = `${baseUri}/2/tweets/${tweetId}`;
 
 	const res = await fetch(endpointURL, getRequestParams());
 	if (res.ok) return await res.json();
@@ -59,26 +59,36 @@ export const getTweet = async (tweetId: string) => {
 	throw new Error("Unsuccessful request");
 };
 
-export const signUp = async (userId: string, userAddress: string) => {
-	if (!giveawayId) throw new Error("user id is needed");
+export const signUp = async (
+	userId: string,
+	userAddress: string,
+	accessToken: string
+) => {
+	if (!userId) throw new Error("user id is needed");
 	if (!userAddress) throw new Error("user address is needed");
+	if (!accessToken) throw new Error("user access token is needed");
 
-	console.log("🚀 ~ signUp userId", userId, "userAddress", userAddress);
+	const user = await UserKV.getUser(userId);
+	if (!user) throw new Error("no user found");
+	if (checkUserSignUp(userId)) throw new Error("user already sign up");
+	if (user.accessToken !== accessToken) throw new Error("accessToken mismatch");
+
 	const userData = {
+		...user,
+		isRegistered: true,
 		userAddress,
 	};
+
 	UserKV.saveUser(userId, userData);
 	return {
-		user: {
-			userId,
-			...userData,
-		},
+		userId,
+		...userData,
 	};
 };
 
 export const checkUserSignUp = async (userId: string) => {
 	const user = await UserKV.getUser(userId);
-	return !!user;
+	return user?.isRegistered;
 };
 
 export const drawWinners = async (
@@ -95,29 +105,15 @@ export const drawWinners = async (
 	const winners = [];
 	const randoms = [];
 	const positions = [];
-	for (let i = 0; i < +prizes - 1; i++) {
+	for (let i = 0; i < +prizes; i++) {
 		const random = randomNewNumber(0, retweets.length, randoms);
 		winners.push(retweets[random].id);
 		positions.push(i);
 		randoms.push(random);
 	}
 
-	console.log("🚀 ~ winners", winners);
-	console.log("🚀 ~ positions", positions);
-	console.log("🚀 ~ randoms", randoms);
-
 	return {
 		winners,
 		positions,
 	};
-	// const winnersRange = [...range(0, +prizes - 1)];
-	// const winners = winnersRange.map((index) => {
-	// 	const random = randomNewNumber(0, retweets.length, []);
-	// 	return {
-	// 		position: index,
-	// 		random,
-	// 		winner: retweets[random],
-	// 	};
-	// });
-	// return winners;
 };
