@@ -2,6 +2,7 @@
 pragma solidity >=0.8.6;
 
 import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -13,8 +14,9 @@ import { IKeeper } from "../interfaces/IKeeper.sol";
 
 abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
     using Address for address;
+    using Counters for Counters.Counter;
 
-    uint256 public nextId = 0;
+    Counters.Counter public nextId;
 
     uint256 public childCreationAmount;
 
@@ -107,10 +109,10 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
 
     /**
      * @notice Get the list of deployed childsVersions
-     * @return allChilds the list of childsVersions
+     * @return _childsVersions the list of childsVersions
      */
-    function getDeployedChilds() external view returns (Child[] memory allChilds) {
-        return childs;
+    function getDeployedChildsVersions() external view returns (ChildVersion[] memory _childsVersions) {
+        return childsVersions;
     }
 
     ///

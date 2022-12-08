@@ -1223,7 +1223,9 @@ export interface GameV2 extends BaseContract {
 
     registrationAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    roundId(overrides?: CallOverrides): Promise<[BigNumber]>;
+    roundId(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { _value: BigNumber }>;
 
     setCreatorFee(
       _creatorFee: PromiseOrValue<BigNumberish>,

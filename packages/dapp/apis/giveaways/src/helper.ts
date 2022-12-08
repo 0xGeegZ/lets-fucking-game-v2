@@ -2,57 +2,13 @@ import { Obj } from "itty-router";
 import { error } from "itty-router-extras";
 import { UserKV } from "./kv";
 
-export const requireTweetId = (params: Obj | undefined) => {
+export const requireField = (field: string, params: Obj | undefined) => {
 	if (!params) {
 		return error(400, "Invalid params");
 	}
-	const { tweetId } = params;
-	if (!tweetId) {
-		return error(400, "Invalid tweet id");
-	}
-	return null;
-};
-
-export const requireUserId = (params: Obj | undefined) => {
-	if (!params) {
-		return error(400, "Invalid params");
-	}
-	const { userId } = params;
-	if (!userId) {
-		return error(400, "Invalid user id");
-	}
-	return null;
-};
-
-export const requireUserAddress = (params: Obj | undefined) => {
-	if (!params) {
-		return error(400, "Invalid params");
-	}
-	const { userAddress } = params;
-	if (!userAddress) {
-		return error(400, "Invalid user address");
-	}
-	return null;
-};
-
-export const requireGiveawayId = (params: Obj | undefined) => {
-	if (!params) {
-		return error(400, "Invalid params");
-	}
-	const { giveawayId } = params;
-	if (!giveawayId) {
-		return error(400, "Invalid giveaway id");
-	}
-	return null;
-};
-
-export const requirePrizes = (params: Obj | undefined) => {
-	if (!params) {
-		return error(400, "Invalid params");
-	}
-	const { prizes } = params;
-	if (!prizes) {
-		return error(400, "Invalid prizes count");
+	const value = params[field];
+	if (!value) {
+		return error(400, "Invalid field", field);
 	}
 	return null;
 };

@@ -17,9 +17,7 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
     using Address for address;
     using Counters for Counters.Counter;
 
-    uint256 public roundId; // roundId gets incremented every time the child restarts
-    // TODO use counter for roundId
-    // Counters.Counter public roundId;
+    Counters.Counter public roundId;
 
     address public owner;
     address public factory;
@@ -153,9 +151,9 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
         else if (_prize.standard == 3)
             _transfertPrizeERC1155(_prize.contractAddress, msg.sender, address(this), _prize.amount, _prize.tokenId);
 
-        prizes[roundId].push(_prize);
+        prizes[roundId.current()].push(_prize);
         emit PrizeAdded(
-            roundId,
+            roundId.current(),
             _prize.position,
             _prize.amount,
             _prize.standard,
@@ -170,9 +168,11 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
      * @dev only available for native token, token or NFT
      */
     function _isChildAllPrizesStandard() internal view returns (bool isStandard) {
-        for (uint256 i = 0; i < prizes[roundId].length; i++)
+        for (uint256 i = 0; i < prizes[roundId.current()].length; i++)
             if (
-                prizes[roundId][i].standard != 0 && prizes[roundId][i].standard != 1 && prizes[roundId][i].standard != 2
+                prizes[roundId.current()][i].standard != 0 &&
+                prizes[roundId.current()][i].standard != 1 &&
+                prizes[roundId.current()][i].standard != 2
             ) return false;
         return true;
     }
@@ -208,10 +208,15 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
      * @param _roundId round id
      * @param _position position of prize
      */
-    function _getPrizeForPosition(uint256 _roundId, uint256 _position) internal view returns (Prize memory _prize) {
+    function _getPrizeForPosition(
+        uint256 _roundId,
+        uint256 _position
+    ) internal view returns (bool _found, Prize memory _prize) {
         for (uint256 idx = 0; idx < prizes[_roundId].length; idx++) {
-            if (prizes[_roundId][idx].position == _position) return prizes[_roundId][idx];
+            if (prizes[_roundId][idx].position == _position) return (true, prizes[_roundId][idx]);
         }
+        Prize memory defaultPrize;
+        return (false, defaultPrize);
     }
 
     ///
@@ -243,6 +248,16 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
     /// SETTERS FUNCTIONS
     ///
 
+    /**
+     * @notice Set the treasury fee for the child
+     * @param _treasuryFee the new treasury fee in %
+     * @dev Callable by admin
+     * @dev Callable when child if not in progress
+     */
+    function setTreasuryFee(uint256 _treasuryFee) external override onlyAdmin onlyTreasuryFee(_treasuryFee) {
+        treasuryFee = _treasuryFee;
+    }
+
     ///
     /// ADMIN FUNCTIONS
     ///
@@ -262,16 +277,6 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
         treasuryAmount = 0;
         emit TreasuryFeeClaimed(currentTreasuryAmount);
         _safeTransfert(owner, currentTreasuryAmount);
-    }
-
-    /**
-     * @notice Set the treasury fee for the child
-     * @param _treasuryFee the new treasury fee in %
-     * @dev Callable by admin
-     * @dev Callable when child if not in progress
-     */
-    function setTreasuryFee(uint256 _treasuryFee) external override onlyAdmin onlyTreasuryFee(_treasuryFee) {
-        treasuryFee = _treasuryFee;
     }
 
     /**
@@ -392,7 +397,7 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
      * @notice Modifier that ensure that roundId exist
      */
     modifier onlyIfRoundId(uint256 _roundId) {
-        require(_roundId <= roundId, "This round does not exist");
+        require(_roundId <= roundId.current(), "This round does not exist");
         _;
     }
 
@@ -443,7 +448,7 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
      * @notice Modifier that ensure that prize details is not empty
      */
     modifier onlyIfPrizesIsNotEmpty() {
-        require(prizes[roundId].length > 0, "Prizes should be greather or equal to 1");
+        require(prizes[roundId.current()].length > 0, "Prizes should be greather or equal to 1");
         _;
     }
 }

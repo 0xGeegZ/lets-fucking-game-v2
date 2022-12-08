@@ -88,25 +88,34 @@ export const signUp = async (
 
 export const checkUserSignUp = async (userId: string) => {
 	const user = await UserKV.getUser(userId);
-	return user?.isRegistered;
+	return user?.isRegistered || false;
 };
 
 export const drawWinners = async (
 	giveawayId: string,
 	tweetId: string,
-	prizes: string
+	retweetMaxCount: number,
+	prizes: number
 ) => {
 	if (!giveawayId) throw new Error("giveaway id is needed");
 	if (!tweetId) throw new Error("tweet id is needed");
+	if (!retweetMaxCount) throw new Error("retweetMaxCount id is needed");
 	if (!prizes) throw new Error("prizes id is needed");
 
 	const retweets = await getAllRetweets(tweetId);
 
-	const winners = [];
-	const randoms = [];
-	const positions = [];
+	// TODO order retweets by date if needed ?
+
+	const winners = [],
+		randoms = [],
+		positions = [];
+	const retweetCountLimit =
+		retweetMaxCount && retweets.length > retweetMaxCount
+			? retweetMaxCount
+			: retweets.length;
+
 	for (let i = 0; i < +prizes; i++) {
-		const random = randomNewNumber(0, retweets.length, randoms);
+		const random = randomNewNumber(0, retweetCountLimit, randoms);
 		winners.push(retweets[random].id);
 		positions.push(i);
 		randoms.push(random);

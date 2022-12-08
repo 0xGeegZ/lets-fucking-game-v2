@@ -2,6 +2,7 @@
 pragma solidity >=0.8.6;
 
 import "@openzeppelin/contracts/proxy/Clones.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
 import { IGame } from "../interfaces/IGame.sol";
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
@@ -10,6 +11,8 @@ import { Factory } from "../abstracts/Factory.sol";
 import { Keeper } from "../keepers/Keeper.sol";
 
 contract GameFactoryV2 is Factory {
+    using Counters for Counters.Counter;
+
     uint256[] public authorizedAmounts;
     mapping(uint256 => AuthorizedAmount) public usedAuthorizedAmounts;
 
@@ -96,7 +99,7 @@ contract GameFactoryV2 is Factory {
         usedAuthorizedAmounts[_registrationAmount].isUsed = true;
         childs.push(
             Child({
-                id: nextId,
+                id: nextId.current(),
                 versionId: latestVersionId,
                 creator: msg.sender,
                 deployedAddress: newGameAddress,
@@ -117,7 +120,7 @@ contract GameFactoryV2 is Factory {
         initialization.keeper = address(keeper);
         initialization.name = _name;
         initialization.version = latestVersionId;
-        initialization.id = nextId;
+        initialization.id = nextId.current();
         initialization.playTimeRange = _playTimeRange;
         initialization.maxPlayers = _maxPlayers;
         initialization.registrationAmount = _registrationAmount;
@@ -132,8 +135,8 @@ contract GameFactoryV2 is Factory {
         keeper.registerCronToUpkeep(newGameAddress);
         keeper.transferOwnership(newGameAddress);
 
-        emit GameCreated(nextId, newGameAddress, latestVersionId, msg.sender);
-        nextId += 1;
+        emit GameCreated(nextId.current(), newGameAddress, latestVersionId, msg.sender);
+        nextId.increment();
 
         return newGameAddress;
     }

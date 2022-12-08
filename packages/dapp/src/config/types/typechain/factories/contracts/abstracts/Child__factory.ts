@@ -535,7 +535,7 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "_value",
         type: "uint256",
       },
     ],

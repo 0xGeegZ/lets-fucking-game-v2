@@ -34,7 +34,7 @@ describe("Giveaway worker testing", () => {
 	describe("Giveaway endpoints", () => {
 		it("Should draw 1 winners for not already drawn giveaway", async () => {
 			return fetch(
-				`${workerUri}/giveaway/1/winners?tweetId=${tweetId}&prizes=1`,
+				`${workerUri}/chains/1/giveaways/1/winners?tweetId=${tweetId}&prizes=1`,
 				fetchParams
 			)
 				.then((res) => res.json())
@@ -49,7 +49,7 @@ describe("Giveaway worker testing", () => {
 
 		it("Should draw 2 winners for not already drawn giveaway", async () => {
 			return fetch(
-				`${workerUri}/giveaway/1/winners?tweetId=${tweetId}&prizes=2`,
+				`${workerUri}/chains/1/giveaways/1/winners?tweetId=${tweetId}&prizes=2`,
 				fetchParams
 			)
 				.then((res) => res.json())
@@ -64,7 +64,7 @@ describe("Giveaway worker testing", () => {
 
 		it("Should draw winner for not already drawn giveaway", async () => {
 			return fetch(
-				`${workerUri}/giveaway/1/refresh?tweetId=${tweetId}`,
+				`${workerUri}/chains/1/giveaways/1/refresh?tweetId=${tweetId}`,
 				fetchParams
 			)
 				.then((res) => res.json())

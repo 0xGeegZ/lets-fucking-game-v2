@@ -510,7 +510,9 @@ export interface GameFactoryV2 extends BaseContract {
 
     latestVersionId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    nextId(overrides?: CallOverrides): Promise<[BigNumber]>;
+    nextId(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { _value: BigNumber }>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 

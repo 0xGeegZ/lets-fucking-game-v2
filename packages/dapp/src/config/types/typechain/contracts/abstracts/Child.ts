@@ -508,7 +508,9 @@ export interface Child extends BaseContract {
 
     paused(overrides?: CallOverrides): Promise<[boolean]>;
 
-    roundId(overrides?: CallOverrides): Promise<[BigNumber]>;
+    roundId(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { _value: BigNumber }>;
 
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,

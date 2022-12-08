@@ -2,7 +2,7 @@ import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
-import { gameConfig } from '../config/gameConfig'
+import { giveawayConfig } from '../config/giveawayConfig'
 import { delay } from '../helpers/delay'
 
 const func: DeployFunction = async function ({
@@ -16,18 +16,21 @@ const func: DeployFunction = async function ({
 
   const isLocalDeployment = chainId === '31337' || chainId === '1337'
 
-  const currentGameConfig = gameConfig[chainId]
-  if (!currentGameConfig)
-    throw new Error('No game config found for chain id', chainId)
+  const currentGiveawayConfig = giveawayConfig[chainId]
+  if (!currentGiveawayConfig)
+    throw new Error('No giveaway config found for chain id', chainId)
 
   let linkTokenAddress: string
-
+  // TODO load oracle & jobId
   if (chainId === '31337' || chainId === '1337') {
     const linkToken = await deployments.get('LinkToken')
     linkTokenAddress = linkToken.address
   } else {
     linkTokenAddress = networkConfig[chainId].linkToken as string
   }
+
+  if (!linkTokenAddress)
+    throw new Error('Link token address not found for chainId', chainId)
 
   const deployer = await ethers.getSigner(deployerAddress)
 
@@ -36,8 +39,11 @@ const func: DeployFunction = async function ({
     log: true,
   }
 
-  const treasuryFee = currentGameConfig.TREASURY_FEE_DEFAULT
-  const encodedCron = currentGameConfig.ENCODED_CRON_DEFAULT
+  const {
+    TREASURY_FEE_DEFAULT: treasuryFee,
+    ENCODED_CRON_DEFAULT: encodedCron,
+    API_BASE_URL_DEFAULT: apiBaseUrl,
+  } = currentGiveawayConfig
 
   const jobId = ethers.utils.hexlify(
     ethers.utils.toUtf8Bytes('7223acbd01654282865b678924126013')
@@ -88,9 +94,10 @@ const func: DeployFunction = async function ({
   )
   // cronUpkeep.addDelegator(keeperAddress)
 
+  // TODO Load it from config
   const giveawayArgs = [
     jobId,
-    'https://lfgames.xyz/api/giveaway/',
+    apiBaseUrl,
     '0xCC79157eb46F5624204f47AB42b3906cAA40eaB7',
     linkTokenAddress,
     // cronUpkeepAddress,

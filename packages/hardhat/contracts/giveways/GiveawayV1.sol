@@ -2,6 +2,8 @@
 pragma solidity >=0.8.6;
 
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -23,10 +25,11 @@ import "hardhat/console.sol";
 
 contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     using Chainlink for Chainlink.Request;
+    using EnumerableMap for EnumerableMap.UintToAddressMap;
+    using Counters for Counters.Counter;
 
     // address public cronUpkeep;
     // address public keeper;
-
     // string encodedCron;
 
     bytes32 public immutable jobId;
@@ -49,7 +52,8 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     }
 
     mapping(uint256 => Giveaway) public giveaways;
-    mapping(uint256 => address) public users;
+
+    EnumerableMap.UintToAddressMap private users;
 
     /**
      * @notice Called when a new giveaway is created
@@ -158,8 +162,8 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         uint256 _retweetMaxCount,
         Prize[] memory _prizes
     ) external payable {
-        console.log("createGiveaway for round %s and prizes %s", roundId, _prizes.length);
-        giveaways[roundId] = Giveaway({
+        console.log("createGiveaway for round %s and prizes %s", roundId.current(), _prizes.length);
+        giveaways[roundId.current()] = Giveaway({
             name: _name,
             image: _image,
             creator: msg.sender,
@@ -178,9 +182,9 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         // Limitation for current version as standard for NFT is not implemented
         require(_isChildAllPrizesStandard(), "This version only allow standard prize");
 
-        emit GiveawayCreated(roundId, _userId, _tweetId, _prizes.length);
+        emit GiveawayCreated(roundId.current(), _userId, _tweetId, _prizes.length);
 
-        roundId += 1;
+        roundId.increment();
     }
 
     /**
@@ -188,7 +192,8 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      */
     function signUp(uint256 _userId) external {
         console.log("Sign up for user %s and address %s", _userId, msg.sender);
-        users[_userId] = msg.sender;
+        users.set(_userId, msg.sender);
+
         emit SignedUp(_userId, msg.sender);
         _requestSignUp(_userId);
     }
@@ -197,8 +202,17 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Check if user has signed up
      * @param _userId - twitter user id
      */
-    function isSignedUp(uint256 _userId) external view returns (bool) {
-        return users[_userId] != address(0);
+    function hasSignedUp(uint256 _userId) external view returns (bool) {
+        return users.contains(_userId);
+    }
+
+    /**
+     * @notice Check if caller has signed up
+     */
+    function hasSignedUp() external view returns (bool) {
+        bool found = false;
+        for (uint256 idx = 0; idx < users.length(); idx++) if (users.get(idx) == msg.sender) found = true;
+        return found;
     }
 
     ///
@@ -226,8 +240,9 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         giveaways[_giveawayId].isEnded = true;
 
         for (uint256 i = 0; i < winnersIds.length; i++) {
-            Prize memory prize = _getPrizeForPosition(_giveawayId, winnersPositions[i]);
-            address winnerAddress = users[winnersIds[i]] != address(0) ? users[winnersIds[i]] : address(0);
+            (bool _found, Prize memory prize) = _getPrizeForPosition(_giveawayId, winnersPositions[i]);
+            require(_found, "No prize found for winner");
+            (, address winnerAddress) = users.tryGet(winnersIds[i]);
             _addWinner(_giveawayId, winnersPositions[i], winnersIds[i], winnerAddress, prize);
         }
     }
@@ -246,10 +261,12 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     ) public recordChainlinkFulfillment(_requestId) {
         console.log("fulfillSignUp %s _userId %s _isValidate %s", _userId, _isValidate);
 
-        if (!_isValidate) delete users[_userId];
-        for (uint256 round = 0; round < roundId; round++)
+        if (!_isValidate) users.remove(_userId);
+
+        address user = users.get(_userId);
+        for (uint256 round = 0; round < roundId.current(); round++)
             for (uint256 idx = 0; idx < winners[round].length; idx++)
-                if (winners[round][idx].userId == _userId) winners[round][idx].playerAddress = users[_userId];
+                if (winners[round][idx].userId == _userId) winners[round][idx].playerAddress = user;
     }
 
     /**
@@ -276,8 +293,8 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Refresh all active giveaways retweet count
      */
     function refreshActiveGiveawayStatus() external whenNotPaused {
-        console.log("refreshActiveGiveawayStatus rounds %s", roundId);
-        for (uint256 round = 0; round < roundId; round++)
+        console.log("refreshActiveGiveawayStatus rounds %s", roundId.current());
+        for (uint256 round = 0; round < roundId.current(); round++)
             if (!giveaways[round].isEnded) {
                 _requestRefreshGiveaway(round);
                 emit GiveawayRefreshed(round, block.timestamp);
@@ -303,10 +320,11 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     function checkUpkeep(
         bytes memory _calldata
     ) external view override whenNotPaused returns (bool _upkeepNeeded, bytes memory _payload) {
-        uint256 startIdx = block.number % roundId;
+        _calldata; // dummy call to _calldata to avoir warning
+        uint256 startIdx = block.number % roundId.current();
         bool result;
         bytes memory payload;
-        (result, payload) = _checkInBatch(startIdx, roundId);
+        (result, payload) = _checkInBatch(startIdx, roundId.current());
         if (result) return (result, payload);
 
         (result, payload) = _checkInBatch(0, startIdx);
@@ -328,13 +346,17 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
             string(
                 abi.encodePacked(
                     requestBaseURI,
+                    "/chains/",
+                    block.chainid,
                     "/giveaways/",
                     Strings.toString(_giveawayId),
                     "/winners",
                     "?prizes=",
                     Strings.toString(prizes[_giveawayId].length),
                     "&tweetId",
-                    Strings.toString(giveaways[_giveawayId].tweetId)
+                    Strings.toString(giveaways[_giveawayId].tweetId),
+                    "&retweetMaxCount",
+                    Strings.toString(giveaways[_giveawayId].retweetMaxCount)
                 )
             );
     }
@@ -348,6 +370,8 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
             string(
                 abi.encodePacked(
                     requestBaseURI,
+                    "/chains/",
+                    block.chainid,
                     "/giveaways/",
                     Strings.toString(_giveawayId),
                     "/refresh",
@@ -365,15 +389,40 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         return string(abi.encodePacked(requestBaseURI, "/users/", Strings.toString(_userId)));
     }
 
+    /**
+     * @notice Get the list of deployed giveaways
+     * @return _giveaways the list of giveaways
+     */
+    function getGiveaways() external view returns (Child[] memory _giveaways) {
+        return giveaways;
+    }
+
     ///
     /// ADMIN FUNCTIONS
     ///
     /**
      * @notice Witdraws LINK from the contract to the Owner
+     * @dev only admin can call this function
      */
     function withdrawLink() external onlyAdmin {
         LinkTokenInterface link = LinkTokenInterface(chainlinkTokenAddress());
         require(link.transfer(owner, link.balanceOf(address(this))), "Unable to transfer");
+    }
+
+    /**
+     * @notice Set requestBaseURI
+     * @dev only admin can call this function
+     */
+    function setRequestBaseURI(string calldata _requestBaseURI) external onlyAdmin {
+        requestBaseURI = _requestBaseURI;
+    }
+
+    /**
+     * @notice Add user to users list
+     * @dev only admin can call this function
+     */
+    function addUser(uint256 _userId, address _userAddress) external onlyAdmin {
+        if (!users.contains(_userId)) users.set(_userId, _userAddress);
     }
 
     /**
@@ -383,6 +432,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @param _callbackFunctionId The bytes4 callback function ID specified for
      * the request to cancel
      * @param _expiration The expiration generated for the request to cancel
+     * @dev only admin can call this function
      */
     function cancelRequest(
         bytes32 _requestId,
@@ -501,12 +551,14 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         address _winnerAddress,
         Prize memory _prize
     ) private {
+        uint256 treasuryRoundAmount = (_prize.amount * treasuryFee) / 10000;
+        uint256 rewardAmount = _prize.amount - treasuryRoundAmount;
         winners[_giveawayId].push(
             Winner({
                 roundId: _giveawayId,
                 userId: _winnerId,
                 playerAddress: _winnerAddress,
-                amountWon: _prize.amount,
+                amountWon: rewardAmount,
                 position: _position,
                 standard: _prize.standard,
                 contractAddress: _prize.contractAddress,
@@ -515,5 +567,6 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
             })
         );
         emit WinnerAdded(_giveawayId, _position, _winnerId, _prize.contractAddress, _prize.amount, _prize.tokenId);
+        treasuryAmount += treasuryRoundAmount;
     }
 }

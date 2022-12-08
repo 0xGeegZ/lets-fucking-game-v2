@@ -67,6 +67,13 @@ const func: DeployFunction = async function ({
     '../dapp/src/config/internal/gameConfig.ts'
   )
   log('✅ Multi Chain game config data was copied to the dapp')
+
+  // Copy giveaway configuration to the dapp
+  await fs.copyFileSync(
+    'config/giveawayConfig.ts',
+    '../dapp/src/config/internal/giveawayConfig.ts'
+  )
+  log('✅ Multi Chain giveaway config data was copied to the dapp')
 }
 
 func.tags = ['all', 'dev', 'staging', 'prod', 'save-contract-data']

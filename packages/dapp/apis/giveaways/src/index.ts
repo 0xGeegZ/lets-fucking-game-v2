@@ -19,19 +19,10 @@
 // WORKER SIGN IN EXAMPLE :  https://github.com/vonadz/newsletter-oauth-registration-cfw
 
 import { Router } from "itty-router";
-import { error, json, missing, status } from "itty-router-extras";
-import {
-	handleCors,
-	wrapCorsHeader,
-	requireTweetId,
-	requireUserId,
-	requireGiveawayId,
-	requireUserAddress,
-	requirePrizes,
-} from "./helper";
+import { error, json, missing } from "itty-router-extras";
+import { handleCors, wrapCorsHeader, requireField } from "./helper";
 import {
 	getAllRetweets,
-	getRetweets,
 	getTweet,
 	checkUserSignUp,
 	signUp,
@@ -46,7 +37,7 @@ const allowedOrigin =
 	/[^\w](lfgames\.xyz)|(localhost:3000)|(127.0.0.1:3000)|(lfgames.finance)$/;
 
 router.get("/tweets/:tweetId/retweets", async ({ params }) => {
-	const isParamError = requireTweetId(params);
+	const isParamError = requireField("tweetId", params);
 	if (isParamError) return isParamError;
 
 	const { tweetId } = params;
@@ -60,7 +51,7 @@ router.get("/tweets/:tweetId/retweets", async ({ params }) => {
 });
 
 router.get("/tweets/:tweetId", async ({ params }) => {
-	const isParamError = requireTweetId(params);
+	const isParamError = requireField("tweetId", params);
 	if (isParamError) return isParamError;
 
 	const { tweetId } = params;
@@ -72,51 +63,72 @@ router.get("/tweets/:tweetId", async ({ params }) => {
 	}
 });
 
-router.get("/giveaway/:giveawayId/winners", async ({ params, query }) => {
-	const isParamError = requireGiveawayId(params);
-	if (isParamError) return isParamError;
+router.get(
+	"/chains/:chainId/giveaways/:giveawayId/winners",
+	async ({ params, query }) => {
+		const isParamChainError = requireField("chainId", params);
+		if (isParamChainError) return isParamChainError;
 
-	const isQueryTweetIdError = requireTweetId(query);
-	if (isQueryTweetIdError) return isQueryTweetIdError;
+		const isParamGiveawayError = requireField("giveawayId", params);
+		if (isParamGiveawayError) return isParamGiveawayError;
 
-	const isQueryPrizesError = requirePrizes(query);
-	if (isQueryPrizesError) return isQueryPrizesError;
+		const isQueryTweetIdError = requireField("tweetId", query);
+		if (isQueryTweetIdError) return isQueryTweetIdError;
 
-	const { giveawayId } = params;
-	// TODO : those data should be loaded via multicall and on chain request
-	const { prizes, tweetId } = query;
+		const isQueryPrizesError = requireField("prizes", query);
+		if (isQueryPrizesError) return isQueryPrizesError;
 
-	try {
-		const result = await drawWinners(giveawayId, tweetId, prizes);
-		return json(result);
-	} catch (err) {
-		return error(500, { error: { message: err.message } });
+		const isQueryRetweetError = requireField("retweetMaxCount", query);
+		if (isQueryRetweetError) return isQueryRetweetError;
+
+		const { giveawayId /*, chainId*/ } = params;
+
+		// TODO : those data should be loaded via multicall and on chain request
+		const { prizes, tweetId, retweetMaxCount } = query;
+
+		try {
+			const result = await drawWinners(
+				giveawayId,
+				tweetId,
+				+retweetMaxCount,
+				+prizes
+			);
+			return json(result);
+		} catch (err) {
+			return error(500, { error: { message: err.message } });
+		}
 	}
-});
+);
 
-router.get("/giveaway/:giveawayId/refresh", async ({ params, query }) => {
-	const isParamError = requireGiveawayId(params);
-	if (isParamError) return isParamError;
+router.get(
+	"/chains/:chainId/giveaways/:giveawayId/refresh",
+	async ({ params, query }) => {
+		const isParamChainError = requireField("chainId", params);
+		if (isParamChainError) return isParamChainError;
 
-	const isQueryTweetIdError = requireTweetId(query);
-	if (isQueryTweetIdError) return isQueryTweetIdError;
+		const isParamGiveawayError = requireField("giveawayId", params);
+		if (isParamGiveawayError) return isParamGiveawayError;
 
-	// const { giveawayId } = params;
-	// TODO : those data should be loaded via multicall and on chain request
-	const { tweetId } = query;
+		const isQueryTweetIdError = requireField("tweetId", query);
+		if (isQueryTweetIdError) return isQueryTweetIdError;
 
-	try {
-		const refreshed = await getAllRetweets(tweetId);
-		return json({
-			retweetCount: refreshed.length,
-		});
-	} catch (err) {
-		return error(500, { error: { message: err.message } });
+		// const { giveawayId, chainId } = params;
+		// TODO : those data should be loaded via multicall and on chain request
+		const { tweetId } = query;
+
+		try {
+			const refreshed = await getAllRetweets(tweetId);
+			return json({
+				retweetCount: refreshed.length,
+			});
+		} catch (err) {
+			return error(500, { error: { message: err.message } });
+		}
 	}
-});
+);
 
 router.get("/users/:userId", async ({ params }) => {
-	const isParamError = requireUserId(params);
+	const isParamError = requireField("userId", params);
 	if (isParamError) return isParamError;
 
 	const { userId } = params;
@@ -130,15 +142,14 @@ router.get("/users/:userId", async ({ params }) => {
 });
 
 router.post("/users", async ({ query }) => {
-	const isQueryUserIdError = requireUserId(query);
+	const isQueryUserIdError = requireField("userId", query);
 	if (isQueryUserIdError) return isQueryUserIdError;
 
-	const isQueryAddressError = requireUserAddress(query);
+	const isQueryAddressError = requireField("userAddress", query);
 	if (isQueryAddressError) return isQueryAddressError;
 
-	// TODO FOR accessToken
-	// const isQueryAddressError = requireUserAddress(query);
-	// if (isQueryAddressError) return isQueryAddressError;
+	const isQueryTokenError = requireField("accessToken", query);
+	if (isQueryTokenError) return isQueryTokenError;
 
 	const { userId, userAddress, accessToken } = query;
 
@@ -161,6 +172,14 @@ router.get("/auth/twitter", async () => {
 
 router.get("/callback", async ({ query }) => {
 	try {
+		const isQueryCodeError = requireField("code", query);
+		if (isQueryCodeError)
+			return error(500, { error: { message: "Code return is missing" } });
+
+		const isQueryStateError = requireField("state", query);
+		if (isQueryStateError)
+			return error(500, { error: { message: "State return is missing" } });
+
 		const { code, state } = query;
 
 		return json(await twitterCallback(code, state));

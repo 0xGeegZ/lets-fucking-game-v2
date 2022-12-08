@@ -1,6 +1,6 @@
 import { ethers, run } from 'hardhat'
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
+import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { networkConfig } from '../config/networkConfig'
 import { autoFundCheck } from '../helpers/autoFundCheck'
@@ -28,6 +28,15 @@ const func: DeployFunction = async function ({
   if (await autoFundCheck(cronUpkeep.address, chainId, linkTokenAddress)) {
     await run('fund-link', {
       contract: cronUpkeep.address,
+      linkaddress: linkTokenAddress,
+    })
+  }
+
+  const Giveaway = await deployments.get('GiveawayV1')
+  const giveaway = await ethers.getContractAt('GiveawayV1', Giveaway.address)
+  if (await autoFundCheck(giveaway.address, chainId, linkTokenAddress)) {
+    await run('fund-link', {
+      contract: giveaway.address,
       linkaddress: linkTokenAddress,
     })
   }

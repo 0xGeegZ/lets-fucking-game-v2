@@ -1,4 +1,12 @@
-// GAME CONFIG : UPDATE DEFAULT CONFIG FROM HARDHAT PACKAGE THEN COPY CHANGE TO DAPP BY COMPILING OR DEPLOYING CONTRACT
+//  * All testnets config : https://docs.chain.link/any-api/testnet-oracles/
+//  * Goerli Testnet details:
+//  *  - Link Token: 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
+//  *  - Oracle: 0xCC79157eb46F5624204f47AB42b3906cAA40eaB7 (Chainlink DevRel)
+//  *  - jobId: 7223acbd01654282865b678924126013
+//  * Mumbai Testnet details :
+//  *  - Link Token: 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
+//  *  - Oracle: 0x816BA5612d744B01c36b0517B32b4FcCb9747009
+//  *  - jobId: 72bd0768b5c84706a548061c75c35ecc
 
 export const networkConfig: Record<
   string,
@@ -7,7 +15,8 @@ export const networkConfig: Record<
     linkToken?: string
     fee: string
     fundAmount: string
-    gameConfig?
+    oracleToken?: string
+    requestJobId?: string
   }
 > = {
   '31337': {
