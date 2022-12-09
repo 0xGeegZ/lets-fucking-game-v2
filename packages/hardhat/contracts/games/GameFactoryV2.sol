@@ -36,7 +36,7 @@ contract GameFactoryV2 is Factory {
     /**
      * @notice Called when a game is created
      */
-    event GameCreated(uint256 nextId, address gameAddress, uint256 implementationVersion, address creatorAddress);
+    event GameCreated(uint256 id, address gameAddress, uint256 implementationVersion, address creatorAddress);
 
     /**
      * @notice Constructor Tha initialised the factory configuration
@@ -99,7 +99,7 @@ contract GameFactoryV2 is Factory {
         usedAuthorizedAmounts[_registrationAmount].isUsed = true;
         childs.push(
             Child({
-                id: nextId.current(),
+                id: id.current(),
                 versionId: latestVersionId,
                 creator: msg.sender,
                 deployedAddress: newGameAddress,
@@ -120,7 +120,7 @@ contract GameFactoryV2 is Factory {
         initialization.keeper = address(keeper);
         initialization.name = _name;
         initialization.version = latestVersionId;
-        initialization.id = nextId.current();
+        initialization.gameId = id.current();
         initialization.playTimeRange = _playTimeRange;
         initialization.maxPlayers = _maxPlayers;
         initialization.registrationAmount = _registrationAmount;
@@ -135,8 +135,8 @@ contract GameFactoryV2 is Factory {
         keeper.registerCronToUpkeep(newGameAddress);
         keeper.transferOwnership(newGameAddress);
 
-        emit GameCreated(nextId.current(), newGameAddress, latestVersionId, msg.sender);
-        nextId.increment();
+        emit GameCreated(id.current(), newGameAddress, latestVersionId, msg.sender);
+        id.increment();
 
         return newGameAddress;
     }

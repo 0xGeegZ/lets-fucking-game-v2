@@ -38,7 +38,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -171,7 +171,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -203,7 +203,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -355,7 +355,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_roundId",
+        name: "_epoch",
         type: "uint256",
       },
     ],
@@ -369,6 +369,19 @@ const _abi = [
     name: "claimTreasuryFee",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "epoch",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "_value",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -388,7 +401,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_roundId",
+        name: "_epoch",
         type: "uint256",
       },
     ],
@@ -434,7 +447,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_roundId",
+        name: "_epoch",
         type: "uint256",
       },
     ],
@@ -444,7 +457,7 @@ const _abi = [
         components: [
           {
             internalType: "uint256",
-            name: "roundId",
+            name: "epoch",
             type: "uint256",
           },
           {
@@ -524,19 +537,6 @@ const _abi = [
         internalType: "bool",
         name: "",
         type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "roundId",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "_value",
-        type: "uint256",
       },
     ],
     stateMutability: "view",

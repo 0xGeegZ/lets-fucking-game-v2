@@ -17,6 +17,8 @@
 // SEE https://docs.upstash.com/redis/tutorials/cloudflare_workers_with_redis
 
 // WORKER SIGN IN EXAMPLE :  https://github.com/vonadz/newsletter-oauth-registration-cfw
+import { ethers } from "ethers";
+import { BigNumber } from "@ethersproject/bignumber";
 
 import { Router } from "itty-router";
 import { error, json, missing } from "itty-router-extras";
@@ -75,16 +77,17 @@ router.get(
 		const isQueryTweetIdError = requireField("tweetId", query);
 		if (isQueryTweetIdError) return isQueryTweetIdError;
 
-		const isQueryPrizesError = requireField("prizes", query);
-		if (isQueryPrizesError) return isQueryPrizesError;
-
-		const isQueryRetweetError = requireField("retweetMaxCount", query);
-		if (isQueryRetweetError) return isQueryRetweetError;
-
 		const { giveawayId /*, chainId*/ } = params;
 
 		// TODO : those data should be loaded via multicall and on chain request
-		const { prizes, tweetId, retweetMaxCount } = query;
+		// eslint-disable-next-line prefer-const
+		let { prizes, tweetId, retweetMaxCount } = query;
+
+		const isQueryPrizesError = requireField("prizes", query);
+		if (isQueryPrizesError) prizes = 1;
+
+		const isQueryRetweetError = requireField("retweetMaxCount", query);
+		if (isQueryRetweetError) retweetMaxCount = 0;
 
 		try {
 			const result = await drawWinners(
@@ -93,7 +96,14 @@ router.get(
 				+retweetMaxCount,
 				+prizes
 			);
-			return json(result);
+			const payload = ethers.utils.hexlify(
+				ethers.utils.toUtf8Bytes(JSON.stringify(result))
+			);
+
+			return json({
+				giveawayId: BigNumber.from(giveawayId),
+				payload,
+			});
 		} catch (err) {
 			return error(500, { error: { message: err.message } });
 		}
@@ -112,13 +122,14 @@ router.get(
 		const isQueryTweetIdError = requireField("tweetId", query);
 		if (isQueryTweetIdError) return isQueryTweetIdError;
 
-		// const { giveawayId, chainId } = params;
+		const { giveawayId, chainId } = params;
 		// TODO : those data should be loaded via multicall and on chain request
 		const { tweetId } = query;
 
 		try {
 			const refreshed = await getAllRetweets(tweetId);
 			return json({
+				giveawayId: BigNumber.from(giveawayId),
 				retweetCount: refreshed.length,
 			});
 		} catch (err) {
@@ -134,8 +145,11 @@ router.get("/users/:userId", async ({ params }) => {
 	const { userId } = params;
 
 	try {
-		const isAlreadySignedUp = await checkUserSignUp(userId);
-		return json({ isValidate: isAlreadySignedUp });
+		const hasSignedUp = await checkUserSignUp(userId);
+		return json({
+			userId: BigNumber.from(userId),
+			hasSignedUp,
+		});
 	} catch (err) {
 		return error(500, { error: { message: err.message } });
 	}

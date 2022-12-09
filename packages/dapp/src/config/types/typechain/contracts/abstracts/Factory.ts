@@ -28,26 +28,14 @@ import type {
 } from "../../common";
 
 export declare namespace Factory {
-  export type ChildStruct = {
+  export type ChildVersionStruct = {
     id: PromiseOrValue<BigNumberish>;
-    versionId: PromiseOrValue<BigNumberish>;
-    creator: PromiseOrValue<string>;
     deployedAddress: PromiseOrValue<string>;
-    childCreationAmount: PromiseOrValue<BigNumberish>;
   };
 
-  export type ChildStructOutput = [
-    BigNumber,
-    BigNumber,
-    string,
-    string,
-    BigNumber
-  ] & {
+  export type ChildVersionStructOutput = [BigNumber, string] & {
     id: BigNumber;
-    versionId: BigNumber;
-    creator: string;
     deployedAddress: string;
-    childCreationAmount: BigNumber;
   };
 }
 
@@ -57,9 +45,9 @@ export interface FactoryInterface extends utils.Interface {
     "childs(uint256)": FunctionFragment;
     "childsVersions(uint256)": FunctionFragment;
     "cronUpkeep()": FunctionFragment;
-    "getDeployedChilds()": FunctionFragment;
+    "getDeployedChildsVersions()": FunctionFragment;
+    "id()": FunctionFragment;
     "latestVersionId()": FunctionFragment;
-    "nextId()": FunctionFragment;
     "owner()": FunctionFragment;
     "pause()": FunctionFragment;
     "pauseAll()": FunctionFragment;
@@ -80,9 +68,9 @@ export interface FactoryInterface extends utils.Interface {
       | "childs"
       | "childsVersions"
       | "cronUpkeep"
-      | "getDeployedChilds"
+      | "getDeployedChildsVersions"
+      | "id"
       | "latestVersionId"
-      | "nextId"
       | "owner"
       | "pause"
       | "pauseAll"
@@ -114,14 +102,14 @@ export interface FactoryInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getDeployedChilds",
+    functionFragment: "getDeployedChildsVersions",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "id", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "latestVersionId",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "nextId", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "pauseAll", values?: undefined): string;
@@ -164,14 +152,14 @@ export interface FactoryInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "cronUpkeep", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getDeployedChilds",
+    functionFragment: "getDeployedChildsVersions",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "id", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "latestVersionId",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "nextId", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pauseAll", data: BytesLike): Result;
@@ -330,17 +318,17 @@ export interface Factory extends BaseContract {
 
     cronUpkeep(overrides?: CallOverrides): Promise<[string]>;
 
-    getDeployedChilds(
+    getDeployedChildsVersions(
       overrides?: CallOverrides
     ): Promise<
-      [Factory.ChildStructOutput[]] & { allChilds: Factory.ChildStructOutput[] }
+      [Factory.ChildVersionStructOutput[]] & {
+        _childsVersions: Factory.ChildVersionStructOutput[];
+      }
     >;
 
-    latestVersionId(overrides?: CallOverrides): Promise<[BigNumber]>;
+    id(overrides?: CallOverrides): Promise<[BigNumber] & { _value: BigNumber }>;
 
-    nextId(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { _value: BigNumber }>;
+    latestVersionId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -413,13 +401,13 @@ export interface Factory extends BaseContract {
 
   cronUpkeep(overrides?: CallOverrides): Promise<string>;
 
-  getDeployedChilds(
+  getDeployedChildsVersions(
     overrides?: CallOverrides
-  ): Promise<Factory.ChildStructOutput[]>;
+  ): Promise<Factory.ChildVersionStructOutput[]>;
+
+  id(overrides?: CallOverrides): Promise<BigNumber>;
 
   latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
-
-  nextId(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -494,13 +482,13 @@ export interface Factory extends BaseContract {
 
     cronUpkeep(overrides?: CallOverrides): Promise<string>;
 
-    getDeployedChilds(
+    getDeployedChildsVersions(
       overrides?: CallOverrides
-    ): Promise<Factory.ChildStructOutput[]>;
+    ): Promise<Factory.ChildVersionStructOutput[]>;
+
+    id(overrides?: CallOverrides): Promise<BigNumber>;
 
     latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nextId(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -588,11 +576,11 @@ export interface Factory extends BaseContract {
 
     cronUpkeep(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getDeployedChilds(overrides?: CallOverrides): Promise<BigNumber>;
+    getDeployedChildsVersions(overrides?: CallOverrides): Promise<BigNumber>;
+
+    id(overrides?: CallOverrides): Promise<BigNumber>;
 
     latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nextId(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -660,11 +648,13 @@ export interface Factory extends BaseContract {
 
     cronUpkeep(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getDeployedChilds(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getDeployedChildsVersions(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    id(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     latestVersionId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    nextId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

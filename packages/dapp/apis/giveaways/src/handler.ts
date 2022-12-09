@@ -99,7 +99,8 @@ export const drawWinners = async (
 ) => {
 	if (!giveawayId) throw new Error("giveaway id is needed");
 	if (!tweetId) throw new Error("tweet id is needed");
-	if (!retweetMaxCount) throw new Error("retweetMaxCount id is needed");
+	if (typeof retweetMaxCount === "undefined")
+		throw new Error("retweetMaxCount id is needed");
 	if (!prizes) throw new Error("prizes id is needed");
 
 	const retweets = await getAllRetweets(tweetId);

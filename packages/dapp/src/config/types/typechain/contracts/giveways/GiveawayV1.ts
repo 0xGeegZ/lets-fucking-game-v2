@@ -52,7 +52,7 @@ export declare namespace IChild {
   };
 
   export type WinnerStruct = {
-    roundId: PromiseOrValue<BigNumberish>;
+    epoch: PromiseOrValue<BigNumberish>;
     userId: PromiseOrValue<BigNumberish>;
     playerAddress: PromiseOrValue<string>;
     amountWon: PromiseOrValue<BigNumberish>;
@@ -74,7 +74,7 @@ export declare namespace IChild {
     BigNumber,
     boolean
   ] & {
-    roundId: BigNumber;
+    epoch: BigNumber;
     userId: BigNumber;
     playerAddress: string;
     amountWon: BigNumber;
@@ -83,6 +83,42 @@ export declare namespace IChild {
     contractAddress: string;
     tokenId: BigNumber;
     prizeClaimed: boolean;
+  };
+}
+
+export declare namespace GiveawayV1 {
+  export type GiveawayStruct = {
+    name: PromiseOrValue<string>;
+    image: PromiseOrValue<string>;
+    creator: PromiseOrValue<string>;
+    userId: PromiseOrValue<BigNumberish>;
+    tweetId: PromiseOrValue<BigNumberish>;
+    endTimestamp: PromiseOrValue<BigNumberish>;
+    retweetCount: PromiseOrValue<BigNumberish>;
+    retweetMaxCount: PromiseOrValue<BigNumberish>;
+    isEnded: PromiseOrValue<boolean>;
+  };
+
+  export type GiveawayStructOutput = [
+    string,
+    string,
+    string,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    boolean
+  ] & {
+    name: string;
+    image: string;
+    creator: string;
+    userId: BigNumber;
+    tweetId: BigNumber;
+    endTimestamp: BigNumber;
+    retweetCount: BigNumber;
+    retweetMaxCount: BigNumber;
+    isEnded: boolean;
   };
 }
 
@@ -96,12 +132,14 @@ export interface GiveawayV1Interface extends utils.Interface {
     "claimPrize(uint256)": FunctionFragment;
     "claimTreasuryFee()": FunctionFragment;
     "createGiveaway(string,string,uint256,uint256,uint256,uint256,(uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
+    "epoch()": FunctionFragment;
     "factory()": FunctionFragment;
     "fulfillGiveawayWinner(bytes32,uint256,bytes)": FunctionFragment;
     "fulfillRefreshGiveaway(bytes32,uint256,uint256)": FunctionFragment;
     "fulfillSignUp(bytes32,uint256,bool)": FunctionFragment;
     "getGiveawayRefreshURI(uint256)": FunctionFragment;
     "getGiveawayURI(uint256)": FunctionFragment;
+    "getGiveaways()": FunctionFragment;
     "getPrizes(uint256)": FunctionFragment;
     "getSignUpURI(uint256)": FunctionFragment;
     "getWinners(uint256)": FunctionFragment;
@@ -115,7 +153,6 @@ export interface GiveawayV1Interface extends utils.Interface {
     "performUpkeep(bytes)": FunctionFragment;
     "refreshActiveGiveawayStatus()": FunctionFragment;
     "requestBaseURI()": FunctionFragment;
-    "roundId()": FunctionFragment;
     "setRequestBaseURI(string)": FunctionFragment;
     "setTreasuryFee(uint256)": FunctionFragment;
     "signUp(uint256)": FunctionFragment;
@@ -138,12 +175,14 @@ export interface GiveawayV1Interface extends utils.Interface {
       | "claimPrize"
       | "claimTreasuryFee"
       | "createGiveaway"
+      | "epoch"
       | "factory"
       | "fulfillGiveawayWinner"
       | "fulfillRefreshGiveaway"
       | "fulfillSignUp"
       | "getGiveawayRefreshURI"
       | "getGiveawayURI"
+      | "getGiveaways"
       | "getPrizes"
       | "getSignUpURI"
       | "getWinners"
@@ -157,7 +196,6 @@ export interface GiveawayV1Interface extends utils.Interface {
       | "performUpkeep"
       | "refreshActiveGiveawayStatus"
       | "requestBaseURI"
-      | "roundId"
       | "setRequestBaseURI"
       | "setTreasuryFee"
       | "signUp"
@@ -215,6 +253,7 @@ export interface GiveawayV1Interface extends utils.Interface {
       IChild.PrizeStruct[]
     ]
   ): string;
+  encodeFunctionData(functionFragment: "epoch", values?: undefined): string;
   encodeFunctionData(functionFragment: "factory", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "fulfillGiveawayWinner",
@@ -247,6 +286,10 @@ export interface GiveawayV1Interface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getGiveawayURI",
     values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getGiveaways",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getPrizes",
@@ -288,7 +331,6 @@ export interface GiveawayV1Interface extends utils.Interface {
     functionFragment: "requestBaseURI",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "roundId", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setRequestBaseURI",
     values: [PromiseOrValue<string>]
@@ -350,6 +392,7 @@ export interface GiveawayV1Interface extends utils.Interface {
     functionFragment: "createGiveaway",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "epoch", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "factory", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "fulfillGiveawayWinner",
@@ -369,6 +412,10 @@ export interface GiveawayV1Interface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getGiveawayURI",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getGiveaways",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getPrizes", data: BytesLike): Result;
@@ -402,7 +449,6 @@ export interface GiveawayV1Interface extends utils.Interface {
     functionFragment: "requestBaseURI",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "roundId", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setRequestBaseURI",
     data: BytesLike
@@ -548,7 +594,7 @@ export type ChainlinkRequestedEventFilter =
 
 export interface ChildPrizeClaimedEventObject {
   claimer: string;
-  roundId: BigNumber;
+  epoch: BigNumber;
   amountClaimed: BigNumber;
 }
 export type ChildPrizeClaimedEvent = TypedEvent<
@@ -631,7 +677,7 @@ export type FailedTransferEventFilter = TypedEventFilter<FailedTransferEvent>;
 
 export interface GamePrizeClaimedEventObject {
   claimer: string;
-  roundId: BigNumber;
+  epoch: BigNumber;
   amountClaimed: BigNumber;
 }
 export type GamePrizeClaimedEvent = TypedEvent<
@@ -643,7 +689,7 @@ export type GamePrizeClaimedEventFilter =
   TypedEventFilter<GamePrizeClaimedEvent>;
 
 export interface GiveawayCreatedEventObject {
-  roundId: BigNumber;
+  epoch: BigNumber;
   userId: BigNumber;
   tweetId: BigNumber;
   prizesLength: BigNumber;
@@ -711,7 +757,7 @@ export type PerformUpkeepExecutedEventFilter =
   TypedEventFilter<PerformUpkeepExecutedEvent>;
 
 export interface PrizeAddedEventObject {
-  roundId: BigNumber;
+  epoch: BigNumber;
   position: BigNumber;
   amount: BigNumber;
   standard: BigNumber;
@@ -858,7 +904,7 @@ export interface GiveawayV1 extends BaseContract {
     >;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -876,6 +922,10 @@ export interface GiveawayV1 extends BaseContract {
       _prizes: IChild.PrizeStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    epoch(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { _value: BigNumber }>;
 
     factory(overrides?: CallOverrides): Promise<[string]>;
 
@@ -896,7 +946,7 @@ export interface GiveawayV1 extends BaseContract {
     fulfillSignUp(
       _requestId: PromiseOrValue<BytesLike>,
       _userId: PromiseOrValue<BigNumberish>,
-      _isValidate: PromiseOrValue<boolean>,
+      _hasSignedUp: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -910,8 +960,16 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string] & { _giveawayURI: string }>;
 
+    getGiveaways(
+      overrides?: CallOverrides
+    ): Promise<
+      [GiveawayV1.GiveawayStructOutput[]] & {
+        _giveaways: GiveawayV1.GiveawayStructOutput[];
+      }
+    >;
+
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [IChild.PrizeStructOutput[]] & { childPrizes: IChild.PrizeStructOutput[] }
@@ -923,7 +981,7 @@ export interface GiveawayV1 extends BaseContract {
     ): Promise<[string] & { _signUpURI: string }>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [IChild.WinnerStructOutput[]] & {
@@ -985,10 +1043,6 @@ export interface GiveawayV1 extends BaseContract {
     ): Promise<ContractTransaction>;
 
     requestBaseURI(overrides?: CallOverrides): Promise<[string]>;
-
-    roundId(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { _value: BigNumber }>;
 
     setRequestBaseURI(
       _requestBaseURI: PromiseOrValue<string>,
@@ -1060,7 +1114,7 @@ export interface GiveawayV1 extends BaseContract {
   ): Promise<[boolean, string] & { _upkeepNeeded: boolean; _payload: string }>;
 
   claimPrize(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _epoch: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1078,6 +1132,8 @@ export interface GiveawayV1 extends BaseContract {
     _prizes: IChild.PrizeStruct[],
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  epoch(overrides?: CallOverrides): Promise<BigNumber>;
 
   factory(overrides?: CallOverrides): Promise<string>;
 
@@ -1098,7 +1154,7 @@ export interface GiveawayV1 extends BaseContract {
   fulfillSignUp(
     _requestId: PromiseOrValue<BytesLike>,
     _userId: PromiseOrValue<BigNumberish>,
-    _isValidate: PromiseOrValue<boolean>,
+    _hasSignedUp: PromiseOrValue<boolean>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1112,8 +1168,12 @@ export interface GiveawayV1 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  getGiveaways(
+    overrides?: CallOverrides
+  ): Promise<GiveawayV1.GiveawayStructOutput[]>;
+
   getPrizes(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _epoch: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<IChild.PrizeStructOutput[]>;
 
@@ -1123,7 +1183,7 @@ export interface GiveawayV1 extends BaseContract {
   ): Promise<string>;
 
   getWinners(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _epoch: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<IChild.WinnerStructOutput[]>;
 
@@ -1181,8 +1241,6 @@ export interface GiveawayV1 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   requestBaseURI(overrides?: CallOverrides): Promise<string>;
-
-  roundId(overrides?: CallOverrides): Promise<BigNumber>;
 
   setRequestBaseURI(
     _requestBaseURI: PromiseOrValue<string>,
@@ -1256,7 +1314,7 @@ export interface GiveawayV1 extends BaseContract {
     >;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1272,6 +1330,8 @@ export interface GiveawayV1 extends BaseContract {
       _prizes: IChild.PrizeStruct[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    epoch(overrides?: CallOverrides): Promise<BigNumber>;
 
     factory(overrides?: CallOverrides): Promise<string>;
 
@@ -1292,7 +1352,7 @@ export interface GiveawayV1 extends BaseContract {
     fulfillSignUp(
       _requestId: PromiseOrValue<BytesLike>,
       _userId: PromiseOrValue<BigNumberish>,
-      _isValidate: PromiseOrValue<boolean>,
+      _hasSignedUp: PromiseOrValue<boolean>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1306,8 +1366,12 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    getGiveaways(
+      overrides?: CallOverrides
+    ): Promise<GiveawayV1.GiveawayStructOutput[]>;
+
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<IChild.PrizeStructOutput[]>;
 
@@ -1317,7 +1381,7 @@ export interface GiveawayV1 extends BaseContract {
     ): Promise<string>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<IChild.WinnerStructOutput[]>;
 
@@ -1371,8 +1435,6 @@ export interface GiveawayV1 extends BaseContract {
     refreshActiveGiveawayStatus(overrides?: CallOverrides): Promise<void>;
 
     requestBaseURI(overrides?: CallOverrides): Promise<string>;
-
-    roundId(overrides?: CallOverrides): Promise<BigNumber>;
 
     setRequestBaseURI(
       _requestBaseURI: PromiseOrValue<string>,
@@ -1446,12 +1508,12 @@ export interface GiveawayV1 extends BaseContract {
 
     "ChildPrizeClaimed(address,uint256,uint256)"(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): ChildPrizeClaimedEventFilter;
     ChildPrizeClaimed(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): ChildPrizeClaimedEventFilter;
 
@@ -1502,23 +1564,23 @@ export interface GiveawayV1 extends BaseContract {
 
     "GamePrizeClaimed(address,uint256,uint256)"(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): GamePrizeClaimedEventFilter;
     GamePrizeClaimed(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): GamePrizeClaimedEventFilter;
 
     "GiveawayCreated(uint256,uint256,uint256,uint256)"(
-      roundId?: null,
+      epoch?: null,
       userId?: null,
       tweetId?: null,
       prizesLength?: null
     ): GiveawayCreatedEventFilter;
     GiveawayCreated(
-      roundId?: null,
+      epoch?: null,
       userId?: null,
       tweetId?: null,
       prizesLength?: null
@@ -1564,7 +1626,7 @@ export interface GiveawayV1 extends BaseContract {
     ): PerformUpkeepExecutedEventFilter;
 
     "PrizeAdded(uint256,uint256,uint256,uint256,address,uint256)"(
-      roundId?: null,
+      epoch?: null,
       position?: null,
       amount?: null,
       standard?: null,
@@ -1572,7 +1634,7 @@ export interface GiveawayV1 extends BaseContract {
       tokenId?: null
     ): PrizeAddedEventFilter;
     PrizeAdded(
-      roundId?: null,
+      epoch?: null,
       position?: null,
       amount?: null,
       standard?: null,
@@ -1663,7 +1725,7 @@ export interface GiveawayV1 extends BaseContract {
     ): Promise<BigNumber>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1681,6 +1743,8 @@ export interface GiveawayV1 extends BaseContract {
       _prizes: IChild.PrizeStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    epoch(overrides?: CallOverrides): Promise<BigNumber>;
 
     factory(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1701,7 +1765,7 @@ export interface GiveawayV1 extends BaseContract {
     fulfillSignUp(
       _requestId: PromiseOrValue<BytesLike>,
       _userId: PromiseOrValue<BigNumberish>,
-      _isValidate: PromiseOrValue<boolean>,
+      _hasSignedUp: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1715,8 +1779,10 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getGiveaways(overrides?: CallOverrides): Promise<BigNumber>;
+
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1726,7 +1792,7 @@ export interface GiveawayV1 extends BaseContract {
     ): Promise<BigNumber>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1762,8 +1828,6 @@ export interface GiveawayV1 extends BaseContract {
     ): Promise<BigNumber>;
 
     requestBaseURI(overrides?: CallOverrides): Promise<BigNumber>;
-
-    roundId(overrides?: CallOverrides): Promise<BigNumber>;
 
     setRequestBaseURI(
       _requestBaseURI: PromiseOrValue<string>,
@@ -1836,7 +1900,7 @@ export interface GiveawayV1 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1854,6 +1918,8 @@ export interface GiveawayV1 extends BaseContract {
       _prizes: IChild.PrizeStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    epoch(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     factory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1874,7 +1940,7 @@ export interface GiveawayV1 extends BaseContract {
     fulfillSignUp(
       _requestId: PromiseOrValue<BytesLike>,
       _userId: PromiseOrValue<BigNumberish>,
-      _isValidate: PromiseOrValue<boolean>,
+      _hasSignedUp: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1888,8 +1954,10 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getGiveaways(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1899,7 +1967,7 @@ export interface GiveawayV1 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1935,8 +2003,6 @@ export interface GiveawayV1 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     requestBaseURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    roundId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setRequestBaseURI(
       _requestBaseURI: PromiseOrValue<string>,

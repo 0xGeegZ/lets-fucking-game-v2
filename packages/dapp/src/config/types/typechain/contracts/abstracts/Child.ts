@@ -52,7 +52,7 @@ export declare namespace IChild {
   };
 
   export type WinnerStruct = {
-    roundId: PromiseOrValue<BigNumberish>;
+    epoch: PromiseOrValue<BigNumberish>;
     userId: PromiseOrValue<BigNumberish>;
     playerAddress: PromiseOrValue<string>;
     amountWon: PromiseOrValue<BigNumberish>;
@@ -74,7 +74,7 @@ export declare namespace IChild {
     BigNumber,
     boolean
   ] & {
-    roundId: BigNumber;
+    epoch: BigNumber;
     userId: BigNumber;
     playerAddress: string;
     amountWon: BigNumber;
@@ -92,13 +92,13 @@ export interface ChildInterface extends utils.Interface {
     "addPrizes((uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
     "claimPrize(uint256)": FunctionFragment;
     "claimTreasuryFee()": FunctionFragment;
+    "epoch()": FunctionFragment;
     "factory()": FunctionFragment;
     "getPrizes(uint256)": FunctionFragment;
     "getWinners(uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
-    "roundId()": FunctionFragment;
     "setTreasuryFee(uint256)": FunctionFragment;
     "transferAdminOwnership(address)": FunctionFragment;
     "transferFactoryOwnership(address)": FunctionFragment;
@@ -114,13 +114,13 @@ export interface ChildInterface extends utils.Interface {
       | "addPrizes"
       | "claimPrize"
       | "claimTreasuryFee"
+      | "epoch"
       | "factory"
       | "getPrizes"
       | "getWinners"
       | "owner"
       | "pause"
       | "paused"
-      | "roundId"
       | "setTreasuryFee"
       | "transferAdminOwnership"
       | "transferFactoryOwnership"
@@ -146,6 +146,7 @@ export interface ChildInterface extends utils.Interface {
     functionFragment: "claimTreasuryFee",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "epoch", values?: undefined): string;
   encodeFunctionData(functionFragment: "factory", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getPrizes",
@@ -158,7 +159,6 @@ export interface ChildInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
-  encodeFunctionData(functionFragment: "roundId", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setTreasuryFee",
     values: [PromiseOrValue<BigNumberish>]
@@ -195,13 +195,13 @@ export interface ChildInterface extends utils.Interface {
     functionFragment: "claimTreasuryFee",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "epoch", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "factory", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getPrizes", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getWinners", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "roundId", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setTreasuryFee",
     data: BytesLike
@@ -283,7 +283,7 @@ export type AdminOwnershipTransferredEventFilter =
 
 export interface ChildPrizeClaimedEventObject {
   claimer: string;
-  roundId: BigNumber;
+  epoch: BigNumber;
   amountClaimed: BigNumber;
 }
 export type ChildPrizeClaimedEvent = TypedEvent<
@@ -366,7 +366,7 @@ export type FailedTransferEventFilter = TypedEventFilter<FailedTransferEvent>;
 
 export interface GamePrizeClaimedEventObject {
   claimer: string;
-  roundId: BigNumber;
+  epoch: BigNumber;
   amountClaimed: BigNumber;
 }
 export type GamePrizeClaimedEvent = TypedEvent<
@@ -385,7 +385,7 @@ export type PausedEvent = TypedEvent<[string], PausedEventObject>;
 export type PausedEventFilter = TypedEventFilter<PausedEvent>;
 
 export interface PrizeAddedEventObject {
-  roundId: BigNumber;
+  epoch: BigNumber;
   position: BigNumber;
   amount: BigNumber;
   standard: BigNumber;
@@ -474,7 +474,7 @@ export interface Child extends BaseContract {
     ): Promise<ContractTransaction>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -482,17 +482,21 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    epoch(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { _value: BigNumber }>;
+
     factory(overrides?: CallOverrides): Promise<[string]>;
 
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [IChild.PrizeStructOutput[]] & { childPrizes: IChild.PrizeStructOutput[] }
     >;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [IChild.WinnerStructOutput[]] & {
@@ -507,10 +511,6 @@ export interface Child extends BaseContract {
     ): Promise<ContractTransaction>;
 
     paused(overrides?: CallOverrides): Promise<[boolean]>;
-
-    roundId(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { _value: BigNumber }>;
 
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,
@@ -549,7 +549,7 @@ export interface Child extends BaseContract {
   ): Promise<ContractTransaction>;
 
   claimPrize(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _epoch: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -557,15 +557,17 @@ export interface Child extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  epoch(overrides?: CallOverrides): Promise<BigNumber>;
+
   factory(overrides?: CallOverrides): Promise<string>;
 
   getPrizes(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _epoch: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<IChild.PrizeStructOutput[]>;
 
   getWinners(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _epoch: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<IChild.WinnerStructOutput[]>;
 
@@ -576,8 +578,6 @@ export interface Child extends BaseContract {
   ): Promise<ContractTransaction>;
 
   paused(overrides?: CallOverrides): Promise<boolean>;
-
-  roundId(overrides?: CallOverrides): Promise<BigNumber>;
 
   setTreasuryFee(
     _treasuryFee: PromiseOrValue<BigNumberish>,
@@ -616,21 +616,23 @@ export interface Child extends BaseContract {
     ): Promise<void>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     claimTreasuryFee(overrides?: CallOverrides): Promise<void>;
 
+    epoch(overrides?: CallOverrides): Promise<BigNumber>;
+
     factory(overrides?: CallOverrides): Promise<string>;
 
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<IChild.PrizeStructOutput[]>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<IChild.WinnerStructOutput[]>;
 
@@ -639,8 +641,6 @@ export interface Child extends BaseContract {
     pause(overrides?: CallOverrides): Promise<void>;
 
     paused(overrides?: CallOverrides): Promise<boolean>;
-
-    roundId(overrides?: CallOverrides): Promise<BigNumber>;
 
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,
@@ -681,12 +681,12 @@ export interface Child extends BaseContract {
 
     "ChildPrizeClaimed(address,uint256,uint256)"(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): ChildPrizeClaimedEventFilter;
     ChildPrizeClaimed(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): ChildPrizeClaimedEventFilter;
 
@@ -737,12 +737,12 @@ export interface Child extends BaseContract {
 
     "GamePrizeClaimed(address,uint256,uint256)"(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): GamePrizeClaimedEventFilter;
     GamePrizeClaimed(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): GamePrizeClaimedEventFilter;
 
@@ -750,7 +750,7 @@ export interface Child extends BaseContract {
     Paused(account?: null): PausedEventFilter;
 
     "PrizeAdded(uint256,uint256,uint256,uint256,address,uint256)"(
-      roundId?: null,
+      epoch?: null,
       position?: null,
       amount?: null,
       standard?: null,
@@ -758,7 +758,7 @@ export interface Child extends BaseContract {
       tokenId?: null
     ): PrizeAddedEventFilter;
     PrizeAdded(
-      roundId?: null,
+      epoch?: null,
       position?: null,
       amount?: null,
       standard?: null,
@@ -795,7 +795,7 @@ export interface Child extends BaseContract {
     ): Promise<BigNumber>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -803,15 +803,17 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    epoch(overrides?: CallOverrides): Promise<BigNumber>;
+
     factory(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -822,8 +824,6 @@ export interface Child extends BaseContract {
     ): Promise<BigNumber>;
 
     paused(overrides?: CallOverrides): Promise<BigNumber>;
-
-    roundId(overrides?: CallOverrides): Promise<BigNumber>;
 
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,
@@ -863,7 +863,7 @@ export interface Child extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -871,15 +871,17 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    epoch(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     factory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -890,8 +892,6 @@ export interface Child extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    roundId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,

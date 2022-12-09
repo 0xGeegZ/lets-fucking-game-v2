@@ -32,7 +32,7 @@ interface IGame is IChild {
         address keeper;
         bytes32 name;
         uint256 version;
-        uint256 id;
+        uint256 gameId;
         uint256 playTimeRange;
         uint256 maxPlayers;
         uint256 registrationAmount;
@@ -43,9 +43,9 @@ interface IGame is IChild {
     }
 
     struct GameData {
-        uint256 id;
+        uint256 gameId;
         uint256 versionId;
-        uint256 roundId;
+        uint256 epoch;
         bytes32 name;
         uint256 playerAddressesCount;
         uint256 remainingPlayersCount;
@@ -90,7 +90,7 @@ interface IGame is IChild {
     /**
      * @notice Called when a player lost a game
      */
-    event GameLost(uint256 roundId, address playerAddress, uint256 roundCount);
+    event GameLost(uint256 epoch, address playerAddress, uint256 roundCount);
     /**
      * @notice Called when a player play a round
      */
@@ -98,19 +98,19 @@ interface IGame is IChild {
     /**
      * @notice Called when a player won the game
      */
-    event GameWon(uint256 roundId, uint256 winnersCounter, address playerAddress, uint256 amountWon);
+    event GameWon(uint256 epoch, uint256 winnersCounter, address playerAddress, uint256 amountWon);
     /**
      * @notice Called when some player(s) split the game
      */
-    event GameSplitted(uint256 roundId, uint256 remainingPlayersCount, uint256 amountWon);
+    event GameSplitted(uint256 epoch, uint256 remainingPlayersCount, uint256 amountWon);
     /**
      * @notice Called when a player vote to split pot
      */
-    event VoteToSplitPot(uint256 roundId, address playerAddress);
+    event VoteToSplitPot(uint256 epoch, address playerAddress);
     /**
      * @notice Called when TriggerDailyCheckpoint function is called
      */
-    event TriggeredDailyCheckpoint(uint256 roundId, address emmiter, uint256 timestamp);
+    event TriggeredDailyCheckpoint(uint256 epoch, address emmiter, uint256 timestamp);
 
     ///
     /// INITIALISATION
@@ -124,7 +124,7 @@ interface IGame is IChild {
      *  @param _initialization.cronUpkeep the cron upkeep address
      *  @param _initialization.name the game name
      *  @param _initialization.version the version of the game implementation
-     *  @param _initialization.id the unique game id (fix)
+     *  @param _initialization.gameId the unique game gameId (fix)
      *  @param _initialization.playTimeRange the time range during which a player can play in hour
      *  @param _initialization.maxPlayers the maximum number of players for a game
      *  @param _initialization.registrationAmount the amount that players will need to pay to enter in the game
@@ -182,7 +182,7 @@ interface IGame is IChild {
      * @notice Return game informations
      * @return gameData the game status data with params as follow :
      *  gameData.creator the creator address of the game
-     *  gameData.roundId the roundId of the game
+     *  gameData.epoch the epoch of the game
      *  gameData.name the name of the game
      *  gameData.playerAddressesCount the number of registered players
      *  gameData.maxPlayers the maximum players of the game

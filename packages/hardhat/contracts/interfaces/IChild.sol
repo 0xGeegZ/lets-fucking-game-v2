@@ -10,7 +10,7 @@ interface IChild {
      * @notice Winner structure that contain all usefull data for a winner
      */
     struct Winner {
-        uint256 roundId;
+        uint256 epoch;
         uint256 userId;
         address playerAddress;
         uint256 amountWon;
@@ -32,7 +32,7 @@ interface IChild {
     }
 
     /**
-     * @notice Prize structure that contain a list of prizes for the current roundId
+     * @notice Prize structure that contain a list of prizes for the current epoch
      */
     struct Prize {
         uint256 position;
@@ -58,7 +58,7 @@ interface IChild {
      * @notice Called when a prize is added
      */
     event PrizeAdded(
-        uint256 roundId,
+        uint256 epoch,
         uint256 position,
         uint256 amount,
         uint256 standard,
@@ -68,7 +68,7 @@ interface IChild {
     /**
      * @notice Called when a player have claimed his prize
      */
-    event GamePrizeClaimed(address claimer, uint256 roundId, uint256 amountClaimed);
+    event GamePrizeClaimed(address claimer, uint256 epoch, uint256 amountClaimed);
     /**
      * @notice Called when a methode transferCreatorOwnership is called
      */
@@ -92,7 +92,7 @@ interface IChild {
     /**
      * @notice Called when a player have claimed his prize
      */
-    event ChildPrizeClaimed(address claimer, uint256 roundId, uint256 amountClaimed);
+    event ChildPrizeClaimed(address claimer, uint256 epoch, uint256 amountClaimed);
     /**
      * @notice Called when the treasury fee are claimed
      */
@@ -118,7 +118,7 @@ interface IChild {
      * @notice Function that is called by a winner to claim his prize
      * @dev TODO NEXT VERSION Update claim process according to prize type
      */
-    function claimPrize(uint256 _roundId) external;
+    function claimPrize(uint256 _epoch) external;
 
     /**
      * @notice Prizes adding management
@@ -134,17 +134,17 @@ interface IChild {
     ///
     /**
      * @notice Return the winners for a round id
-     * @param _roundId the round id
+     * @param _epoch the round id
      * @return childWinners list of Winner
      */
-    function getWinners(uint256 _roundId) external view returns (Winner[] memory childWinners);
+    function getWinners(uint256 _epoch) external view returns (Winner[] memory childWinners);
 
     /**
      * @notice Return the winners for a round id
-     * @param _roundId the round id
+     * @param _epoch the round id
      * @return childPrizes list of Prize
      */
-    function getPrizes(uint256 _roundId) external view returns (Prize[] memory childPrizes);
+    function getPrizes(uint256 _epoch) external view returns (Prize[] memory childPrizes);
 
     ///
     /// SETTERS FUNCTIONS

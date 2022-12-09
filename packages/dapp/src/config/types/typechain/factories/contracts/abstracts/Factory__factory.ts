@@ -201,7 +201,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "getDeployedChilds",
+    name: "getDeployedChildsVersions",
     outputs: [
       {
         components: [
@@ -211,29 +211,27 @@ const _abi = [
             type: "uint256",
           },
           {
-            internalType: "uint256",
-            name: "versionId",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "creator",
-            type: "address",
-          },
-          {
             internalType: "address",
             name: "deployedAddress",
             type: "address",
           },
-          {
-            internalType: "uint256",
-            name: "childCreationAmount",
-            type: "uint256",
-          },
         ],
-        internalType: "struct Factory.Child[]",
-        name: "allChilds",
+        internalType: "struct Factory.ChildVersion[]",
+        name: "_childsVersions",
         type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "id",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "_value",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -246,19 +244,6 @@ const _abi = [
       {
         internalType: "uint256",
         name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "nextId",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "_value",
         type: "uint256",
       },
     ],

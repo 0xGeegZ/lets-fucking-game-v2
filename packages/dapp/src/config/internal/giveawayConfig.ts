@@ -99,7 +99,6 @@ export const giveawayConfig: Record<string, GiveawayConfig | null> = {
   '97': {
     ...defaultGiveawayConfig,
     GIVEAWAY_AMOUNT_DEFAULT: parseEther('0.01'),
-    PLAYERS_DEFAULT: 5,
   },
   '5': {
     ...defaultGiveawayConfig,

@@ -16,7 +16,7 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
     using Address for address;
     using Counters for Counters.Counter;
 
-    Counters.Counter public nextId;
+    Counters.Counter public id;
 
     uint256 public childCreationAmount;
 

@@ -65,6 +65,16 @@ export declare namespace GameFactoryV2 {
 }
 
 export declare namespace Factory {
+  export type ChildVersionStruct = {
+    id: PromiseOrValue<BigNumberish>;
+    deployedAddress: PromiseOrValue<string>;
+  };
+
+  export type ChildVersionStructOutput = [BigNumber, string] & {
+    id: BigNumber;
+    deployedAddress: string;
+  };
+
   export type ChildStruct = {
     id: PromiseOrValue<BigNumberish>;
     versionId: PromiseOrValue<BigNumberish>;
@@ -99,10 +109,10 @@ export interface GameFactoryV2Interface extends utils.Interface {
     "cronUpkeep()": FunctionFragment;
     "getAuthorizedAmount(uint256)": FunctionFragment;
     "getAuthorizedAmounts()": FunctionFragment;
-    "getDeployedChilds()": FunctionFragment;
+    "getDeployedChildsVersions()": FunctionFragment;
     "getDeployedGames()": FunctionFragment;
+    "id()": FunctionFragment;
     "latestVersionId()": FunctionFragment;
-    "nextId()": FunctionFragment;
     "owner()": FunctionFragment;
     "pause()": FunctionFragment;
     "pauseAll()": FunctionFragment;
@@ -129,10 +139,10 @@ export interface GameFactoryV2Interface extends utils.Interface {
       | "cronUpkeep"
       | "getAuthorizedAmount"
       | "getAuthorizedAmounts"
-      | "getDeployedChilds"
+      | "getDeployedChildsVersions"
       | "getDeployedGames"
+      | "id"
       | "latestVersionId"
-      | "nextId"
       | "owner"
       | "pause"
       | "pauseAll"
@@ -194,18 +204,18 @@ export interface GameFactoryV2Interface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getDeployedChilds",
+    functionFragment: "getDeployedChildsVersions",
     values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getDeployedGames",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "id", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "latestVersionId",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "nextId", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "pauseAll", values?: undefined): string;
@@ -272,18 +282,18 @@ export interface GameFactoryV2Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getDeployedChilds",
+    functionFragment: "getDeployedChildsVersions",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "getDeployedGames",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "id", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "latestVersionId",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "nextId", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pauseAll", data: BytesLike): Result;
@@ -361,7 +371,7 @@ export type FailedTransferEvent = TypedEvent<
 export type FailedTransferEventFilter = TypedEventFilter<FailedTransferEvent>;
 
 export interface GameCreatedEventObject {
-  nextId: BigNumber;
+  id: BigNumber;
   gameAddress: string;
   implementationVersion: BigNumber;
   creatorAddress: string;
@@ -496,10 +506,12 @@ export interface GameFactoryV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]] & { gameAuthorisedAmounts: BigNumber[] }>;
 
-    getDeployedChilds(
+    getDeployedChildsVersions(
       overrides?: CallOverrides
     ): Promise<
-      [Factory.ChildStructOutput[]] & { allChilds: Factory.ChildStructOutput[] }
+      [Factory.ChildVersionStructOutput[]] & {
+        _childsVersions: Factory.ChildVersionStructOutput[];
+      }
     >;
 
     getDeployedGames(
@@ -508,11 +520,9 @@ export interface GameFactoryV2 extends BaseContract {
       [Factory.ChildStructOutput[]] & { allGames: Factory.ChildStructOutput[] }
     >;
 
-    latestVersionId(overrides?: CallOverrides): Promise<[BigNumber]>;
+    id(overrides?: CallOverrides): Promise<[BigNumber] & { _value: BigNumber }>;
 
-    nextId(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { _value: BigNumber }>;
+    latestVersionId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -619,17 +629,17 @@ export interface GameFactoryV2 extends BaseContract {
 
   getAuthorizedAmounts(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-  getDeployedChilds(
+  getDeployedChildsVersions(
     overrides?: CallOverrides
-  ): Promise<Factory.ChildStructOutput[]>;
+  ): Promise<Factory.ChildVersionStructOutput[]>;
 
   getDeployedGames(
     overrides?: CallOverrides
   ): Promise<Factory.ChildStructOutput[]>;
 
-  latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
+  id(overrides?: CallOverrides): Promise<BigNumber>;
 
-  nextId(overrides?: CallOverrides): Promise<BigNumber>;
+  latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -738,17 +748,17 @@ export interface GameFactoryV2 extends BaseContract {
 
     getAuthorizedAmounts(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-    getDeployedChilds(
+    getDeployedChildsVersions(
       overrides?: CallOverrides
-    ): Promise<Factory.ChildStructOutput[]>;
+    ): Promise<Factory.ChildVersionStructOutput[]>;
 
     getDeployedGames(
       overrides?: CallOverrides
     ): Promise<Factory.ChildStructOutput[]>;
 
-    latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
+    id(overrides?: CallOverrides): Promise<BigNumber>;
 
-    nextId(overrides?: CallOverrides): Promise<BigNumber>;
+    latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -805,13 +815,13 @@ export interface GameFactoryV2 extends BaseContract {
     FailedTransfer(receiver?: null, amount?: null): FailedTransferEventFilter;
 
     "GameCreated(uint256,address,uint256,address)"(
-      nextId?: null,
+      id?: null,
       gameAddress?: null,
       implementationVersion?: null,
       creatorAddress?: null
     ): GameCreatedEventFilter;
     GameCreated(
-      nextId?: null,
+      id?: null,
       gameAddress?: null,
       implementationVersion?: null,
       creatorAddress?: null
@@ -883,13 +893,13 @@ export interface GameFactoryV2 extends BaseContract {
 
     getAuthorizedAmounts(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getDeployedChilds(overrides?: CallOverrides): Promise<BigNumber>;
+    getDeployedChildsVersions(overrides?: CallOverrides): Promise<BigNumber>;
 
     getDeployedGames(overrides?: CallOverrides): Promise<BigNumber>;
 
-    latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
+    id(overrides?: CallOverrides): Promise<BigNumber>;
 
-    nextId(overrides?: CallOverrides): Promise<BigNumber>;
+    latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -993,13 +1003,15 @@ export interface GameFactoryV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getDeployedChilds(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getDeployedChildsVersions(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     getDeployedGames(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    latestVersionId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    id(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    nextId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    latestVersionId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

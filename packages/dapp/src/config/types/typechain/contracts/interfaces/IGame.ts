@@ -52,7 +52,7 @@ export declare namespace IChild {
   };
 
   export type WinnerStruct = {
-    roundId: PromiseOrValue<BigNumberish>;
+    epoch: PromiseOrValue<BigNumberish>;
     userId: PromiseOrValue<BigNumberish>;
     playerAddress: PromiseOrValue<string>;
     amountWon: PromiseOrValue<BigNumberish>;
@@ -74,7 +74,7 @@ export declare namespace IChild {
     BigNumber,
     boolean
   ] & {
-    roundId: BigNumber;
+    epoch: BigNumber;
     userId: BigNumber;
     playerAddress: string;
     amountWon: BigNumber;
@@ -88,9 +88,9 @@ export declare namespace IChild {
 
 export declare namespace IGame {
   export type GameDataStruct = {
-    id: PromiseOrValue<BigNumberish>;
+    gameId: PromiseOrValue<BigNumberish>;
     versionId: PromiseOrValue<BigNumberish>;
-    roundId: PromiseOrValue<BigNumberish>;
+    epoch: PromiseOrValue<BigNumberish>;
     name: PromiseOrValue<BytesLike>;
     playerAddressesCount: PromiseOrValue<BigNumberish>;
     remainingPlayersCount: PromiseOrValue<BigNumberish>;
@@ -124,9 +124,9 @@ export declare namespace IGame {
     string,
     string
   ] & {
-    id: BigNumber;
+    gameId: BigNumber;
     versionId: BigNumber;
-    roundId: BigNumber;
+    epoch: BigNumber;
     name: string;
     playerAddressesCount: BigNumber;
     remainingPlayersCount: BigNumber;
@@ -180,7 +180,7 @@ export declare namespace IGame {
     keeper: PromiseOrValue<string>;
     name: PromiseOrValue<BytesLike>;
     version: PromiseOrValue<BigNumberish>;
-    id: PromiseOrValue<BigNumberish>;
+    gameId: PromiseOrValue<BigNumberish>;
     playTimeRange: PromiseOrValue<BigNumberish>;
     maxPlayers: PromiseOrValue<BigNumberish>;
     registrationAmount: PromiseOrValue<BigNumberish>;
@@ -212,7 +212,7 @@ export declare namespace IGame {
     keeper: string;
     name: string;
     version: BigNumber;
-    id: BigNumber;
+    gameId: BigNumber;
     playTimeRange: BigNumber;
     maxPlayers: BigNumber;
     registrationAmount: BigNumber;
@@ -615,7 +615,7 @@ export type AdminOwnershipTransferredEventFilter =
 
 export interface ChildPrizeClaimedEventObject {
   claimer: string;
-  roundId: BigNumber;
+  epoch: BigNumber;
   amountClaimed: BigNumber;
 }
 export type ChildPrizeClaimedEvent = TypedEvent<
@@ -697,7 +697,7 @@ export type FailedTransferEvent = TypedEvent<
 export type FailedTransferEventFilter = TypedEventFilter<FailedTransferEvent>;
 
 export interface GameLostEventObject {
-  roundId: BigNumber;
+  epoch: BigNumber;
   playerAddress: string;
   roundCount: BigNumber;
 }
@@ -710,7 +710,7 @@ export type GameLostEventFilter = TypedEventFilter<GameLostEvent>;
 
 export interface GamePrizeClaimedEventObject {
   claimer: string;
-  roundId: BigNumber;
+  epoch: BigNumber;
   amountClaimed: BigNumber;
 }
 export type GamePrizeClaimedEvent = TypedEvent<
@@ -722,7 +722,7 @@ export type GamePrizeClaimedEventFilter =
   TypedEventFilter<GamePrizeClaimedEvent>;
 
 export interface GameSplittedEventObject {
-  roundId: BigNumber;
+  epoch: BigNumber;
   remainingPlayersCount: BigNumber;
   amountWon: BigNumber;
 }
@@ -734,7 +734,7 @@ export type GameSplittedEvent = TypedEvent<
 export type GameSplittedEventFilter = TypedEventFilter<GameSplittedEvent>;
 
 export interface GameWonEventObject {
-  roundId: BigNumber;
+  epoch: BigNumber;
   winnersCounter: BigNumber;
   playerAddress: string;
   amountWon: BigNumber;
@@ -754,7 +754,7 @@ export type PlayedRoundEvent = TypedEvent<[string], PlayedRoundEventObject>;
 export type PlayedRoundEventFilter = TypedEventFilter<PlayedRoundEvent>;
 
 export interface PrizeAddedEventObject {
-  roundId: BigNumber;
+  epoch: BigNumber;
   position: BigNumber;
   amount: BigNumber;
   standard: BigNumber;
@@ -836,7 +836,7 @@ export type TreasuryFeeClaimedByFactoryEventFilter =
   TypedEventFilter<TreasuryFeeClaimedByFactoryEvent>;
 
 export interface TriggeredDailyCheckpointEventObject {
-  roundId: BigNumber;
+  epoch: BigNumber;
   emmiter: string;
   timestamp: BigNumber;
 }
@@ -849,7 +849,7 @@ export type TriggeredDailyCheckpointEventFilter =
   TypedEventFilter<TriggeredDailyCheckpointEvent>;
 
 export interface VoteToSplitPotEventObject {
-  roundId: BigNumber;
+  epoch: BigNumber;
   playerAddress: string;
 }
 export type VoteToSplitPotEvent = TypedEvent<
@@ -896,7 +896,7 @@ export interface IGame extends BaseContract {
     ): Promise<ContractTransaction>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -922,7 +922,7 @@ export interface IGame extends BaseContract {
     ): Promise<[string[]] & { gamePlayerAddresses: string[] }>;
 
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [IChild.PrizeStructOutput[]] & { childPrizes: IChild.PrizeStructOutput[] }
@@ -933,7 +933,7 @@ export interface IGame extends BaseContract {
     ): Promise<[BigNumber] & { remainingPlayersCount: BigNumber }>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [IChild.WinnerStructOutput[]] & {
@@ -1057,7 +1057,7 @@ export interface IGame extends BaseContract {
   ): Promise<ContractTransaction>;
 
   claimPrize(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _epoch: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1075,14 +1075,14 @@ export interface IGame extends BaseContract {
   getPlayerAddresses(overrides?: CallOverrides): Promise<string[]>;
 
   getPrizes(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _epoch: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<IChild.PrizeStructOutput[]>;
 
   getRemainingPlayersCount(overrides?: CallOverrides): Promise<BigNumber>;
 
   getWinners(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _epoch: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<IChild.WinnerStructOutput[]>;
 
@@ -1194,7 +1194,7 @@ export interface IGame extends BaseContract {
     claimCreatorFee(overrides?: CallOverrides): Promise<void>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1210,14 +1210,14 @@ export interface IGame extends BaseContract {
     getPlayerAddresses(overrides?: CallOverrides): Promise<string[]>;
 
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<IChild.PrizeStructOutput[]>;
 
     getRemainingPlayersCount(overrides?: CallOverrides): Promise<BigNumber>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<IChild.WinnerStructOutput[]>;
 
@@ -1319,12 +1319,12 @@ export interface IGame extends BaseContract {
 
     "ChildPrizeClaimed(address,uint256,uint256)"(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): ChildPrizeClaimedEventFilter;
     ChildPrizeClaimed(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): ChildPrizeClaimedEventFilter;
 
@@ -1374,46 +1374,46 @@ export interface IGame extends BaseContract {
     FailedTransfer(receiver?: null, amount?: null): FailedTransferEventFilter;
 
     "GameLost(uint256,address,uint256)"(
-      roundId?: null,
+      epoch?: null,
       playerAddress?: null,
       roundCount?: null
     ): GameLostEventFilter;
     GameLost(
-      roundId?: null,
+      epoch?: null,
       playerAddress?: null,
       roundCount?: null
     ): GameLostEventFilter;
 
     "GamePrizeClaimed(address,uint256,uint256)"(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): GamePrizeClaimedEventFilter;
     GamePrizeClaimed(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): GamePrizeClaimedEventFilter;
 
     "GameSplitted(uint256,uint256,uint256)"(
-      roundId?: null,
+      epoch?: null,
       remainingPlayersCount?: null,
       amountWon?: null
     ): GameSplittedEventFilter;
     GameSplitted(
-      roundId?: null,
+      epoch?: null,
       remainingPlayersCount?: null,
       amountWon?: null
     ): GameSplittedEventFilter;
 
     "GameWon(uint256,uint256,address,uint256)"(
-      roundId?: null,
+      epoch?: null,
       winnersCounter?: null,
       playerAddress?: null,
       amountWon?: null
     ): GameWonEventFilter;
     GameWon(
-      roundId?: null,
+      epoch?: null,
       winnersCounter?: null,
       playerAddress?: null,
       amountWon?: null
@@ -1423,7 +1423,7 @@ export interface IGame extends BaseContract {
     PlayedRound(playerAddress?: null): PlayedRoundEventFilter;
 
     "PrizeAdded(uint256,uint256,uint256,uint256,address,uint256)"(
-      roundId?: null,
+      epoch?: null,
       position?: null,
       amount?: null,
       standard?: null,
@@ -1431,7 +1431,7 @@ export interface IGame extends BaseContract {
       tokenId?: null
     ): PrizeAddedEventFilter;
     PrizeAdded(
-      roundId?: null,
+      epoch?: null,
       position?: null,
       amount?: null,
       standard?: null,
@@ -1477,22 +1477,22 @@ export interface IGame extends BaseContract {
     ): TreasuryFeeClaimedByFactoryEventFilter;
 
     "TriggeredDailyCheckpoint(uint256,address,uint256)"(
-      roundId?: null,
+      epoch?: null,
       emmiter?: null,
       timestamp?: null
     ): TriggeredDailyCheckpointEventFilter;
     TriggeredDailyCheckpoint(
-      roundId?: null,
+      epoch?: null,
       emmiter?: null,
       timestamp?: null
     ): TriggeredDailyCheckpointEventFilter;
 
     "VoteToSplitPot(uint256,address)"(
-      roundId?: null,
+      epoch?: null,
       playerAddress?: null
     ): VoteToSplitPotEventFilter;
     VoteToSplitPot(
-      roundId?: null,
+      epoch?: null,
       playerAddress?: null
     ): VoteToSplitPotEventFilter;
   };
@@ -1508,7 +1508,7 @@ export interface IGame extends BaseContract {
     ): Promise<BigNumber>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1526,14 +1526,14 @@ export interface IGame extends BaseContract {
     getPlayerAddresses(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getRemainingPlayersCount(overrides?: CallOverrides): Promise<BigNumber>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1648,7 +1648,7 @@ export interface IGame extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1668,7 +1668,7 @@ export interface IGame extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1677,7 +1677,7 @@ export interface IGame extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

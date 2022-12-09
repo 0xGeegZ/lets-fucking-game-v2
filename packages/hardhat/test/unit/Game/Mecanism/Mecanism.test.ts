@@ -867,7 +867,7 @@ describe('GameV1Contract - Mecanism', function () {
 
       it('should create a new Winner and add it to the winners list', async function () {
         const winnerIndex = 4
-        const roundId = await this.deployedPayableGame.roundId()
+        const epoch = await this.deployedPayableGame.epoch()
 
         await setUpGameWithAWinner({
           players: this.players,
@@ -877,7 +877,7 @@ describe('GameV1Contract - Mecanism', function () {
           mockKeeper: this.mockKeeper,
         })
 
-        const winners = await this.deployedPayableGame.getWinners(roundId)
+        const winners = await this.deployedPayableGame.getWinners(epoch)
         const [newWinner] = winners
 
         expect(newWinner.playerAddress).to.equal(
@@ -886,7 +886,7 @@ describe('GameV1Contract - Mecanism', function () {
 
         expect(newWinner.amountWon.eq(this.prizeAmount)).to.be.true
         expect(newWinner.prizeClaimed).to.be.false
-        expect(newWinner.roundId).to.equal(roundId)
+        expect(newWinner.epoch).to.equal(epoch)
         expect(winners.length).to.equal(1)
       })
 
@@ -924,7 +924,7 @@ describe('GameV1Contract - Mecanism', function () {
         const updatedPlayerAddressesList =
           await this.deployedPayableGame.getPlayerAddresses()
 
-        const updatedId = await this.deployedPayableGame.roundId()
+        const updatedId = await this.deployedPayableGame.epoch()
 
         expect(updatedPlayerAddressesList.length).to.equal(0)
         for (let i = 0; i < updatedPlayerAddressesList.length; i++) {
@@ -1103,7 +1103,7 @@ describe('GameV1Contract - Mecanism', function () {
       it('should allow players to split the pot for payable game', async function () {
         const finalistIndex = 2
         const secondFinalistIndex = 3
-        const roundId = await this.deployedPayableGame.roundId()
+        const epoch = await this.deployedPayableGame.epoch()
 
         await getTwoLastPlayersVoteSplitPot({
           players: this.players,
@@ -1144,7 +1144,7 @@ describe('GameV1Contract - Mecanism', function () {
           .to.emit(this.deployedPayableGame, 'GameSplitted')
           .to.emit(this.deployedPayableGame, 'ResetGame')
 
-        const winners = await this.deployedPayableGame.getWinners(roundId)
+        const winners = await this.deployedPayableGame.getWinners(epoch)
         const [firstWinner, secondWinner] = winners
 
         expect(firstWinner.playerAddress).to.equal(
@@ -1152,14 +1152,14 @@ describe('GameV1Contract - Mecanism', function () {
         )
         expect(firstWinner.amountWon.eq(this.prizeAmount / 2)).to.be.true
         expect(firstWinner.prizeClaimed).to.be.false
-        expect(firstWinner.roundId).to.equal(roundId)
+        expect(firstWinner.epoch).to.equal(epoch)
 
         expect(secondWinner.playerAddress).to.equal(
           this.players[secondFinalistIndex].address
         )
         expect(secondWinner.amountWon.eq(this.prizeAmount / 2)).to.be.true
         expect(secondWinner.prizeClaimed).to.be.false
-        expect(secondWinner.roundId).to.equal(roundId)
+        expect(secondWinner.epoch).to.equal(epoch)
 
         expect(winners.length).to.equal(2)
       })
@@ -1167,7 +1167,7 @@ describe('GameV1Contract - Mecanism', function () {
       it('should allow players to split the pot for free game', async function () {
         const finalistIndex = 2
         const secondFinalistIndex = 3
-        const roundId = await this.deployedPayableGame.roundId()
+        const epoch = await this.deployedPayableGame.epoch()
 
         await getTwoLastPlayersVoteSplitPot({
           players: this.players,
@@ -1185,19 +1185,19 @@ describe('GameV1Contract - Mecanism', function () {
         // await expect(
         //   this.deployedFreeGame
         //     .connect(this.players[finalistIndex])
-        //     .claimPrize(roundId)
+        //     .claimPrize(epoch)
         // )
         //   .to.emit(this.deployedFreeGame, 'GamePrizeClaimed')
         //   .withArgs(
         //     this.players[finalistIndex].address,
-        //     roundId,
+        //     epoch,
         //     this.freeGamePrizeAmount / 2
         //   )
 
         await expect(
           this.deployedFreeGame
             .connect(this.players[finalistIndex])
-            .claimPrize(roundId)
+            .claimPrize(epoch)
         ).to.changeEtherBalance(
           this.players[finalistIndex],
           this.freeGamePrizeAmount / 2
@@ -1206,18 +1206,18 @@ describe('GameV1Contract - Mecanism', function () {
         // await expect(
         //   this.deployedFreeGame
         //     .connect(this.players[secondFinalistIndex])
-        //     .claimPrize(roundId)
+        //     .claimPrize(epoch)
         // )
         //   .to.emit(this.deployedFreeGame, 'GamePrizeClaimed')
         //   .withArgs(
         //     this.players[secondFinalistIndex].address,
-        //     roundId,
+        //     epoch,
         //     this.freeGamePrizeAmount / 2
         //   )
         await expect(
           this.deployedFreeGame
             .connect(this.players[secondFinalistIndex])
-            .claimPrize(roundId)
+            .claimPrize(epoch)
         ).to.changeEtherBalance(
           this.players[secondFinalistIndex],
           this.freeGamePrizeAmount / 2
@@ -1228,7 +1228,7 @@ describe('GameV1Contract - Mecanism', function () {
         const finalistIndex = 2
         const secondFinalistIndex = 3
 
-        const roundId = await this.deployedPayableGame.roundId()
+        const epoch = await this.deployedPayableGame.epoch()
 
         await getTwoLastPlayersVoteSplitPot({
           players: this.players,
@@ -1246,18 +1246,18 @@ describe('GameV1Contract - Mecanism', function () {
         // await expect(
         //   this.deployedPayableGame
         //     .connect(this.players[finalistIndex])
-        //     .claimPrize(roundId)
+        //     .claimPrize(epoch)
         // )
         //   .to.emit(this.deployedPayableGame, 'GamePrizeClaimed')
         //   .withArgs(
         //     this.players[finalistIndex].address,
-        //     roundId,
+        //     epoch,
         //     this.prizeAmount / 2
         //   )
         await expect(
           this.deployedPayableGame
             .connect(this.players[finalistIndex])
-            .claimPrize(roundId)
+            .claimPrize(epoch)
         ).to.changeEtherBalance(
           this.players[finalistIndex],
           this.prizeAmount / 2
@@ -1265,18 +1265,18 @@ describe('GameV1Contract - Mecanism', function () {
         // await expect(
         //   this.deployedPayableGame
         //     .connect(this.players[secondFinalistIndex])
-        //     .claimPrize(roundId)
+        //     .claimPrize(epoch)
         // )
         //   .to.emit(this.deployedPayableGame, 'GamePrizeClaimed')
         //   .withArgs(
         //     this.players[secondFinalistIndex].address,
-        //     roundId,
+        //     epoch,
         //     this.prizeAmount / 2
         //   )
         await expect(
           this.deployedPayableGame
             .connect(this.players[secondFinalistIndex])
-            .claimPrize(roundId)
+            .claimPrize(epoch)
         ).to.changeEtherBalance(
           this.players[secondFinalistIndex],
           this.prizeAmount / 2

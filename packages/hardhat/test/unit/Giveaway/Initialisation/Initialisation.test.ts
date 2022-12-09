@@ -1,10 +1,16 @@
+import { expect } from 'chai'
+
 import { initialiseTestData } from '../../../factories/setup'
 
 describe('GiveawayContract', function () {
   beforeEach(initialiseTestData)
   context('Giveaway contract deployed', function () {
     describe('when the creator tries to initialize a game already initialized', function () {
-      it.only('should create a giveaway', async function () {
+      it('should create a giveaway', async function () {
+        const deployedGiveawaysBefore = await this.giveaway
+          .connect(this.owner)
+          .getGiveaways()
+
         await this.giveaway
           .connect(this.bob)
           .createGiveaway(
@@ -18,39 +24,27 @@ describe('GiveawayContract', function () {
             { value: this.giveawayData.giveawayAmount }
           )
 
-        // const deployedGiveaways = await this.giveaway
-        //   .connect(this.owner)
-        //   .giveaways()
-        // console.log(
-        //   '🚀 ~ file: Initialisation.test.ts:24 ~ deployedGiveaways',
-        //   deployedGiveaways
-        // )
+        const deployedGiveaways = await this.giveaway
+          .connect(this.owner)
+          .getGiveaways()
+        expect(deployedGiveaways.length).to.be.equal(
+          deployedGiveawaysBefore.length + 1
+        )
       })
     })
   })
-  // context('Giveaway constructor', function () {
-  //   describe('when Giveaway gets deployed', function () {
-  //     it('should set the correct values to state variables', async function () {
-  //       const responseLatestGameV1VersionId =
-  //         await this.giveaway.latestVersionId()
+  context('Giveaway constructor', function () {
+    describe('when Giveaway gets deployed', function () {
+      it('should set the correct values to state variables', async function () {
+        const responseGiveaways = await this.giveaway
+          .connect(this.owner)
+          .getGiveaways()
 
-  //       const responseGameV1 = await this.giveaway.childs(
-  //         responseLatestGameV1VersionId
-  //       )
-  //       const responseOwner = await this.giveaway.owner()
+        const responseOwner = await this.giveaway.owner()
 
-  //       const responseAuthorizedAmounts =
-  //         await this.giveaway.getAuthorizedAmounts()
-
-  //       expect(responseOwner).to.be.equal(this.owner.address)
-  //       expect(responseLatestGameV1VersionId).to.be.equal('0')
-  //       expect(responseGameV1.deployedAddress).to.be.equal(
-  //         this.deployedPayableGame.address
-  //       )
-  //       expect(responseAuthorizedAmounts.toString()).to.be.equal(
-  //         this.authorizedAmounts.toString()
-  //       )
-  //     })
-  //   })
-  // })
+        expect(responseOwner).to.be.equal(this.owner.address)
+        expect(responseGiveaways.length).to.be.equal(1)
+      })
+    })
+  })
 })

@@ -41,7 +41,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -168,7 +168,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -199,7 +199,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -218,7 +218,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -243,7 +243,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -287,7 +287,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -432,7 +432,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -457,7 +457,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -521,7 +521,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_roundId",
+        name: "_epoch",
         type: "uint256",
       },
     ],
@@ -545,7 +545,7 @@ const _abi = [
         components: [
           {
             internalType: "uint256",
-            name: "id",
+            name: "gameId",
             type: "uint256",
           },
           {
@@ -555,7 +555,7 @@ const _abi = [
           },
           {
             internalType: "uint256",
-            name: "roundId",
+            name: "epoch",
             type: "uint256",
           },
           {
@@ -710,7 +710,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_roundId",
+        name: "_epoch",
         type: "uint256",
       },
     ],
@@ -769,7 +769,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_roundId",
+        name: "_epoch",
         type: "uint256",
       },
     ],
@@ -779,7 +779,7 @@ const _abi = [
         components: [
           {
             internalType: "uint256",
-            name: "roundId",
+            name: "epoch",
             type: "uint256",
           },
           {
@@ -867,7 +867,7 @@ const _abi = [
           },
           {
             internalType: "uint256",
-            name: "id",
+            name: "gameId",
             type: "uint256",
           },
           {

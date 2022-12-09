@@ -16,13 +16,6 @@ import { Keeper } from "../keepers/Keeper.sol";
 
 import "hardhat/console.sol";
 
-// EXAMPLE ChainlinkClient contract https://github.com/smartcontractkit/Chainlinked/blob/master/contracts/MyContract.sol
-// EXAMPLE https://github.com/taijusanagi/chainlink-aa-paymaster-wallet/blob/main/packages/contracts/contracts/ChainlinkStripePaymaster.sol
-// EXAMPLE https://github.com/charifmews/tweet.win/blob/main/contracts/GiveAwayTweet.sol
-
-// TODO Mock contract for test : https://blog.chain.link/testing-chainlink-smart-contracts/
-// TODO see test implementation to mock contract : https://github.com/smartcontractkit/hardhat-starter-kit/blob/5bce50fc0989d7b786ecc9af224567731f6cb23e/test/unit/APIConsumer_unit_test.js#L31
-
 contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     using Chainlink for Chainlink.Request;
     using EnumerableMap for EnumerableMap.UintToAddressMap;
@@ -58,7 +51,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     /**
      * @notice Called when a new giveaway is created
      */
-    event GiveawayCreated(uint256 roundId, uint256 userId, uint256 tweetId, uint256 prizesLength);
+    event GiveawayCreated(uint256 epoch, uint256 userId, uint256 tweetId, uint256 prizesLength);
     /**
      * @notice Called when a winner is added
      */
@@ -102,14 +95,6 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     /**
      * @notice Initialize the link token and target oracle
      * All testnets config : https://docs.chain.link/any-api/testnet-oracles/
-     * Goerli Testnet details:
-     *  - Link Token: 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
-     *  - Oracle: 0xCC79157eb46F5624204f47AB42b3906cAA40eaB7 (Chainlink DevRel)
-     *  - jobId: 7223acbd01654282865b678924126013
-     * Mumbai Testnet details :
-     *  - Link Token: 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
-     *  - Oracle: 0x816BA5612d744B01c36b0517B32b4FcCb9747009
-     *  - jobId: 72bd0768b5c84706a548061c75c35ecc
      */
     constructor(
         bytes32 _jobId,
@@ -162,8 +147,8 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         uint256 _retweetMaxCount,
         Prize[] memory _prizes
     ) external payable {
-        console.log("createGiveaway for round %s and prizes %s", roundId.current(), _prizes.length);
-        giveaways[roundId.current()] = Giveaway({
+        console.log("createGiveaway for round %s and prizes %s", epoch.current(), _prizes.length);
+        giveaways[epoch.current()] = Giveaway({
             name: _name,
             image: _image,
             creator: msg.sender,
@@ -182,9 +167,9 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         // Limitation for current version as standard for NFT is not implemented
         require(_isChildAllPrizesStandard(), "This version only allow standard prize");
 
-        emit GiveawayCreated(roundId.current(), _userId, _tweetId, _prizes.length);
+        emit GiveawayCreated(epoch.current(), _userId, _tweetId, _prizes.length);
 
-        roundId.increment();
+        epoch.increment();
     }
 
     /**
@@ -252,19 +237,19 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      *
      * @param _requestId - id of the request
      * @param _userId - twitter user id
-     * @param _isValidate - true if  twitter userId match msg.sender address
+     * @param _hasSignedUp - true if  twitter userId match msg.sender address
      */
     function fulfillSignUp(
         bytes32 _requestId,
         uint256 _userId,
-        bool _isValidate
+        bool _hasSignedUp
     ) public recordChainlinkFulfillment(_requestId) {
-        console.log("fulfillSignUp %s _userId %s _isValidate %s", _userId, _isValidate);
+        console.log("fulfillSignUp %s _userId %s _hasSignedUp %s", _userId, _hasSignedUp);
 
-        if (!_isValidate) users.remove(_userId);
+        if (!_hasSignedUp) users.remove(_userId);
 
         address user = users.get(_userId);
-        for (uint256 round = 0; round < roundId.current(); round++)
+        for (uint256 round = 0; round < epoch.current(); round++)
             for (uint256 idx = 0; idx < winners[round].length; idx++)
                 if (winners[round][idx].userId == _userId) winners[round][idx].playerAddress = user;
     }
@@ -293,8 +278,8 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Refresh all active giveaways retweet count
      */
     function refreshActiveGiveawayStatus() external whenNotPaused {
-        console.log("refreshActiveGiveawayStatus rounds %s", roundId.current());
-        for (uint256 round = 0; round < roundId.current(); round++)
+        console.log("refreshActiveGiveawayStatus rounds %s", epoch.current());
+        for (uint256 round = 0; round < epoch.current(); round++)
             if (!giveaways[round].isEnded) {
                 _requestRefreshGiveaway(round);
                 emit GiveawayRefreshed(round, block.timestamp);
@@ -321,10 +306,10 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         bytes memory _calldata
     ) external view override whenNotPaused returns (bool _upkeepNeeded, bytes memory _payload) {
         _calldata; // dummy call to _calldata to avoir warning
-        uint256 startIdx = block.number % roundId.current();
+        uint256 startIdx = block.number % epoch.current();
         bool result;
         bytes memory payload;
-        (result, payload) = _checkInBatch(startIdx, roundId.current());
+        (result, payload) = _checkInBatch(startIdx, epoch.current());
         if (result) return (result, payload);
 
         (result, payload) = _checkInBatch(0, startIdx);
@@ -393,8 +378,10 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Get the list of deployed giveaways
      * @return _giveaways the list of giveaways
      */
-    function getGiveaways() external view returns (Child[] memory _giveaways) {
-        return giveaways;
+    function getGiveaways() external view returns (Giveaway[] memory _giveaways) {
+        Giveaway[] memory allGiveaways = new Giveaway[](epoch.current());
+        for (uint256 idx = 0; idx < epoch.current(); idx++) allGiveaways[idx] = giveaways[idx];
+        return allGiveaways;
     }
 
     ///
@@ -478,7 +465,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfillSignUp.selector);
         req.add("get", getSignUpURI(_userId));
         // https://docs.chain.link/any-api/testnet-oracles/
-        req.add("path", "isValidate");
+        req.add("path", "hasSignedUp");
         bytes32 requestId = sendChainlinkRequest(req, fee);
         emit SignUpRequested(_userId, requestId);
         return requestId;
@@ -555,7 +542,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         uint256 rewardAmount = _prize.amount - treasuryRoundAmount;
         winners[_giveawayId].push(
             Winner({
-                roundId: _giveawayId,
+                epoch: _giveawayId,
                 userId: _winnerId,
                 playerAddress: _winnerAddress,
                 amountWon: rewardAmount,

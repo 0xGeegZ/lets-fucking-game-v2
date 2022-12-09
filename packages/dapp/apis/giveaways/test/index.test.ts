@@ -32,33 +32,16 @@ describe("Giveaway worker testing", () => {
 	});
 
 	describe("Giveaway endpoints", () => {
-		it("Should draw 1 winners for not already drawn giveaway", async () => {
+		it("Should draw winners for not already drawn giveaway", async () => {
 			return fetch(
-				`${workerUri}/chains/1/giveaways/1/winners?tweetId=${tweetId}&prizes=1`,
+				`${workerUri}/chains/1/giveaways/1/winners?tweetId=${tweetId}&retweetMaxCount=0&prizes=2`,
 				fetchParams
 			)
 				.then((res) => res.json())
 				.then((json: any) => {
 					expect(json).toBeDefined();
-					expect(json.winners).toBeDefined();
-					expect(json.positions).toBeDefined();
-					expect(json.winners.length).toEqual(1);
-					expect(json.winners.length).toEqual(json.positions.length);
-				});
-		});
-
-		it("Should draw 2 winners for not already drawn giveaway", async () => {
-			return fetch(
-				`${workerUri}/chains/1/giveaways/1/winners?tweetId=${tweetId}&prizes=2`,
-				fetchParams
-			)
-				.then((res) => res.json())
-				.then((json: any) => {
-					expect(json).toBeDefined();
-					expect(json.winners).toBeDefined();
-					expect(json.positions).toBeDefined();
-					expect(json.winners.length).toEqual(2);
-					expect(json.winners.length).toEqual(json.positions.length);
+					expect(json.giveawayId).toBeDefined();
+					expect(json.payload).toBeDefined();
 				});
 		});
 
@@ -70,6 +53,7 @@ describe("Giveaway worker testing", () => {
 				.then((res) => res.json())
 				.then((json: any) => {
 					expect(json).toBeDefined();
+					expect(json.giveawayId).toBeDefined();
 					expect(json.retweetCount).toBeDefined();
 				});
 		});
@@ -81,8 +65,9 @@ describe("Giveaway worker testing", () => {
 				.then((res) => res.json())
 				.then((json: any) => {
 					expect(json).toBeDefined();
-					expect(json.isValidate).toBeDefined();
-					expect(json.isValidate).toBe(false);
+					expect(json.userId).toBeDefined();
+					expect(json.hasSignedUp).toBeDefined();
+					expect(json.hasSignedUp).toBe(false);
 				});
 		});
 	});
