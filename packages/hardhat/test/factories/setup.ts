@@ -190,7 +190,7 @@ const initialiseTestData = async function () {
     defaultGameConfig.REGISTRATION_AMOUNT_DEFAULT.mul(999)
   this.zeroRegistrationAmount = defaultGameConfig.REGISTRATION_AMOUNT_FREE
 
-  this.gameCreationAmount = defaultGameConfig.GAME_CREATION_AMOUNT
+  this.itemCreationAmount = defaultGameConfig.GAME_CREATION_AMOUNT
   this.treasuryFee = defaultGameConfig.TREASURY_FEE_DEFAULT
   this.creatorFee = defaultGameConfig.CREATOR_FEE_DEFAULT
 

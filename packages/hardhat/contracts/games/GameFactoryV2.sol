@@ -42,15 +42,15 @@ contract GameFactoryV2 is Factory {
      * @notice Constructor Tha initialised the factory configuration
      * @param _game the game implementation address
      * @param _cronUpkeep the keeper address
-     * @param _gameCreationAmount the game creation amount
+     * @param _itemCreationAmount the game creation amount
      * @param _authorizedAmounts the list of authorized amounts for game creation
      */
     constructor(
         address _game,
         address _cronUpkeep,
-        uint256 _gameCreationAmount,
+        uint256 _itemCreationAmount,
         uint256[] memory _authorizedAmounts
-    ) onlyIfAuthorizedAmountsIsNotEmpty(_authorizedAmounts) Factory(_game, _cronUpkeep, _gameCreationAmount) {
+    ) onlyIfAuthorizedAmountsIsNotEmpty(_authorizedAmounts) Factory(_game, _cronUpkeep, _itemCreationAmount) {
         for (uint256 i = 0; i < _authorizedAmounts.length; i++) {
             if (!_isExistAuthorizedAmounts(_authorizedAmounts[i])) {
                 authorizedAmounts.push(_authorizedAmounts[i]);

@@ -49,7 +49,7 @@ describe('GameFactoryContract', function () {
             this.creatorFee,
             this.encodedCron,
             updatedPrizes,
-            { value: this.gameCreationAmount }
+            { value: this.itemCreationAmount }
           )
 
         const deployedGames = await this.gameFactory

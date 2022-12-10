@@ -28,7 +28,7 @@ const func: DeployFunction = async function ({
   }
 
   const name = formatBytes32String(currentGameConfig.NAME_DEFAULT)
-  const gameCreationAmount = currentGameConfig.GAME_CREATION_AMOUNT
+  const itemCreationAmount = currentGameConfig.GAME_CREATION_AMOUNT
   const maxPlayers = currentGameConfig.PLAYERS_DEFAULT
   const playTimeRange = currentGameConfig.PLAY_TIME_RANGE_DEFAULT
   const registrationAmount = currentGameConfig.REGISTRATION_AMOUNT_DEFAULT
@@ -88,7 +88,7 @@ const func: DeployFunction = async function ({
     creatorFee,
     encodedCron,
     prizes,
-    { value: gameCreationAmount }
+    { value: itemCreationAmount }
   )
   log(`✅ New payable game created`)
 
@@ -102,7 +102,7 @@ const func: DeployFunction = async function ({
     creatorFee,
     encodedCron,
     freeGamePrizes,
-    { value: gameCreationAmount.add(freeGamePrizepoolAmount) }
+    { value: itemCreationAmount.add(freeGamePrizepoolAmount) }
   )
   log(`✅ New free game created`)
 
@@ -117,7 +117,7 @@ const func: DeployFunction = async function ({
   //   '*/2 * * * *',
   //   // encodedCron,
   //   freeGamePrizes,
-  //   { value: gameCreationAmount.add(freeGamePrizepoolAmount) }
+  //   { value: itemCreationAmount.add(freeGamePrizepoolAmount) }
   // )
   // log(`✅ New free game for 2 players created`)
 }

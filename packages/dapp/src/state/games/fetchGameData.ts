@@ -104,7 +104,7 @@ export const fetchGamesPrizes = async (games: any[], chainId = ChainId.BSC): Pro
     return {
       address: game.address,
       name: 'getPrizes',
-      params: [game.roundId],
+      params: [game.epoch],
     }
   })
   const chunkSize = gameCalls.length / games.length
@@ -120,11 +120,11 @@ export const fetchGamesPrizes = async (games: any[], chainId = ChainId.BSC): Pro
 
 export const fetchGamesWinners = async (games: any[], chainId = ChainId.BSC): Promise<any[]> => {
   const gameCalls = games.map((game) => {
-    const roundId = game.roundId ? game.roundId - 1 : game.roundId
+    const epoch = game.epoch ? game.epoch - 1 : game.epoch
     return {
       address: game.address,
       name: 'getWinners',
-      params: [roundId],
+      params: [epoch],
     }
   })
   const chunkSize = gameCalls.length / games.length

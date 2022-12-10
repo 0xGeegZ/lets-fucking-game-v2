@@ -7,7 +7,7 @@ import { useGameV2Contract } from 'hooks/useContract'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useTransactionAdder } from 'state/transactions/hooks'
 
-export const useClaimPrize = (gameAddress: string, roundId: BigNumber) => {
+export const useClaimPrize = (gameAddress: string, epoch: BigNumber) => {
   const { t } = useTranslation()
   const { toastSuccess } = useToast()
   const addTransaction = useTransactionAdder()
@@ -17,7 +17,7 @@ export const useClaimPrize = (gameAddress: string, roundId: BigNumber) => {
   const { fetchWithCatchTxError, loading: isPending } = useCatchTxError()
 
   const handleClaim = useCallback(async () => {
-    const receipt = await fetchWithCatchTxError(() => contract.claimPrize(roundId))
+    const receipt = await fetchWithCatchTxError(() => contract.claimPrize(epoch))
 
     if (receipt?.status) {
       toastSuccess(
@@ -33,16 +33,16 @@ export const useClaimPrize = (gameAddress: string, roundId: BigNumber) => {
           hash: receipt.transactionHash,
         },
         {
-          summary: `Claim prize for game ${gameAddress} and round ${roundId}`,
+          summary: `Claim prize for game ${gameAddress} and round ${epoch}`,
           translatableSummary: {
-            text: 'Claim prize for game %gameAddress% and round %roundId%',
-            data: { gameAddress, roundId: roundId.toNumber() },
+            text: 'Claim prize for game %gameAddress% and round %epoch%',
+            data: { gameAddress, epoch: epoch.toNumber() },
           },
           type: 'claim-prize',
         },
       )
     }
-  }, [fetchWithCatchTxError, contract, roundId, toastSuccess, t, addTransaction, gameAddress])
+  }, [fetchWithCatchTxError, contract, epoch, toastSuccess, t, addTransaction, gameAddress])
 
   return { isPending, handleClaim }
 }

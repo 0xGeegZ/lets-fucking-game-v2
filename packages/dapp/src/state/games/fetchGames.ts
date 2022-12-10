@@ -18,7 +18,6 @@ const fetchGames = async (chainId: number): Promise<SerializedGame[]> => {
   try {
     const gameFactoryContract: GameFactory = getGameFactoryContract(chainId)
     const gamesToFetch: GameFactory.GameStructOutput[] = await gameFactoryContract.getDeployedGames()
-    console.log('🚀 ~ file: fetchGames.ts:21 ~ fetchGames ~ gamesToFetch', gamesToFetch)
 
     const [gameData, gamePlayers, gameCreatorAmounts, gameTreasuryAmounts] = await Promise.all([
       fetchPublicGamesData(gamesToFetch, chainId),

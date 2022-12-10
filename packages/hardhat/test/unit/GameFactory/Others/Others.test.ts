@@ -208,7 +208,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               this.prizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             ),
           'Pausable: paused'
         )
@@ -235,7 +235,7 @@ describe('GameFactoryContract', function () {
             this.creatorFee,
             this.encodedCron,
             updatedPrizes,
-            { value: this.gameCreationAmount }
+            { value: this.itemCreationAmount }
           )
       })
 

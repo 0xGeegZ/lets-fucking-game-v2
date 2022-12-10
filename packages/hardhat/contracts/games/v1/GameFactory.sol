@@ -17,7 +17,7 @@ contract GameFactory is Pausable, Ownable, ReentrancyGuard {
 
     uint256 public nextId = 0;
 
-    uint256 public gameCreationAmount;
+    uint256 public itemCreationAmount;
 
     uint256 public latestVersionId;
     GameV1Version[] public games;
@@ -39,7 +39,7 @@ contract GameFactory is Pausable, Ownable, ReentrancyGuard {
         uint256 versionId;
         address creator;
         address deployedAddress;
-        uint256 gameCreationAmount;
+        uint256 itemCreationAmount;
     }
 
     /**
@@ -84,17 +84,17 @@ contract GameFactory is Pausable, Ownable, ReentrancyGuard {
      * @notice Constructor Tha initialised the factory configuration
      * @param _game the game implementation address
      * @param _cronUpkeep the keeper address
-     * @param _gameCreationAmount the game creation amount
+     * @param _itemCreationAmount the game creation amount
      * @param _authorizedAmounts the list of authorized amounts for game creation
      */
     constructor(
         address _game,
         address _cronUpkeep,
-        uint256 _gameCreationAmount,
+        uint256 _itemCreationAmount,
         uint256[] memory _authorizedAmounts
     ) onlyIfAuthorizedAmountsIsNotEmpty(_authorizedAmounts) onlyAddressInit(_game) onlyAddressInit(_cronUpkeep) {
         cronUpkeep = _cronUpkeep;
-        gameCreationAmount = _gameCreationAmount;
+        itemCreationAmount = _itemCreationAmount;
 
         games.push(GameV1Version({ id: latestVersionId, deployedAddress: _game }));
 
@@ -136,7 +136,7 @@ contract GameFactory is Pausable, Ownable, ReentrancyGuard {
         external
         payable
         whenNotPaused
-        onlyGameCreationAmount
+        onlyitemCreationAmount
         onlyAllowedRegistrationAmount(_registrationAmount)
         onlyIfNotUsedRegistrationAmounts(_registrationAmount)
         returns (address game)
@@ -151,7 +151,7 @@ contract GameFactory is Pausable, Ownable, ReentrancyGuard {
                 versionId: latestVersionId,
                 creator: msg.sender,
                 deployedAddress: newGameAddress,
-                gameCreationAmount: gameCreationAmount
+                itemCreationAmount: itemCreationAmount
             })
         );
 
@@ -173,7 +173,7 @@ contract GameFactory is Pausable, Ownable, ReentrancyGuard {
         initialization.encodedCron = _encodedCron;
         initialization.prizes = _prizes;
 
-        uint256 prizepool = msg.value - gameCreationAmount;
+        uint256 prizepool = msg.value - itemCreationAmount;
         GameV1Interface(newGameAddress).initialize{ value: prizepool }(initialization);
 
         emit GameCreated(nextId, newGameAddress, latestVersionId, msg.sender);
@@ -395,8 +395,8 @@ contract GameFactory is Pausable, Ownable, ReentrancyGuard {
     /**
      * @notice Modifier that ensure that amount sended is game creation amount
      */
-    modifier onlyGameCreationAmount() {
-        require(msg.sender == owner() || msg.value >= gameCreationAmount, "Only game creation amount is allowed");
+    modifier onlyitemCreationAmount() {
+        require(msg.sender == owner() || msg.value >= itemCreationAmount, "Only game creation amount is allowed");
         _;
     }
 

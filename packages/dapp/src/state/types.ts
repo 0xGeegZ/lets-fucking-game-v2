@@ -35,7 +35,7 @@ export interface DeserializedPrizeData {
 }
 
 export interface SerializedWinnerData {
-  roundId: number
+  epoch: number
   playerAddress: string
   amountWon: string
   position: number
@@ -43,7 +43,7 @@ export interface SerializedWinnerData {
 }
 
 export interface DeserializedWinnerData {
-  roundId: BigNumber
+  epoch: BigNumber
   playerAddress: string
   amountWon: BigNumber
   position: BigNumber
@@ -98,7 +98,7 @@ export interface SerializedGame {
   id: number
   name: string
   versionId: number
-  roundId: number
+  epoch: number
   isPaused: boolean
   isInProgress: boolean
   isRegistering: boolean
@@ -107,7 +107,7 @@ export interface SerializedGame {
   playTimeRange: number
   remainingPlayersCount: number
   playerAddressesCount: number
-  gameCreationAmount: string
+  itemCreationAmount: string
   registrationAmount: string
   address: string
   prizepool: string
@@ -129,7 +129,7 @@ export interface DeserializedGame {
   id: BigNumber
   name: string
   versionId: BigNumber
-  roundId: BigNumber
+  epoch: BigNumber
   isPaused: boolean
   isInProgress: boolean
   isRegistering: boolean
@@ -138,7 +138,7 @@ export interface DeserializedGame {
   playTimeRange: BigNumber
   remainingPlayersCount: BigNumber
   playerAddressesCount: BigNumber
-  gameCreationAmount: BigNumber
+  itemCreationAmount: BigNumber
   registrationAmount: BigNumber
   address: string
   prizepool: BigNumber

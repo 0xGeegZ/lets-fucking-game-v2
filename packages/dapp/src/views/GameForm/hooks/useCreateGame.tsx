@@ -40,13 +40,13 @@ export const useCreateGame = (game) => {
 
   const parsedRegistrationAmount: number = registrationAmount ? parseFloat(formatEther(`${registrationAmount}`)) : 0
 
-  const gameCreationAmountEther = GAME_CREATION_AMOUNT
+  const itemCreationAmountEther = GAME_CREATION_AMOUNT
 
   const registrationAmountEther = parseEther(`${parsedRegistrationAmount}`)
 
   const totalValueAmount = parsedRegistrationAmount
-    ? gameCreationAmountEther
-    : gameCreationAmountEther.add(parseEther(`${freeGamePrizepoolAmount}`))
+    ? itemCreationAmountEther
+    : itemCreationAmountEther.add(parseEther(`${freeGamePrizepoolAmount}`))
 
   const prizepool = parsedRegistrationAmount ? parsedRegistrationAmount * maxPlayers : freeGamePrizepoolAmount
 
