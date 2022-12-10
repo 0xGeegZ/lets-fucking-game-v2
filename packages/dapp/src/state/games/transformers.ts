@@ -24,7 +24,7 @@ export const gameBaseTransformer = (gameData, gamePlayers, gameCreatorAmounts, g
     const [
       [
         {
-          id,
+          gameId,
           name,
           versionId,
           roundId,
@@ -49,7 +49,7 @@ export const gameBaseTransformer = (gameData, gamePlayers, gameCreatorAmounts, g
     const [[treasuryAmount]] = gameTreasuryAmounts[index]
 
     return {
-      id: id.toNumber(),
+      id: gameId.toNumber(),
       name: parseStringOrBytes32('', name, 'Game'),
       versionId: versionId?.toNumber(),
       roundId: roundId.toNumber(),

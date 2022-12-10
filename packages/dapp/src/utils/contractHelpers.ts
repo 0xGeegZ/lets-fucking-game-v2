@@ -5,7 +5,7 @@ import { Contract } from '@ethersproject/contracts'
 import { CAKE } from '@pancakeswap/tokens'
 
 // Addresses
-import { getAddress, getGameFactoryV1Address, getMulticallAddress } from 'utils/addressHelpers'
+import { getAddress, getGameFactoryV2Address, getGiveawayV1Address, getMulticallAddress } from 'utils/addressHelpers'
 
 import { GameFactoryV2, GameV1, GameV2, GiveawayV1 } from 'config/types/typechain'
 
@@ -56,7 +56,7 @@ export const getGameFactoryContract = (chainId?: number, signer?: Signer | Provi
 
   return getContract({
     abi: internal[chainId || ChainId.BSC].GameFactoryV2.abi,
-    address: getGameFactoryV1Address(chainId),
+    address: getGameFactoryV2Address(chainId),
     signer,
     chainId,
   }) as GameFactoryV2
@@ -99,7 +99,7 @@ export const getGameV2Contract = (address: string, chainId?: number, signer?: Si
   }) as GameV2
 }
 
-export const getGiveawayV1Contract = (address: string, chainId?: number, signer?: Signer | Provider) => {
+export const getGiveawayV1Contract = (chainId?: number, signer?: Signer | Provider) => {
   if (!internal[chainId || ChainId.BSC]) {
     console.error('No config found for this chain')
     return null
@@ -111,7 +111,7 @@ export const getGiveawayV1Contract = (address: string, chainId?: number, signer?
 
   return getContract({
     abi: internal[chainId || ChainId.BSC].Giveaway.abi,
-    address,
+    address: getGiveawayV1Address(chainId),
     signer,
     chainId,
   }) as GiveawayV1

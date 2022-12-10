@@ -19,7 +19,7 @@ export const fetchPublicGamesData = async (
   const chunkSize = gameCalls.length / games.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV1.abi,
+    abi: internal[chainId || ChainId.BSC].GameV2.abi,
     calls: gameCalls,
     chainId,
   })
@@ -43,7 +43,7 @@ export const fetchGamesCreatorAmounts = async (
   const chunkSize = gameCalls.length / games.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV1.abi,
+    abi: internal[chainId || ChainId.BSC].GameV2.abi,
     calls: gameCalls,
     chainId,
   })
@@ -64,7 +64,7 @@ export const fetchGamesTreasuryAmounts = async (
   const chunkSize = gameCalls.length / games.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV1.abi,
+    abi: internal[chainId || ChainId.BSC].GameV2.abi,
     calls: gameCalls,
     chainId,
   })
@@ -85,7 +85,7 @@ export const fetchGamesPlayersAddresses = async (
   const chunkSize = gameCalls.length / games.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV1.abi,
+    abi: internal[chainId || ChainId.BSC].GameV2.abi,
     calls: gameCalls,
     chainId,
   })
@@ -110,7 +110,7 @@ export const fetchGamesPrizes = async (games: any[], chainId = ChainId.BSC): Pro
   const chunkSize = gameCalls.length / games.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV1.abi,
+    abi: internal[chainId || ChainId.BSC].GameV2.abi,
     calls: gameCalls,
     chainId,
   })
@@ -130,7 +130,7 @@ export const fetchGamesWinners = async (games: any[], chainId = ChainId.BSC): Pr
   const chunkSize = gameCalls.length / games.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV1.abi,
+    abi: internal[chainId || ChainId.BSC].GameV2.abi,
     calls: gameCalls,
     chainId,
   })

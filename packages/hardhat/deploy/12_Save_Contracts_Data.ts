@@ -1,6 +1,6 @@
 import fs from 'fs'
-import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { DeployFunction } from 'hardhat-deploy/types'
 
 import { saveContractData } from '../helpers/saveContractData'
 
@@ -11,8 +11,8 @@ const func: DeployFunction = async function ({
   const { deploy, log } = deployments
 
   const chainId = await getChainId()
-  const game = await deployments.get('GameV1')
-  const gameFactory = await deployments.get('GameFactory')
+  const game = await deployments.get('GameV2')
+  const gameFactory = await deployments.get('GameFactoryV2')
 
   const multiCall3 = await deployments.get('Multicall3')
 
@@ -21,13 +21,13 @@ const func: DeployFunction = async function ({
 
   saveContractData({
     [chainId]: {
-      GameFactory: {
+      GameFactoryV2: {
         address: gameFactory.address,
         libraries: gameFactory.libraries || {},
         transactionHash: gameFactory.transactionHash,
         abi: gameFactory.abi,
       },
-      GameV1: {
+      GameV2: {
         address: game.address,
         libraries: game.libraries || {},
         transactionHash: game.transactionHash,
