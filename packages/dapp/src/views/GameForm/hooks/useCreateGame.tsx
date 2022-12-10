@@ -3,7 +3,7 @@ import { useTranslation } from '@pancakeswap/localization'
 import { useToast } from '@pancakeswap/uikit'
 import useCatchTxError from 'hooks/useCatchTxError'
 import { ToastDescriptionWithTx } from 'components/Toast'
-import { useGameFactoryV1Contract } from 'hooks/useContract'
+import { useGameFactoryContract } from 'hooks/useContract'
 import { parseEther, formatEther } from '@ethersproject/units'
 import { formatBytes32String } from '@ethersproject/strings'
 import { useGameContext } from 'views/GameForm/hooks/useGameContext'
@@ -18,7 +18,7 @@ export const useCreateGame = (game) => {
   const { toastSuccess } = useToast()
   const addTransaction = useTransactionAdder()
 
-  const contract = useGameFactoryV1Contract()
+  const contract = useGameFactoryContract()
   const { actions, gameConfig, currentStep } = useGameContext()
 
   const { GAME_CREATION_AMOUNT } = gameConfig

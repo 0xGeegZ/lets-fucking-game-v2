@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
-import { useGameFactoryV1Contract } from 'hooks/useContract'
+import { useGameFactoryContract } from 'hooks/useContract'
 import { useSWRContract, UseSWRContractKey } from 'hooks/useSWRContract'
 import { SLOW_INTERVAL } from 'config/constants'
 
 export const useLoadGames = () => {
-  const contract = useGameFactoryV1Contract()
+  const contract = useGameFactoryContract()
 
   const key = useMemo<UseSWRContractKey>(() => {
     return {

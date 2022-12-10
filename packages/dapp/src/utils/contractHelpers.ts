@@ -7,7 +7,7 @@ import { CAKE } from '@pancakeswap/tokens'
 // Addresses
 import { getAddress, getGameFactoryV1Address, getMulticallAddress } from 'utils/addressHelpers'
 
-import { GameFactory, GameV1 } from 'config/types/typechain'
+import { GameFactory, GameV1, Giveaway } from 'config/types/typechain'
 
 // ABI
 import bep20Abi from 'config/abi/erc20.json'
@@ -44,12 +44,16 @@ export const getErc721Contract = (address: string, signer?: Signer | Provider) =
   return getContract({ abi: erc721Abi, address, signer }) as Erc721
 }
 
-// TODO GUIGUI getGameFactoryV1Contract
-export const getGameFactoryV1Contract = (chainId?: number, signer?: Signer | Provider) => {
+export const getGameFactoryContract = (chainId?: number, signer?: Signer | Provider) => {
   if (!internal[chainId || ChainId.BSC]) {
+    console.error('No config found for this chain')
+    return null
+  }
+  if (!internal[chainId || ChainId.BSC].GameFactory) {
     console.error('No GameFactory found for this chain')
     return null
   }
+
   return getContract({
     abi: internal[chainId || ChainId.BSC].GameFactory.abi,
     address: getGameFactoryV1Address(chainId),
@@ -57,9 +61,14 @@ export const getGameFactoryV1Contract = (chainId?: number, signer?: Signer | Pro
     chainId,
   }) as GameFactory
 }
-// TODO GUIGUI getGameV1Contract
+
 export const getGameV1Contract = (address: string, chainId?: number, signer?: Signer | Provider) => {
   if (!internal[chainId || ChainId.BSC]) {
+    console.error('No config found for this chain')
+    return null
+  }
+
+  if (!internal[chainId || ChainId.BSC].GameV1) {
     console.error('No GameV1 found for this chain')
     return null
   }
@@ -70,6 +79,42 @@ export const getGameV1Contract = (address: string, chainId?: number, signer?: Si
     signer,
     chainId,
   }) as GameV1
+}
+
+export const getGameV2Contract = (address: string, chainId?: number, signer?: Signer | Provider) => {
+  if (!internal[chainId || ChainId.BSC]) {
+    console.error('No config found for this chain')
+    return null
+  }
+  if (!internal[chainId || ChainId.BSC].GameV2) {
+    console.error('No GameV2 found for this chain')
+    return null
+  }
+
+  return getContract({
+    abi: internal[chainId || ChainId.BSC].GameV2.abi,
+    address,
+    signer,
+    chainId,
+  }) as GameV1
+}
+
+export const getGiveawayContract = (address: string, chainId?: number, signer?: Signer | Provider) => {
+  if (!internal[chainId || ChainId.BSC]) {
+    console.error('No config found for this chain')
+    return null
+  }
+  if (!internal[chainId || ChainId.BSC].Giveaway) {
+    console.error('No Giveaway found for this chain')
+    return null
+  }
+
+  return getContract({
+    abi: internal[chainId || ChainId.BSC].Giveaway.abi,
+    address,
+    signer,
+    chainId,
+  }) as Giveaway
 }
 
 export const getCakeContract = (signer?: Signer | Provider, chainId?: number) => {
