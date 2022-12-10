@@ -88,22 +88,22 @@ contract GameFactoryV2 is Factory {
         external
         payable
         whenNotPaused
-        onlyChildCreationAmount
+        onlyItemCreationAmount
         onlyAllowedRegistrationAmount(_registrationAmount)
         onlyIfNotUsedRegistrationAmounts(_registrationAmount)
         returns (address game)
     {
-        address latestGameV1Address = childsVersions[latestVersionId].deployedAddress;
+        address latestGameV1Address = versions[latestVersionId].deployedAddress;
         address payable newGameAddress = payable(Clones.clone(latestGameV1Address));
 
         usedAuthorizedAmounts[_registrationAmount].isUsed = true;
-        childs.push(
-            Child({
+        items.push(
+            Item({
                 id: id.current(),
                 versionId: latestVersionId,
                 creator: msg.sender,
                 deployedAddress: newGameAddress,
-                childCreationAmount: childCreationAmount
+                itemCreationAmount: itemCreationAmount
             })
         );
 
@@ -129,7 +129,7 @@ contract GameFactoryV2 is Factory {
         initialization.encodedCron = _encodedCron;
         initialization.prizes = _prizes;
 
-        uint256 prizepool = msg.value - childCreationAmount;
+        uint256 prizepool = msg.value - itemCreationAmount;
         IGame(newGameAddress).initialize{ value: prizepool }(initialization);
 
         keeper.registerCronToUpkeep(newGameAddress);
@@ -162,11 +162,11 @@ contract GameFactoryV2 is Factory {
     ///
 
     /**
-     * @notice Get the list of deployed childsVersions
-     * @return allGames the list of childsVersions
+     * @notice Get the list of deployed itemsVersions
+     * @return allGames the list of itemsVersions
      */
-    function getDeployedGames() external view returns (Child[] memory allGames) {
-        return childs;
+    function getDeployedGames() external view returns (Item[] memory allGames) {
+        return items;
     }
 
     /**

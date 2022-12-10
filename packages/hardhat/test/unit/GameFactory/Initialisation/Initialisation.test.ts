@@ -87,7 +87,7 @@ describe('GameFactoryContract', function () {
         const responseLatestGameV1VersionId =
           await this.gameFactory.latestVersionId()
 
-        const responseGameV1 = await this.gameFactory.childs(
+        const responseGameV1 = await this.gameFactory.items(
           responseLatestGameV1VersionId
         )
         const responseOwner = await this.gameFactory.owner()

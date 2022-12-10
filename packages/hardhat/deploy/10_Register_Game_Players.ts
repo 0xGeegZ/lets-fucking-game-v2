@@ -55,7 +55,7 @@ const func: DeployFunction = async function ({
   )
 
   log('Register 9 players to free game')
-  const { deployedAddress: freeGameDeployedAddress } = await gameFactory.childs(
+  const { deployedAddress: freeGameDeployedAddress } = await gameFactory.items(
     '1'
   )
 
@@ -74,7 +74,7 @@ const func: DeployFunction = async function ({
 
   log('Register 9 players to payable game')
   const { deployedAddress: payableGameDeployedAddress } =
-    await gameFactory.childs('0')
+    await gameFactory.items('0')
 
   const payableGame = new ethers.Contract(
     payableGameDeployedAddress,

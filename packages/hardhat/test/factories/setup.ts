@@ -105,7 +105,7 @@ const setupTest = deployments.createFixture(
       deployer
     )
 
-    const payableGame = await gameFactory.childs('0')
+    const payableGame = await gameFactory.items('0')
 
     const deployedPayableGame = new ethers.Contract(
       payableGame.deployedAddress,
@@ -113,7 +113,7 @@ const setupTest = deployments.createFixture(
       deployer
     )
 
-    const freeGame = await gameFactory.childs('1')
+    const freeGame = await gameFactory.items('1')
 
     const deployedFreeGame = new ethers.Contract(
       freeGame.deployedAddress,

@@ -7,7 +7,7 @@ import {
   getGameFactoryContract,
   getGameV1Contract,
   getGameV2Contract,
-  getGiveawayContract,
+  getGiveawayV1Contract,
   getBep20Contract,
   getErc721Contract,
   getErc721CollectionContract,
@@ -51,10 +51,10 @@ export const useGameV2Contract = (address: string) => {
   return useMemo(() => getGameV2Contract(address, chainId, providerOrSigner), [address, chainId, providerOrSigner])
 }
 
-export const useGiveawayContract = (address: string) => {
+export const useGiveawayV1Contract = (address: string) => {
   const providerOrSigner = useProviderOrSigner(true)
   const { chainId } = useActiveChainId()
-  return useMemo(() => getGiveawayContract(address, chainId, providerOrSigner), [address, chainId, providerOrSigner])
+  return useMemo(() => getGiveawayV1Contract(address, chainId, providerOrSigner), [address, chainId, providerOrSigner])
 }
 
 export const useERC20 = (address: string, withSignerIfPossible = true) => {

@@ -18,13 +18,13 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
 
     Counters.Counter public id;
 
-    uint256 public childCreationAmount;
+    uint256 public itemCreationAmount;
 
     uint256 public latestVersionId;
 
-    ChildVersion[] public childsVersions;
+    Version[] public versions;
 
-    Child[] public childs;
+    Item[] public items;
 
     address public cronUpkeep;
 
@@ -33,20 +33,20 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
     ///
 
     /**
-     * @notice Child structure that contain all usefull data for a child
+     * @notice Item structure that contain all usefull data for a item
      */
-    struct Child {
+    struct Item {
         uint256 id;
         uint256 versionId;
         address creator;
         address deployedAddress;
-        uint256 childCreationAmount;
+        uint256 itemCreationAmount;
     }
 
     /**
-     * @notice ChildVersion structure that contain all usefull data for a child Implementation version
+     * @notice Version structure that contain all usefull data for a item Implementation version
      */
-    struct ChildVersion {
+    struct Version {
         uint256 id;
         address deployedAddress;
     }
@@ -70,18 +70,18 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
 
     /**
      * @notice Constructor Tha initialised the factory configuration
-     * @param _child the child implementation address
+     * @param _item the item implementation address
      * @param _cronUpkeep the keeper address
-     * @param _childCreationAmount the child creation amount
+     * @param _itemCreationAmount the item creation amount
      */
     constructor(
-        address _child,
+        address _item,
         address _cronUpkeep,
-        uint256 _childCreationAmount
-    ) onlyAddressInit(_child) onlyAddressInit(_cronUpkeep) {
+        uint256 _itemCreationAmount
+    ) onlyAddressInit(_item) onlyAddressInit(_cronUpkeep) {
         cronUpkeep = _cronUpkeep;
-        childCreationAmount = _childCreationAmount;
-        childsVersions.push(ChildVersion({ id: latestVersionId, deployedAddress: _child }));
+        itemCreationAmount = _itemCreationAmount;
+        versions.push(Version({ id: latestVersionId, deployedAddress: _item }));
     }
 
     ///
@@ -108,11 +108,11 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
     ///
 
     /**
-     * @notice Get the list of deployed childsVersions
-     * @return _childsVersions the list of childsVersions
+     * @notice Get the list of deployed versions
+     * @return _itemsVersions the list of versions
      */
-    function getDeployedChildsVersions() external view returns (ChildVersion[] memory _childsVersions) {
-        return childsVersions;
+    function getDeployedChildsVersions() external view returns (Version[] memory _itemsVersions) {
+        return versions;
     }
 
     ///
@@ -120,17 +120,17 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
     ///
 
     /**
-     * @notice Set the child implementation address
-     * @param _child the new child implementation address
+     * @notice Set the version id and using given address as defaut address for current version
+     * @param _item the new item implementation address
      * @dev Callable by admin
      */
-    function setNewChild(address _child) external onlyAdmin {
+    function setNewVersion(address _item) external onlyAdmin {
         latestVersionId += 1;
-        childsVersions.push(ChildVersion({ id: latestVersionId, deployedAddress: _child }));
+        versions.push(Version({ id: latestVersionId, deployedAddress: _item }));
     }
 
     /**
-     * @notice Update the keeper address for the factory and all childsVersions and associated keeper job
+     * @notice Update the keeper address for the factory and all versions and associated keeper job
      * @param _cronUpkeep the new keeper address
      * @dev Callable by admin
      */
@@ -138,37 +138,37 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
         cronUpkeep = _cronUpkeep;
         emit CronUpkeepUpdated(cronUpkeep);
 
-        for (uint256 i = 0; i < childs.length; i++) {
-            Child memory child = childs[i];
-            ICronUpkeep(cronUpkeep).addDelegator(child.deployedAddress);
-            IKeeper(payable(child.deployedAddress)).setCronUpkeep(cronUpkeep);
+        for (uint256 i = 0; i < items.length; i++) {
+            Item memory item = items[i];
+            ICronUpkeep(cronUpkeep).addDelegator(item.deployedAddress);
+            IKeeper(payable(item.deployedAddress)).setCronUpkeep(cronUpkeep);
         }
     }
 
     /**
-     * @notice Pause the factory and all childsVersions and associated keeper job
+     * @notice Pause the factory and all versions and associated keeper job
      * @dev Callable by admin
      */
     function pauseAll() external onlyAdmin whenNotPaused {
         // pause first to ensure no more interaction with contract
         _pause();
-        for (uint256 i = 0; i < childs.length; i++) {
-            Child memory child = childs[i];
-            IChild(payable(child.deployedAddress)).pause();
+        for (uint256 i = 0; i < items.length; i++) {
+            Item memory item = items[i];
+            IChild(payable(item.deployedAddress)).pause();
         }
     }
 
     /**
-     * @notice Resume the factory and all childsVersions and associated keeper job
+     * @notice Resume the factory and all versions and associated keeper job
      * @dev Callable by admin
      */
     function resumeAll() external onlyAdmin whenPaused {
         // unpause last to ensure that everything is ok
         _unpause();
 
-        for (uint256 i = 0; i < childs.length; i++) {
-            Child memory child = childs[i];
-            IChild(payable(child.deployedAddress)).unpause();
+        for (uint256 i = 0; i < items.length; i++) {
+            Item memory item = items[i];
+            IChild(payable(item.deployedAddress)).unpause();
         }
     }
 
@@ -246,10 +246,10 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
     }
 
     /**
-     * @notice Modifier that ensure that amount sended is child creation amount
+     * @notice Modifier that ensure that amount sended is item creation amount
      */
-    modifier onlyChildCreationAmount() {
-        require(msg.sender == owner() || msg.value >= childCreationAmount, "Only child creation amount is allowed");
+    modifier onlyItemCreationAmount() {
+        require(msg.sender == owner() || msg.value >= itemCreationAmount, "Only item creation amount is allowed");
         _;
     }
 }

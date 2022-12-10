@@ -7,7 +7,7 @@ import { CAKE } from '@pancakeswap/tokens'
 // Addresses
 import { getAddress, getGameFactoryV1Address, getMulticallAddress } from 'utils/addressHelpers'
 
-import { GameFactory, GameV1, Giveaway } from 'config/types/typechain'
+import { GameFactoryV2, GameV1, GameV2, GiveawayV1 } from 'config/types/typechain'
 
 // ABI
 import bep20Abi from 'config/abi/erc20.json'
@@ -49,17 +49,17 @@ export const getGameFactoryContract = (chainId?: number, signer?: Signer | Provi
     console.error('No config found for this chain')
     return null
   }
-  if (!internal[chainId || ChainId.BSC].GameFactory) {
+  if (!internal[chainId || ChainId.BSC].GameFactoryV2) {
     console.error('No GameFactory found for this chain')
     return null
   }
 
   return getContract({
-    abi: internal[chainId || ChainId.BSC].GameFactory.abi,
+    abi: internal[chainId || ChainId.BSC].GameFactoryV2.abi,
     address: getGameFactoryV1Address(chainId),
     signer,
     chainId,
-  }) as GameFactory
+  }) as GameFactoryV2
 }
 
 export const getGameV1Contract = (address: string, chainId?: number, signer?: Signer | Provider) => {
@@ -96,10 +96,10 @@ export const getGameV2Contract = (address: string, chainId?: number, signer?: Si
     address,
     signer,
     chainId,
-  }) as GameV1
+  }) as GameV2
 }
 
-export const getGiveawayContract = (address: string, chainId?: number, signer?: Signer | Provider) => {
+export const getGiveawayV1Contract = (address: string, chainId?: number, signer?: Signer | Provider) => {
   if (!internal[chainId || ChainId.BSC]) {
     console.error('No config found for this chain')
     return null
@@ -114,7 +114,7 @@ export const getGiveawayContract = (address: string, chainId?: number, signer?: 
     address,
     signer,
     chainId,
-  }) as Giveaway
+  }) as GiveawayV1
 }
 
 export const getCakeContract = (signer?: Signer | Provider, chainId?: number) => {

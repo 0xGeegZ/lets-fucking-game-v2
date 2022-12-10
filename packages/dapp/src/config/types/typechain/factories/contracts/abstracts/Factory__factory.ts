@@ -112,82 +112,6 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "childCreationAmount",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "childs",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "versionId",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "creator",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "deployedAddress",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "childCreationAmount",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "childsVersions",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "deployedAddress",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "cronUpkeep",
     outputs: [
       {
@@ -216,8 +140,8 @@ const _abi = [
             type: "address",
           },
         ],
-        internalType: "struct Factory.ChildVersion[]",
-        name: "_childsVersions",
+        internalType: "struct Factory.Version[]",
+        name: "_itemsVersions",
         type: "tuple[]",
       },
     ],
@@ -231,6 +155,58 @@ const _abi = [
       {
         internalType: "uint256",
         name: "_value",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "itemCreationAmount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "items",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "versionId",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "creator",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "deployedAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "itemCreationAmount",
         type: "uint256",
       },
     ],
@@ -308,11 +284,11 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_child",
+        name: "_item",
         type: "address",
       },
     ],
-    name: "setNewChild",
+    name: "setNewVersion",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -361,6 +337,30 @@ const _abi = [
     name: "updateCronUpkeep",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "versions",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "deployedAddress",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
