@@ -1,5 +1,5 @@
 import { getGameFactoryContract } from 'utils/contractHelpers'
-import { GameFactory } from 'config/types/typechain'
+import { GameFactory, GameFactoryV2 } from 'config/types/typechain'
 
 import { gameBaseTransformer, gameExtendedTransformer } from './transformers'
 
@@ -16,7 +16,7 @@ import { State, SerializedGame, DeserializedGame, DeserializedGameUserData } fro
 
 const fetchGames = async (chainId: number): Promise<SerializedGame[]> => {
   try {
-    const gameFactoryContract: GameFactory = getGameFactoryContract(chainId)
+    const gameFactoryContract: GameFactoryV2 = getGameFactoryContract(chainId)
     const gamesToFetch: GameFactory.GameStructOutput[] = await gameFactoryContract.getDeployedGames()
 
     const [gameData, gamePlayers, gameCreatorAmounts, gameTreasuryAmounts] = await Promise.all([

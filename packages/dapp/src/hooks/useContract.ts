@@ -51,10 +51,10 @@ export const useGameV2Contract = (address: string) => {
   return useMemo(() => getGameV2Contract(address, chainId, providerOrSigner), [address, chainId, providerOrSigner])
 }
 
-export const useGiveawayV1Contract = (address: string) => {
+export const useGiveawayV1Contract = () => {
   const providerOrSigner = useProviderOrSigner(true)
   const { chainId } = useActiveChainId()
-  return useMemo(() => getGiveawayV1Contract(address, chainId, providerOrSigner), [address, chainId, providerOrSigner])
+  return useMemo(() => getGiveawayV1Contract(chainId, providerOrSigner), [chainId, providerOrSigner])
 }
 
 export const useERC20 = (address: string, withSignerIfPossible = true) => {

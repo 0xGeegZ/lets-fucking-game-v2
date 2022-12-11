@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { giveawayConfig, defaultGameConfig } from 'config/internal/giveawayConfig'
+import { giveawayConfig, defaultGiveawayConfig } from 'config/internal/giveawayConfig'
 
 import { useActiveChainId } from './useActiveChainId'
 
@@ -11,12 +11,12 @@ export const useGiveawayConfig = () => {
   return useMemo(() => giveawayConfig[chainId], [chainId])
 }
 
-export const useDefaultGameConfig = () => {
-  return useMemo(() => defaultGameConfig, [])
+export const useDefaultGiveawayConfig = () => {
+  return useMemo(() => defaultGiveawayConfig, [])
 }
 
 export const useGiveawayConfigFallback = () => {
   const { chainId } = useActiveChainId()
 
-  return useMemo(() => giveawayConfig[chainId] || defaultGameConfig, [chainId])
+  return useMemo(() => giveawayConfig[chainId] || defaultGiveawayConfig, [chainId])
 }
