@@ -49,6 +49,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.AutomationBase__factory>;
     getContractFactory(
+      name: "ChainlinkClient",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ChainlinkClient__factory>;
+    getContractFactory(
       name: "ConfirmedOwner",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ConfirmedOwner__factory>;
@@ -61,13 +65,41 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.AutomationCompatibleInterface__factory>;
     getContractFactory(
+      name: "ChainlinkRequestInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ChainlinkRequestInterface__factory>;
+    getContractFactory(
+      name: "ENSInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ENSInterface__factory>;
+    getContractFactory(
+      name: "LinkTokenInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.LinkTokenInterface__factory>;
+    getContractFactory(
+      name: "OperatorInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.OperatorInterface__factory>;
+    getContractFactory(
+      name: "OracleInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.OracleInterface__factory>;
+    getContractFactory(
       name: "OwnableInterface",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.OwnableInterface__factory>;
     getContractFactory(
+      name: "PointerInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.PointerInterface__factory>;
+    getContractFactory(
       name: "Cron",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Cron__factory>;
+    getContractFactory(
+      name: "ENSResolver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ENSResolver__factory>;
     getContractFactory(
       name: "Ownable",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -80,6 +112,66 @@ declare module "hardhat/types/runtime" {
       name: "Pausable",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Pausable__factory>;
+    getContractFactory(
+      name: "ERC1155",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC1155__factory>;
+    getContractFactory(
+      name: "IERC1155MetadataURI",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC1155MetadataURI__factory>;
+    getContractFactory(
+      name: "IERC1155",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC1155__factory>;
+    getContractFactory(
+      name: "IERC1155Receiver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC1155Receiver__factory>;
+    getContractFactory(
+      name: "IERC20",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20__factory>;
+    getContractFactory(
+      name: "ERC721",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC721__factory>;
+    getContractFactory(
+      name: "IERC721Metadata",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC721Metadata__factory>;
+    getContractFactory(
+      name: "IERC721",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC721__factory>;
+    getContractFactory(
+      name: "IERC721Receiver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC721Receiver__factory>;
+    getContractFactory(
+      name: "ERC165",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC165__factory>;
+    getContractFactory(
+      name: "IERC165",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC165__factory>;
+    getContractFactory(
+      name: "Child",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Child__factory>;
+    getContractFactory(
+      name: "Factory",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Factory__factory>;
+    getContractFactory(
+      name: "GameFactoryV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.GameFactoryV2__factory>;
+    getContractFactory(
+      name: "GameV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.GameV2__factory>;
     getContractFactory(
       name: "GameFactory",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -97,17 +189,37 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.GameV1Interface__factory>;
     getContractFactory(
+      name: "GiveawayV1",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.GiveawayV1__factory>;
+    getContractFactory(
+      name: "IChild",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IChild__factory>;
+    getContractFactory(
+      name: "ICronUpkeep",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ICronUpkeep__factory>;
+    getContractFactory(
+      name: "IGame",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IGame__factory>;
+    getContractFactory(
       name: "IKeeper",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IKeeper__factory>;
     getContractFactory(
-      name: "Multicall3",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Multicall3__factory>;
-    getContractFactory(
       name: "CronUpkeep",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.CronUpkeep__factory>;
+    getContractFactory(
+      name: "Keeper",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Keeper__factory>;
+    getContractFactory(
+      name: "Multicall3",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Multicall3__factory>;
 
     getContractAt(
       name: "ERC677Token",
@@ -155,6 +267,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.AutomationBase>;
     getContractAt(
+      name: "ChainlinkClient",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ChainlinkClient>;
+    getContractAt(
       name: "ConfirmedOwner",
       address: string,
       signer?: ethers.Signer
@@ -170,15 +287,50 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.AutomationCompatibleInterface>;
     getContractAt(
+      name: "ChainlinkRequestInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ChainlinkRequestInterface>;
+    getContractAt(
+      name: "ENSInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ENSInterface>;
+    getContractAt(
+      name: "LinkTokenInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.LinkTokenInterface>;
+    getContractAt(
+      name: "OperatorInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.OperatorInterface>;
+    getContractAt(
+      name: "OracleInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.OracleInterface>;
+    getContractAt(
       name: "OwnableInterface",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.OwnableInterface>;
     getContractAt(
+      name: "PointerInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.PointerInterface>;
+    getContractAt(
       name: "Cron",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Cron>;
+    getContractAt(
+      name: "ENSResolver",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ENSResolver>;
     getContractAt(
       name: "Ownable",
       address: string,
@@ -194,6 +346,81 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Pausable>;
+    getContractAt(
+      name: "ERC1155",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC1155>;
+    getContractAt(
+      name: "IERC1155MetadataURI",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC1155MetadataURI>;
+    getContractAt(
+      name: "IERC1155",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC1155>;
+    getContractAt(
+      name: "IERC1155Receiver",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC1155Receiver>;
+    getContractAt(
+      name: "IERC20",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20>;
+    getContractAt(
+      name: "ERC721",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC721>;
+    getContractAt(
+      name: "IERC721Metadata",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC721Metadata>;
+    getContractAt(
+      name: "IERC721",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC721>;
+    getContractAt(
+      name: "IERC721Receiver",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC721Receiver>;
+    getContractAt(
+      name: "ERC165",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC165>;
+    getContractAt(
+      name: "IERC165",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC165>;
+    getContractAt(
+      name: "Child",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Child>;
+    getContractAt(
+      name: "Factory",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Factory>;
+    getContractAt(
+      name: "GameFactoryV2",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.GameFactoryV2>;
+    getContractAt(
+      name: "GameV2",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.GameV2>;
     getContractAt(
       name: "GameFactory",
       address: string,
@@ -215,20 +442,45 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.GameV1Interface>;
     getContractAt(
+      name: "GiveawayV1",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.GiveawayV1>;
+    getContractAt(
+      name: "IChild",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IChild>;
+    getContractAt(
+      name: "ICronUpkeep",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ICronUpkeep>;
+    getContractAt(
+      name: "IGame",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IGame>;
+    getContractAt(
       name: "IKeeper",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IKeeper>;
     getContractAt(
-      name: "Multicall3",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Multicall3>;
-    getContractAt(
       name: "CronUpkeep",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.CronUpkeep>;
+    getContractAt(
+      name: "Keeper",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Keeper>;
+    getContractAt(
+      name: "Multicall3",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Multicall3>;
 
     // default types
     getContractFactory(

@@ -7,12 +7,12 @@ import { BigNumber as EthersBigNumber } from '@ethersproject/bignumber'
 
 interface ClaimButtonProps {
   address: string
-  roundId: BigNumber
+  epoch: BigNumber
 }
 
-const ClaimButton: React.FC<React.PropsWithChildren<ClaimButtonProps>> = ({ address, roundId }) => {
+const ClaimButton: React.FC<React.PropsWithChildren<ClaimButtonProps>> = ({ address, epoch }) => {
   const { t } = useTranslation()
-  const { isPending, handleClaim } = useClaimPrize(address, EthersBigNumber.from(roundId.toString()))
+  const { isPending, handleClaim } = useClaimPrize(address, EthersBigNumber.from(epoch.toString()))
   const isDisabledButton = useMemo(() => !address || isPending, [address, isPending])
 
   return (

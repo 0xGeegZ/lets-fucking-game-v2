@@ -20,14 +20,14 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
 
 export const gameBaseTransformer = (gameData, gamePlayers, gameCreatorAmounts, gameTreasuryAmounts) => {
   return (game, index): SerializedGame => {
-    const { deployedAddress: address, gameCreationAmount } = game
+    const { deployedAddress: address, itemCreationAmount } = game
     const [
       [
         {
-          id,
+          gameId,
           name,
           versionId,
-          roundId,
+          epoch,
           maxPlayers,
           playTimeRange,
           remainingPlayersCount,
@@ -49,16 +49,16 @@ export const gameBaseTransformer = (gameData, gamePlayers, gameCreatorAmounts, g
     const [[treasuryAmount]] = gameTreasuryAmounts[index]
 
     return {
-      id: id.toNumber(),
+      id: gameId.toNumber(),
       name: parseStringOrBytes32('', name, 'Game'),
       versionId: versionId?.toNumber(),
-      roundId: roundId.toNumber(),
+      epoch: epoch.toNumber(),
       maxPlayers: maxPlayers.toNumber(),
       remainingPlayersCount: remainingPlayersCount.toNumber(),
       playerAddressesCount: playerAddressesCount.toNumber(),
       playTimeRange: playTimeRange.toNumber(),
       registrationAmount: formatEther(`${registrationAmount}`),
-      gameCreationAmount: formatEther(`${gameCreationAmount}`),
+      itemCreationAmount: formatEther(`${itemCreationAmount}`),
       creatorFee: creatorFee.toNumber(),
       creatorAmount: creatorAmount.toString(),
       treasuryFee: treasuryFee.toNumber(),
@@ -93,9 +93,9 @@ export const gameExtendedTransformer = (gamePrizes, gameWinners) => {
     const [[rawWinners]] = gameWinners[index]
 
     const winners: SerializedWinnerData[] = rawWinners.map((winner) => {
-      const { roundId, playerAddress, amountWon, position, prizeClaimed } = winner
+      const { epoch, playerAddress, amountWon, position, prizeClaimed } = winner
       return {
-        roundId: roundId.toNumber(),
+        epoch: epoch.toNumber(),
         playerAddress: playerAddress.toString(),
         amountWon: formatEther(`${amountWon}`),
         position: position.toNumber(),

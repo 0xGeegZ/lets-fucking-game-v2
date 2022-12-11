@@ -27,7 +27,7 @@ describe('GameFactoryContract', function () {
             this.creatorFee,
             this.encodedCron,
             updatedPrizes,
-            { value: this.gameCreationAmount }
+            { value: this.itemCreationAmount }
           )
 
         const deployedGames = await this.gameFactory
@@ -42,7 +42,7 @@ describe('GameFactoryContract', function () {
         const responseOwner = await clonedGameContract.owner()
         const responseCreator = await clonedGameContract.creator()
         const responseFactory = await clonedGameContract.factory()
-        const responseId = await clonedGameContract.roundId()
+        const responseId = await clonedGameContract.epoch()
         const responseGameV1Version = await clonedGameContract.version()
         const responsePlayTimeRange = await clonedGameContract.playTimeRange()
         const responseMaxPlayers = await clonedGameContract.maxPlayers()
@@ -89,7 +89,7 @@ describe('GameFactoryContract', function () {
             this.creatorFee,
             this.encodedCron,
             updatedPrizes,
-            { value: this.gameCreationAmount }
+            { value: this.itemCreationAmount }
           )
 
         const deployedGames = await this.gameFactory
@@ -104,7 +104,7 @@ describe('GameFactoryContract', function () {
         const responseOwner = await clonedGameContract.owner()
         const responseCreator = await clonedGameContract.creator()
         const responseFactory = await clonedGameContract.factory()
-        const responseId = await clonedGameContract.roundId()
+        const responseId = await clonedGameContract.epoch()
         const responseGameV1Version = await clonedGameContract.version()
         const responsePlayTimeRange = await clonedGameContract.playTimeRange()
         const responseMaxPlayers = await clonedGameContract.maxPlayers()
@@ -141,7 +141,7 @@ describe('GameFactoryContract', function () {
           this.GameFactoryContract.connect(this.owner).deploy(
             this.game.address,
             this.cronUpkeep.address,
-            this.gameCreationAmount,
+            this.itemCreationAmount,
             emptyauthorizedAmounts
           ),
           'authorizedAmounts should be greather or equal to 1'
@@ -166,7 +166,7 @@ describe('GameFactoryContract', function () {
             this.creatorFee,
             this.encodedCron,
             updatedPrizes,
-            { value: this.gameCreationAmount }
+            { value: this.itemCreationAmount }
           )
 
         await expectRevert(
@@ -181,7 +181,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               updatedPrizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             ),
           'registrationAmout is already used'
         )
@@ -213,7 +213,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               updatedPrizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             ),
           'Prize list is not ordered'
         )
@@ -238,7 +238,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               updatedPrizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             ),
           'Wrong total amount to won'
         )
@@ -263,7 +263,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               updatedPrizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             ),
           'Wrong total amount to won'
         )
@@ -291,7 +291,7 @@ describe('GameFactoryContract', function () {
             this.encodedCron,
             updatedPrizes,
             {
-              value: this.gameCreationAmount.add(
+              value: this.itemCreationAmount.add(
                 ethers.utils.parseEther(`${prizepool}`)
               ),
             }
@@ -309,7 +309,7 @@ describe('GameFactoryContract', function () {
         const responseOwner = await clonedGameContract.owner()
         const responseCreator = await clonedGameContract.creator()
         const responseFactory = await clonedGameContract.factory()
-        const responseId = await clonedGameContract.roundId()
+        const responseId = await clonedGameContract.epoch()
         const responseGameV1Version = await clonedGameContract.version()
         const responsePlayTimeRange = await clonedGameContract.playTimeRange()
         const responseMaxPlayers = await clonedGameContract.maxPlayers()
@@ -360,7 +360,7 @@ describe('GameFactoryContract', function () {
             this.encodedCron,
             updatedPrizes,
             {
-              value: this.gameCreationAmount.add(
+              value: this.itemCreationAmount.add(
                 ethers.utils.parseEther(`${prizepool}`)
               ),
             }
@@ -378,7 +378,7 @@ describe('GameFactoryContract', function () {
         const responseOwner = await clonedGameContract.owner()
         const responseCreator = await clonedGameContract.creator()
         const responseFactory = await clonedGameContract.factory()
-        const responseId = await clonedGameContract.roundId()
+        const responseId = await clonedGameContract.epoch()
         const responseGameV1Version = await clonedGameContract.version()
         const responsePlayTimeRange = await clonedGameContract.playTimeRange()
         const responseMaxPlayers = await clonedGameContract.maxPlayers()
@@ -433,7 +433,7 @@ describe('GameFactoryContract', function () {
             this.encodedCron,
             updatedPrizes,
             {
-              value: this.gameCreationAmount.add(
+              value: this.itemCreationAmount.add(
                 ethers.utils.parseEther(`${prizepool}`)
               ),
             }
@@ -450,7 +450,7 @@ describe('GameFactoryContract', function () {
             this.encodedCron,
             updatedPrizes,
             {
-              value: this.gameCreationAmount.add(
+              value: this.itemCreationAmount.add(
                 ethers.utils.parseEther(`${prizepool}`)
               ),
             }
@@ -477,7 +477,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               updatedPrizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             ),
           'Need to send prizepool amount'
         )
@@ -486,7 +486,7 @@ describe('GameFactoryContract', function () {
 
     describe('when new game gets created', function () {
       it('should add the new game in deployedGames', async function () {
-        const currentId = await this.gameFactory.connect(this.owner).nextId()
+        const currentId = await this.gameFactory.connect(this.owner).id()
 
         const currentGameV1VersionId = await this.gameFactory
           .connect(this.owner)
@@ -511,7 +511,7 @@ describe('GameFactoryContract', function () {
             this.creatorFee,
             this.encodedCron,
             updatedPrizesFirst,
-            { value: this.gameCreationAmount }
+            { value: this.itemCreationAmount }
           )
 
         const registrationAmountSecond =
@@ -533,7 +533,7 @@ describe('GameFactoryContract', function () {
             this.creatorFee,
             this.encodedCron,
             updatedPrizesSecond,
-            { value: this.gameCreationAmount }
+            { value: this.itemCreationAmount }
           )
 
         const deployedGames = await this.gameFactory
@@ -553,7 +553,7 @@ describe('GameFactoryContract', function () {
       })
 
       it('should emit the GameCreated event with the correct data', async function () {
-        const currentId = await this.gameFactory.connect(this.owner).nextId()
+        const currentId = await this.gameFactory.connect(this.owner).id()
 
         const registrationAmount =
           this.authorizedAmounts[this.authorizedAmounts.length - 1]
@@ -573,7 +573,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               updatedPrizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             )
         )
           .to.emit(this.gameFactory, 'GameCreated')
@@ -597,7 +597,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               this.prizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             ),
           'Pausable: paused'
         )
@@ -624,7 +624,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               this.prizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             ),
           'maxPlayers should not be bigger than 100'
         )
@@ -641,7 +641,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               this.prizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             ),
           'maxPlayers should be bigger than or equal to 2'
         )
@@ -668,7 +668,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               this.prizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             ),
           'playTimeRange should not be bigger than 8'
         )
@@ -685,7 +685,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               this.prizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             ),
           'playTimeRange should be bigger than 0'
         )
@@ -718,7 +718,7 @@ describe('GameFactoryContract', function () {
           this.creatorFee,
           this.encodedCron,
           updatedPrizesFirst,
-          { value: this.gameCreationAmount }
+          { value: this.itemCreationAmount }
         )
 
       const registrationAmountSecond = this.authorizedAmounts[2]
@@ -739,7 +739,7 @@ describe('GameFactoryContract', function () {
           this.creatorFee,
           this.encodedCron,
           updatedPrizesSecond,
-          { value: this.gameCreationAmount }
+          { value: this.itemCreationAmount }
         )
 
       const deployedGamesAfter = await this.gameFactory

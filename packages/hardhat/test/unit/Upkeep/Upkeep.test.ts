@@ -114,7 +114,7 @@ describe('Upkeep - Initialisation', function () {
         while (isNeedRecheckupkeep) {
           const [upkeepNeeded, performData] = await this.cronUpkeep
             .connect(this.owner)
-            .callStatic.checkUpkeep(checkData)
+            .checkUpkeep(checkData)
 
           if (upkeepNeeded)
             await this.cronUpkeep.connect(this.owner).performUpkeep(performData)

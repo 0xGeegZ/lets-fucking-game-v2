@@ -25,7 +25,7 @@ const StyledLogo = styled(Logo)<{ size: string }>`
 export interface ExpandableSectionProps {
   id: BigNumber
   name?: string
-  roundId: BigNumber
+  epoch: BigNumber
   versionId: BigNumber
   chainId: number
   prizepool: BigNumber
@@ -51,7 +51,7 @@ const MultiplierTag = styled(Tag)`
 const CardHeadingSection: React.FC<React.PropsWithChildren<ExpandableSectionProps>> = ({
   id,
   name,
-  roundId,
+  epoch,
   versionId,
   chainId,
   prizepool,
@@ -63,7 +63,7 @@ const CardHeadingSection: React.FC<React.PropsWithChildren<ExpandableSectionProp
   isRegistering,
   hasLost,
 }) => {
-  // TODO GUIGUI DISPLAY gameCreationAmount
+  // TODO GUIGUI DISPLAY itemCreationAmount
   return (
     <Wrapper justifyContent="space-between" alignItems="center" mb="12px">
       {isReady ? (
@@ -82,7 +82,7 @@ const CardHeadingSection: React.FC<React.PropsWithChildren<ExpandableSectionProp
       <Flex flexDirection="column" alignItems="flex-end">
         {isReady ? (
           <Heading textAlign="right" mb="4px">
-            #{id.toNumber() + 1}.{roundId.toNumber() + 1} - {name}
+            #{id.toNumber() + 1}.{epoch.toNumber() + 1} - {name}
           </Heading>
         ) : (
           <Skeleton mb="4px" width={60} height={18} />

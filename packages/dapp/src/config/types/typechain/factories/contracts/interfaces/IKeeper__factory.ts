@@ -26,6 +26,25 @@ const _abi = [
         type: "address",
       },
     ],
+    name: "CronUpkeepRegistered",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "jobId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "cronUpkeep",
+        type: "address",
+      },
+    ],
     name: "CronUpkeepUpdated",
     type: "event",
   },
@@ -50,7 +69,40 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "getCronUpkeep",
+    outputs: [
+      {
+        internalType: "address",
+        name: "_cronUpkeep",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getEncodedCron",
+    outputs: [
+      {
+        internalType: "string",
+        name: "_encodedCron",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "pauseKeeper",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "registerCronToUpkeep",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

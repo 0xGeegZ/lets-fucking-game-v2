@@ -1,5 +1,5 @@
-import { getGameFactoryV1Contract } from 'utils/contractHelpers'
-import { GameFactory } from 'config/types/typechain'
+import { getGameFactoryContract } from 'utils/contractHelpers'
+import { GameFactory, GameFactoryV2 } from 'config/types/typechain'
 
 import { gameBaseTransformer, gameExtendedTransformer } from './transformers'
 
@@ -15,25 +15,30 @@ import {
 import { State, SerializedGame, DeserializedGame, DeserializedGameUserData } from '../types'
 
 const fetchGames = async (chainId: number): Promise<SerializedGame[]> => {
-  const gameFactoryContract: GameFactory = getGameFactoryV1Contract(chainId)
-  const gamesToFetch: GameFactory.GameStructOutput[] = await gameFactoryContract.getDeployedGames()
+  try {
+    const gameFactoryContract: GameFactoryV2 = getGameFactoryContract(chainId)
+    const gamesToFetch: GameFactory.GameStructOutput[] = await gameFactoryContract.getDeployedGames()
 
-  const [gameData, gamePlayers, gameCreatorAmounts, gameTreasuryAmounts] = await Promise.all([
-    fetchPublicGamesData(gamesToFetch, chainId),
-    fetchGamesPlayersAddresses(gamesToFetch, chainId),
-    fetchGamesCreatorAmounts(gamesToFetch, chainId),
-    fetchGamesTreasuryAmounts(gamesToFetch, chainId),
-  ])
-  const transformedGames = gamesToFetch.map(
-    gameBaseTransformer(gameData, gamePlayers, gameCreatorAmounts, gameTreasuryAmounts),
-  )
+    const [gameData, gamePlayers, gameCreatorAmounts, gameTreasuryAmounts] = await Promise.all([
+      fetchPublicGamesData(gamesToFetch, chainId),
+      fetchGamesPlayersAddresses(gamesToFetch, chainId),
+      fetchGamesCreatorAmounts(gamesToFetch, chainId),
+      fetchGamesTreasuryAmounts(gamesToFetch, chainId),
+    ])
+    const transformedGames = gamesToFetch.map(
+      gameBaseTransformer(gameData, gamePlayers, gameCreatorAmounts, gameTreasuryAmounts),
+    )
 
-  const [gamePrizes, gameWinners] = await Promise.all([
-    fetchGamesPrizes(transformedGames, chainId),
-    fetchGamesWinners(transformedGames, chainId),
-  ])
-  const completeGames = transformedGames.map(gameExtendedTransformer(gamePrizes, gameWinners))
-  return completeGames
+    const [gamePrizes, gameWinners] = await Promise.all([
+      fetchGamesPrizes(transformedGames, chainId),
+      fetchGamesWinners(transformedGames, chainId),
+    ])
+    const completeGames = transformedGames.map(gameExtendedTransformer(gamePrizes, gameWinners))
+    return completeGames
+  } catch (error) {
+    console.log('🚀 ~ file: fetchGames.ts:22 ~ fetchGames ~ error', error)
+    return []
+  }
 }
 
 export default fetchGames
