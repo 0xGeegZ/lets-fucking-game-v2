@@ -68,7 +68,7 @@ export declare namespace GameFactory {
     versionId: PromiseOrValue<BigNumberish>;
     creator: PromiseOrValue<string>;
     deployedAddress: PromiseOrValue<string>;
-    gameCreationAmount: PromiseOrValue<BigNumberish>;
+    itemCreationAmount: PromiseOrValue<BigNumberish>;
   };
 
   export type GameStructOutput = [
@@ -82,7 +82,7 @@ export declare namespace GameFactory {
     versionId: BigNumber;
     creator: string;
     deployedAddress: string;
-    gameCreationAmount: BigNumber;
+    itemCreationAmount: BigNumber;
   };
 }
 
@@ -93,11 +93,11 @@ export interface GameFactoryInterface extends utils.Interface {
     "createNewGame(bytes32,uint256,uint256,uint256,uint256,uint256,string,(uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
     "cronUpkeep()": FunctionFragment;
     "deployedGames(uint256)": FunctionFragment;
-    "gameCreationAmount()": FunctionFragment;
     "games(uint256)": FunctionFragment;
     "getAuthorizedAmount(uint256)": FunctionFragment;
     "getAuthorizedAmounts()": FunctionFragment;
     "getDeployedGames()": FunctionFragment;
+    "itemCreationAmount()": FunctionFragment;
     "latestVersionId()": FunctionFragment;
     "nextId()": FunctionFragment;
     "owner()": FunctionFragment;
@@ -122,11 +122,11 @@ export interface GameFactoryInterface extends utils.Interface {
       | "createNewGame"
       | "cronUpkeep"
       | "deployedGames"
-      | "gameCreationAmount"
       | "games"
       | "getAuthorizedAmount"
       | "getAuthorizedAmounts"
       | "getDeployedGames"
+      | "itemCreationAmount"
       | "latestVersionId"
       | "nextId"
       | "owner"
@@ -174,10 +174,6 @@ export interface GameFactoryInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "gameCreationAmount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "games",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -191,6 +187,10 @@ export interface GameFactoryInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getDeployedGames",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "itemCreationAmount",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -256,10 +256,6 @@ export interface GameFactoryInterface extends utils.Interface {
     functionFragment: "deployedGames",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "gameCreationAmount",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "games", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getAuthorizedAmount",
@@ -271,6 +267,10 @@ export interface GameFactoryInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getDeployedGames",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "itemCreationAmount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -470,11 +470,9 @@ export interface GameFactory extends BaseContract {
         versionId: BigNumber;
         creator: string;
         deployedAddress: string;
-        gameCreationAmount: BigNumber;
+        itemCreationAmount: BigNumber;
       }
     >;
-
-    gameCreationAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     games(
       arg0: PromiseOrValue<BigNumberish>,
@@ -503,6 +501,8 @@ export interface GameFactory extends BaseContract {
         allGames: GameFactory.GameStructOutput[];
       }
     >;
+
+    itemCreationAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     latestVersionId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -595,11 +595,9 @@ export interface GameFactory extends BaseContract {
       versionId: BigNumber;
       creator: string;
       deployedAddress: string;
-      gameCreationAmount: BigNumber;
+      itemCreationAmount: BigNumber;
     }
   >;
-
-  gameCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
 
   games(
     arg0: PromiseOrValue<BigNumberish>,
@@ -616,6 +614,8 @@ export interface GameFactory extends BaseContract {
   getDeployedGames(
     overrides?: CallOverrides
   ): Promise<GameFactory.GameStructOutput[]>;
+
+  itemCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
 
   latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -708,11 +708,9 @@ export interface GameFactory extends BaseContract {
         versionId: BigNumber;
         creator: string;
         deployedAddress: string;
-        gameCreationAmount: BigNumber;
+        itemCreationAmount: BigNumber;
       }
     >;
-
-    gameCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
 
     games(
       arg0: PromiseOrValue<BigNumberish>,
@@ -731,6 +729,8 @@ export interface GameFactory extends BaseContract {
     getDeployedGames(
       overrides?: CallOverrides
     ): Promise<GameFactory.GameStructOutput[]>;
+
+    itemCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
 
     latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -855,8 +855,6 @@ export interface GameFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    gameCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
     games(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -870,6 +868,8 @@ export interface GameFactory extends BaseContract {
     getAuthorizedAmounts(overrides?: CallOverrides): Promise<BigNumber>;
 
     getDeployedGames(overrides?: CallOverrides): Promise<BigNumber>;
+
+    itemCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
 
     latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -959,10 +959,6 @@ export interface GameFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    gameCreationAmount(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     games(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -978,6 +974,10 @@ export interface GameFactory extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getDeployedGames(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    itemCreationAmount(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     latestVersionId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

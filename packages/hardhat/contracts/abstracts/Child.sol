@@ -4,17 +4,20 @@ pragma solidity >=0.8.6;
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 import { IKeeper } from "../interfaces/IKeeper.sol";
 import { IChild } from "../interfaces/IChild.sol";
 
-import "hardhat/console.sol";
-
 abstract contract Child is IChild, ReentrancyGuard, Pausable {
     using Address for address;
+    using Counters for Counters.Counter;
 
-    uint256 public roundId; // roundId gets incremented every time the child restarts
+    Counters.Counter public epoch;
 
     address public owner;
     address public factory;
@@ -41,32 +44,9 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
     ///
 
     /**
-     * @notice Function that is called by a winner to claim his prize
-     * @dev TODO NEXT VERSION Update claim process according to prize type
-     */
-    function claimPrize(uint256 _roundId) external override onlyIfRoundId(_roundId) {
-        console.log("claimPrize");
-        for (uint256 i = 0; i < winners[_roundId].length; i++)
-            if (winners[_roundId][i].playerAddress == msg.sender) {
-                require(!winners[_roundId][i].prizeClaimed, "Prize for this round already claimed");
-                require(address(this).balance >= winners[_roundId][i].amountWon, "Not enough funds in contract");
-
-                winners[_roundId][i].prizeClaimed = true;
-                console.log("claimPrize OK");
-                emit ChildPrizeClaimed(msg.sender, _roundId, winners[_roundId][i].amountWon);
-                _safeTransfert(msg.sender, winners[_roundId][i].amountWon);
-                return;
-            }
-
-        console.log("claimPrize KO");
-
-        require(false, "Player did not win this round");
-    }
-
-    /**
      * @notice Prizes adding management
      * @dev Callable by admin or creator
-     * @dev TODO NEXT VERSION add a taxe for creator in case of free childs
+     * @dev TODO NEXT VERSION add a tax for creator in case of free childs
      *      Need to store the factory childCreationAmount in this contract on initialisation
      * @dev TODO NEXT VERSION Remove _isChildAllPrizesStandard limitation to include other prize typ
      */
@@ -78,19 +58,84 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
         require(_isChildAllPrizesStandard(), "This version only allow standard prize");
     }
 
+    /**
+     * @notice Function that is called by a winner to claim his prize
+     * @dev TODO NEXT VERSION Update claim process according to prize type
+     */
+    function claimPrize(uint256 _epoch) external override onlyIfEpoch(_epoch) {
+        for (uint256 i = 0; i < winners[_epoch].length; i++)
+            if (winners[_epoch][i].playerAddress == msg.sender) {
+                require(!winners[_epoch][i].prizeClaimed, "Prize for this round already claimed");
+                require(address(this).balance >= winners[_epoch][i].amountWon, "Not enough funds in contract");
+
+                winners[_epoch][i].prizeClaimed = true;
+                emit ChildPrizeClaimed(msg.sender, _epoch, winners[_epoch][i].amountWon);
+
+                if (winners[_epoch][i].standard == 0) _transfertPrizeNative(winners[_epoch][i]);
+                else if (winners[_epoch][i].standard == 1)
+                    _transfertPrizeERC20(
+                        winners[_epoch][i].contractAddress,
+                        address(this),
+                        winners[_epoch][i].playerAddress,
+                        winners[_epoch][i].amountWon
+                    );
+                else if (winners[_epoch][i].standard == 2)
+                    _transfertPrizeERC721(
+                        winners[_epoch][i].contractAddress,
+                        address(this),
+                        winners[_epoch][i].playerAddress,
+                        winners[_epoch][i].tokenId
+                    );
+                else if (winners[_epoch][i].standard == 3)
+                    _transfertPrizeERC1155(
+                        winners[_epoch][i].contractAddress,
+                        address(this),
+                        winners[_epoch][i].playerAddress,
+                        winners[_epoch][i].amountWon,
+                        winners[_epoch][i].tokenId
+                    );
+                else require(false, "Prize type not supported");
+
+                return;
+            }
+        require(false, "Player did not win this round");
+    }
+
     ///
     /// INTERNAL FUNCTIONS
     ///
+
+    function _transfertPrizeNative(Winner memory _winner) private {
+        _safeTransfert(_winner.playerAddress, _winner.amountWon);
+    }
+
+    function _transfertPrizeERC20(address contractAddress, address _from, address _to, uint256 _amount) private {
+        bool success = IERC20(contractAddress).transferFrom(_from, _to, _amount);
+        if (!success) require(false, "Amount transfert failed");
+    }
+
+    function _transfertPrizeERC721(address contractAddress, address _from, address _to, uint256 _tokenId) private {
+        ERC721(contractAddress).transferFrom(_from, _to, _tokenId);
+    }
+
+    // function _transfertPrizeERC1155(Winner memory _winner) private {
+    function _transfertPrizeERC1155(
+        address contractAddress,
+        address _from,
+        address _to,
+        uint256 _tokenId,
+        uint256 _amount
+    ) private {
+        ERC1155(contractAddress).safeTransferFrom(_from, _to, _tokenId, _amount, "");
+    }
 
     /**
      * @notice Internal function for prizes adding management
      * @param _prizes list of prize details
      */
     function _addPrizes(Prize[] memory _prizes) internal virtual {
-        uint256 prizepool = 0;
         for (uint256 i = 0; i < _prizes.length; i++) {
             _addPrize(_prizes[i]);
-            prizepool += _prizes[i].amount;
         }
     }
 
@@ -99,9 +144,16 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
      * @param _prize the prize to add
      */
     function _addPrize(Prize memory _prize) internal {
-        prizes[roundId].push(_prize);
+        if (_prize.standard == 1)
+            _transfertPrizeERC20(_prize.contractAddress, msg.sender, address(this), _prize.amount);
+        else if (_prize.standard == 2)
+            _transfertPrizeERC721(_prize.contractAddress, msg.sender, address(this), _prize.tokenId);
+        else if (_prize.standard == 3)
+            _transfertPrizeERC1155(_prize.contractAddress, msg.sender, address(this), _prize.amount, _prize.tokenId);
+
+        prizes[epoch.current()].push(_prize);
         emit PrizeAdded(
-            roundId,
+            epoch.current(),
             _prize.position,
             _prize.amount,
             _prize.standard,
@@ -113,9 +165,15 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
     /**
      * @notice Internal function to check if all childs are of type standard
      * @return isStandard set to true if all childs are of type standard
+     * @dev only available for native token, token or NFT
      */
     function _isChildAllPrizesStandard() internal view returns (bool isStandard) {
-        for (uint256 i = 0; i < prizes[roundId].length; i++) if (prizes[roundId][i].standard != 0) return false;
+        for (uint256 i = 0; i < prizes[epoch.current()].length; i++)
+            if (
+                prizes[epoch.current()][i].standard != 0 &&
+                prizes[epoch.current()][i].standard != 1 &&
+                prizes[epoch.current()][i].standard != 2
+            ) return false;
         return true;
     }
 
@@ -125,7 +183,7 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
      */
     function _checkIfPrizeAmountIfNeeded(Prize[] memory _prizes) internal view virtual {
         uint256 prizepool = 0;
-        for (uint256 i = 0; i < _prizes.length; i++) prizepool += _prizes[i].amount;
+        for (uint256 i = 0; i < _prizes.length; i++) if (_prizes[i].standard == 0) prizepool += _prizes[i].amount;
 
         require(msg.value == prizepool, "Need to send prizepool amount");
     }
@@ -145,34 +203,58 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
         }
     }
 
+    /**
+     * @notice get prize for given giveaway and current position
+     * @param _epoch round id
+     * @param _position position of prize
+     */
+    function _getPrizeForPosition(
+        uint256 _epoch,
+        uint256 _position
+    ) internal view returns (bool _found, Prize memory _prize) {
+        for (uint256 idx = 0; idx < prizes[_epoch].length; idx++) {
+            if (prizes[_epoch][idx].position == _position) return (true, prizes[_epoch][idx]);
+        }
+        Prize memory defaultPrize;
+        return (false, defaultPrize);
+    }
+
     ///
     /// GETTERS FUNCTIONS
     ///
     /**
      * @notice Return the winners for a round id
-     * @param _roundId the round id
+     * @param _epoch the round id
      * @return childWinners list of Winner
      */
     function getWinners(
-        uint256 _roundId
-    ) external view override onlyIfRoundId(_roundId) returns (Winner[] memory childWinners) {
-        return winners[_roundId];
+        uint256 _epoch
+    ) external view override onlyIfEpoch(_epoch) returns (Winner[] memory childWinners) {
+        return winners[_epoch];
     }
 
     /**
      * @notice Return the winners for a round id
-     * @param _roundId the round id
+     * @param _epoch the round id
      * @return childPrizes list of Prize
      */
-    function getPrizes(
-        uint256 _roundId
-    ) external view override onlyIfRoundId(_roundId) returns (Prize[] memory childPrizes) {
-        return prizes[_roundId];
+    function getPrizes(uint256 _epoch) external view override onlyIfEpoch(_epoch) returns (Prize[] memory childPrizes) {
+        return prizes[_epoch];
     }
 
     ///
     /// SETTERS FUNCTIONS
     ///
+
+    /**
+     * @notice Set the treasury fee for the child
+     * @param _treasuryFee the new treasury fee in %
+     * @dev Callable by admin
+     * @dev Callable when child if not in progress
+     */
+    function setTreasuryFee(uint256 _treasuryFee) external override onlyAdmin onlyTreasuryFee(_treasuryFee) {
+        treasuryFee = _treasuryFee;
+    }
 
     ///
     /// ADMIN FUNCTIONS
@@ -193,16 +275,6 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
         treasuryAmount = 0;
         emit TreasuryFeeClaimed(currentTreasuryAmount);
         _safeTransfert(owner, currentTreasuryAmount);
-    }
-
-    /**
-     * @notice Set the treasury fee for the child
-     * @param _treasuryFee the new treasury fee in %
-     * @dev Callable by admin
-     * @dev Callable when child if not in progress
-     */
-    function setTreasuryFee(uint256 _treasuryFee) external override onlyAdmin onlyTreasuryFee(_treasuryFee) {
-        treasuryFee = _treasuryFee;
     }
 
     /**
@@ -320,10 +392,10 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @notice Modifier that ensure that roundId exist
+     * @notice Modifier that ensure that epoch exist
      */
-    modifier onlyIfRoundId(uint256 _roundId) {
-        require(_roundId <= roundId, "This round does not exist");
+    modifier onlyIfEpoch(uint256 _epoch) {
+        require(_epoch <= epoch.current(), "This round does not exist");
         _;
     }
 
@@ -374,7 +446,7 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
      * @notice Modifier that ensure that prize details is not empty
      */
     modifier onlyIfPrizesIsNotEmpty() {
-        require(prizes[roundId].length > 0, "Prizes should be greather or equal to 1");
+        require(prizes[epoch.current()].length > 0, "Prizes should be greather or equal to 1");
         _;
     }
 }

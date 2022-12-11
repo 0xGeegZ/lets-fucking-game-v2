@@ -268,7 +268,7 @@ contract GameV1 is GameV1Interface, ReentrancyGuard, Pausable {
      * @notice Prizes adding management
      * @dev Callable by admin or creator
      * @dev TODO NEXT VERSION add a taxe for creator in case of free games
-     *      Need to store the factory gameCreationAmount in this contract on initialisation
+     *      Need to store the factory itemCreationAmount in this contract on initialisation
      * @dev TODO NEXT VERSION Remove _isGameAllPrizesStandard limitation to include other prize typ
      */
     function addPrizes(

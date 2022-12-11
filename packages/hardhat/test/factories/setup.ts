@@ -2,6 +2,7 @@ import { deployments, ethers } from 'hardhat'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { defaultGameConfig } from '../../config/gameConfig'
+import { defaultGiveawayConfig } from '../../config/giveawayConfig'
 import { ONE_DAY_IN_SECONDS } from '../helpers'
 
 const setupTest = deployments.createFixture(
@@ -104,7 +105,7 @@ const setupTest = deployments.createFixture(
       deployer
     )
 
-    const payableGame = await gameFactory.childs('0')
+    const payableGame = await gameFactory.items('0')
 
     const deployedPayableGame = new ethers.Contract(
       payableGame.deployedAddress,
@@ -112,7 +113,7 @@ const setupTest = deployments.createFixture(
       deployer
     )
 
-    const freeGame = await gameFactory.childs('1')
+    const freeGame = await gameFactory.items('1')
 
     const deployedFreeGame = new ethers.Contract(
       freeGame.deployedAddress,
@@ -130,6 +131,20 @@ const setupTest = deployments.createFixture(
     // const GameV1Contract = await ethers.getContractFactory('GameV1', libraries)
     const GameV1Contract = await ethers.getContractFactory('GameV2')
 
+    // Loading Giveaway contract
+    const giveawayContract = await deployments.get('GiveawayV1')
+
+    const giveawayInterface = await ethers.getContractFactory(
+      'GiveawayV1'
+      // libraries
+    )
+
+    const giveaway = new ethers.Contract(
+      giveawayContract.address,
+      giveawayInterface.interface,
+      deployer
+    )
+
     return {
       deployer,
       GameFactoryContract,
@@ -142,6 +157,7 @@ const setupTest = deployments.createFixture(
       secondGameV1,
       deployedPayableGame,
       deployedFreeGame,
+      giveaway,
     }
   }
 )
@@ -162,6 +178,7 @@ const initialiseTestData = async function () {
   this.bob = bob
   this.alice = alice
 
+  // *** Game data ***
   this.name = ethers.utils.formatBytes32String("Let's Fucking Game MVP")
   this.newName = ethers.utils.formatBytes32String('New Name')
 
@@ -173,7 +190,7 @@ const initialiseTestData = async function () {
     defaultGameConfig.REGISTRATION_AMOUNT_DEFAULT.mul(999)
   this.zeroRegistrationAmount = defaultGameConfig.REGISTRATION_AMOUNT_FREE
 
-  this.gameCreationAmount = defaultGameConfig.GAME_CREATION_AMOUNT
+  this.itemCreationAmount = defaultGameConfig.GAME_CREATION_AMOUNT
   this.treasuryFee = defaultGameConfig.TREASURY_FEE_DEFAULT
   this.creatorFee = defaultGameConfig.CREATOR_FEE_DEFAULT
 
@@ -196,6 +213,7 @@ const initialiseTestData = async function () {
     10000
   const rewardAmount =
     this.correctRegistrationAmount * this.maxPlayers - treasuryAmt
+
   this.prizeAmount = rewardAmount
 
   this.launchDuration = 60 * 60 * 25
@@ -204,9 +222,6 @@ const initialiseTestData = async function () {
 
   this.nextAllowedPlay = ONE_DAY_IN_SECONDS
   this.RoundMaximumDuration = ONE_DAY_IN_SECONDS * 2
-
-  // TODO Implement business logic to cover keeper in test
-  this.mockKeeper = mockKeeper
 
   this.encodedCron = defaultGameConfig.ENCODED_CRON_DEFAULT
 
@@ -239,6 +254,28 @@ const initialiseTestData = async function () {
 
   this.freeGamePrizes = updatedPrizes
 
+  // *** Giveaway data ***
+  this.giveawayData = {}
+  this.giveawayData.name = defaultGiveawayConfig.NAME_DEFAULT
+  this.giveawayData.image = defaultGiveawayConfig.IMAGE_DEFAULT
+  this.giveawayData.userId = defaultGiveawayConfig.USER_ID_DEFAULT
+  this.giveawayData.tweetId = defaultGiveawayConfig.TWEET_ID_DEFAULT
+  this.giveawayData.endTimestamp = defaultGiveawayConfig.END_TIMESTAMP_DEFAULT
+  this.giveawayData.retweetMaxCount =
+    defaultGiveawayConfig.RETWEET_MAX_COUNT_DEFAULT
+  this.giveawayData.giveawayAmount =
+    defaultGiveawayConfig.GIVEAWAY_AMOUNT_DEFAULT
+  this.giveawayData.prizes = [
+    {
+      position: '1',
+      amount: defaultGiveawayConfig.GIVEAWAY_AMOUNT_DEFAULT,
+      standard: '0',
+      contractAddress: '0x0000000000000000000000000000000000000000',
+      tokenId: '1',
+    },
+  ]
+  // *** contracts ***
+
   const {
     deployer,
     GameFactoryContract,
@@ -251,9 +288,13 @@ const initialiseTestData = async function () {
     secondGameV1,
     deployedPayableGame,
     deployedFreeGame,
+    giveaway,
   } = await setupTest()
 
   this.owner = deployer
+
+  // TODO Implement business logic to cover keeper in test
+  this.mockKeeper = mockKeeper
 
   this.GameV1Contract = GameV1Contract
   this.GameFactoryContract = GameFactoryContract
@@ -267,6 +308,8 @@ const initialiseTestData = async function () {
   this.secondGameV1 = secondGameV1
   this.deployedPayableGame = deployedPayableGame
   this.deployedFreeGame = deployedFreeGame
+
+  this.giveaway = giveaway
 }
 
 module.exports = {

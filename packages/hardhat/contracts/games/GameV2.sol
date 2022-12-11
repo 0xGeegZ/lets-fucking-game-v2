@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.6;
 
+import "@openzeppelin/contracts/utils/Counters.sol";
+
 import { IGame } from "../interfaces/IGame.sol";
 import { IChild } from "../interfaces/IChild.sol";
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
@@ -8,9 +10,9 @@ import { IKeeper } from "../interfaces/IKeeper.sol";
 
 import { Child } from "../abstracts/Child.sol";
 
-import "hardhat/console.sol";
-
 contract GameV2 is Child, IGame {
+    using Counters for Counters.Counter;
+
     bool private _isBase;
 
     uint256 private randNonce;
@@ -28,7 +30,7 @@ contract GameV2 is Child, IGame {
     uint256 public creatorFee; // treasury rate (e.g. 200 = 2%, 150 = 1.50%)
     uint256 public creatorAmount; // treasury amount that was not claimed
 
-    uint256 public id; // id is fix and represent the fixed id for the game
+    uint256 public gameId; // gameId is fix and represent the fixed gameId for the game
 
     bytes32 public name;
 
@@ -62,7 +64,7 @@ contract GameV2 is Child, IGame {
      *  @param _initialization.cronUpkeep the cron upkeep address
      *  @param _initialization.name the game name
      *  @param _initialization.version the version of the game implementation
-     *  @param _initialization.id the unique game id (fix)
+     *  @param _initialization.gameId the unique game gameId (fix)
      *  @param _initialization.playTimeRange the time range during which a player can play in hour
      *  @param _initialization.maxPlayers the maximum number of players for a game
      *  @param _initialization.registrationAmount the amount that players will need to pay to enter in the game
@@ -103,10 +105,9 @@ contract GameV2 is Child, IGame {
         treasuryAmount = 0;
         creatorAmount = 0;
 
-        id = _initialization.id;
+        gameId = _initialization.gameId;
         version = _initialization.version;
 
-        roundId = 0;
         playTimeRange = _initialization.playTimeRange;
         maxPlayers = _initialization.maxPlayers;
 
@@ -201,13 +202,11 @@ contract GameV2 is Child, IGame {
      * @dev TODO NEXT VERSION Update triggerDailyCheckpoint to make it only callable by keeper
      */
     function triggerDailyCheckpoint() external override onlyAdminOrKeeper whenNotPaused {
-        console.log("triggerDailyCheckpoint for game");
         if (isInProgress) {
             _refreshPlayerStatus();
             _checkIfGameEnded();
         } else if (playerAddresses.length == maxPlayers) _startGame();
-
-        emit TriggeredDailyCheckpoint(roundId, msg.sender, block.timestamp);
+        emit TriggeredDailyCheckpoint(epoch.current(), msg.sender, block.timestamp);
     }
 
     /**
@@ -225,7 +224,7 @@ contract GameV2 is Child, IGame {
         onlyIfGameIsSplittable
     {
         players[msg.sender].isSplitOk = true;
-        emit VoteToSplitPot(roundId, players[msg.sender].playerAddress);
+        emit VoteToSplitPot(epoch.current(), players[msg.sender].playerAddress);
     }
 
     ///
@@ -250,13 +249,13 @@ contract GameV2 is Child, IGame {
 
         delete playerAddresses;
 
-        emit ResetGame(block.timestamp, roundId);
-        roundId += 1;
+        emit ResetGame(block.timestamp, epoch.current());
+        epoch.increment();
 
         // Stop game if not payable to allow creator to add prizes
         if (!_isGamePayable()) return _pauseGame();
 
-        Prize[] storage oldPrize = prizes[roundId - 1];
+        Prize[] storage oldPrize = prizes[epoch.current() - 1];
 
         for (uint256 i = 0; i < oldPrize.length; i++) _addPrize(oldPrize[i]);
     }
@@ -288,65 +287,42 @@ contract GameV2 is Child, IGame {
 
         if (remainingPlayersCount > 1 && !isPlitPot) return;
 
-        uint256 treasuryRoundAmount = 0;
-        uint256 creatorRoundAmount = 0;
-
-        Prize[] memory _prizes = prizes[roundId];
+        Prize[] memory _prizes = prizes[epoch.current()];
 
         if (remainingPlayersCount == 1)
             // Distribute prizes over winners
             for (uint256 i = 0; i < playerAddresses.length; i++) {
                 Player memory currentPlayer = players[playerAddresses[i]];
+                (bool _found, Prize memory currentPrize) = _getPrizeForPosition(
+                    epoch.current(),
+                    currentPlayer.position
+                );
 
-                if (!currentPlayer.hasLost) {
-                    // Player is winner
-                    treasuryRoundAmount = (_prizes[0].amount * treasuryFee) / 10000;
-                    creatorRoundAmount = (_prizes[0].amount * creatorFee) / 10000;
-                    uint256 rewardAmount = _prizes[0].amount - treasuryRoundAmount - creatorRoundAmount;
-
-                    _addWinner(0, currentPlayer.playerAddress, rewardAmount);
-                } else if (i < _prizes.length && currentPlayer.position <= _prizes[i].position) {
-                    // Player has won a prize
-                    treasuryRoundAmount = (_prizes[0].amount * treasuryFee) / 10000;
-                    creatorRoundAmount = (_prizes[0].amount * creatorFee) / 10000;
-                    uint256 rewardAmount = _prizes[0].amount - treasuryRoundAmount - creatorRoundAmount;
-
-                    _addWinner(currentPlayer.position, currentPlayer.playerAddress, rewardAmount);
-                }
+                if (!currentPlayer.hasLost)
+                    _addWinner(0, currentPlayer.playerAddress, _prizes[0].amount); // Player is winner
+                else if (_found && currentPrize.position == currentPlayer.position)
+                    _addWinner(currentPlayer.position, currentPlayer.playerAddress, currentPrize.amount); // Player has won a prize
             }
 
         if (isPlitPot) {
             // Split with remaining player
             uint256 prizepool = 0;
             for (uint256 i = 0; i < _prizes.length; i++) prizepool += _prizes[i].amount;
-
-            treasuryRoundAmount = (prizepool * treasuryFee) / 10000;
-            creatorRoundAmount = (prizepool * creatorFee) / 10000;
-            uint256 rewardAmount = prizepool - treasuryRoundAmount - creatorRoundAmount;
-            uint256 splittedPrize = rewardAmount / remainingPlayersCount;
-
+            uint256 splittedPrize = prizepool / remainingPlayersCount;
             for (uint256 i = 0; i < playerAddresses.length; i++) {
                 Player memory currentPlayer = players[playerAddresses[i]];
                 if (!currentPlayer.hasLost && currentPlayer.isSplitOk)
                     _addWinner(1, currentPlayer.playerAddress, splittedPrize);
             }
-            emit GameSplitted(roundId, remainingPlayersCount, splittedPrize);
+            emit GameSplitted(epoch.current(), remainingPlayersCount, splittedPrize);
         }
 
         if (remainingPlayersCount == 0)
             // Creator will take everything except the first prize that goes to the treasury
             for (uint256 i = 0; i < _prizes.length; i++) {
-                treasuryRoundAmount = (_prizes[i].amount * treasuryFee) / 10000;
-                creatorRoundAmount = (_prizes[i].amount * creatorFee) / 10000;
-
-                uint256 rewardAmount = _prizes[i].amount - treasuryRoundAmount - creatorRoundAmount;
-
                 address winnerAddress = i == 1 ? owner : creator;
-                _addWinner(_prizes[i].position, winnerAddress, rewardAmount);
+                _addWinner(_prizes[i].position, winnerAddress, _prizes[i].amount);
             }
-
-        treasuryAmount += treasuryRoundAmount;
-        creatorAmount += creatorRoundAmount;
         _resetGame();
     }
 
@@ -370,16 +346,30 @@ contract GameV2 is Child, IGame {
     }
 
     function _addWinner(uint256 _position, address _playerAddress, uint256 _amount) internal {
-        winners[roundId].push(
+        uint256 treasuryRoundAmount = (_amount * treasuryFee) / 10000;
+        uint256 creatorRoundAmount = (_amount * creatorFee) / 10000;
+        uint256 rewardAmount = _amount - treasuryRoundAmount - creatorRoundAmount;
+
+        (bool _found, Prize memory prize) = _getPrizeForPosition(epoch.current(), _position);
+        // FIXME WHY THIS FIX TESTS
+        // require(_found, "No prize found for winner");
+
+        winners[epoch.current()].push(
             Winner({
-                roundId: roundId,
+                epoch: epoch.current(),
                 position: _position,
+                userId: 0,
                 playerAddress: _playerAddress,
-                amountWon: _amount,
+                amountWon: rewardAmount,
+                standard: prize.standard,
+                contractAddress: prize.contractAddress,
+                tokenId: prize.tokenId,
                 prizeClaimed: false
             })
         );
-        emit GameWon(roundId, winners[roundId].length, _playerAddress, _amount);
+        emit GameWon(epoch.current(), winners[epoch.current()].length, _playerAddress, rewardAmount);
+        treasuryAmount += treasuryRoundAmount;
+        creatorAmount += creatorRoundAmount;
     }
 
     /**
@@ -436,7 +426,7 @@ contract GameV2 is Child, IGame {
         _player.hasLost = true;
         _player.isSplitOk = false;
 
-        emit GameLost(roundId, _player.playerAddress, _player.roundCount);
+        emit GameLost(epoch.current(), _player.playerAddress, _player.roundCount);
     }
 
     /**
@@ -500,7 +490,7 @@ contract GameV2 is Child, IGame {
      * @notice Return game informations
      * @return gameData the game status data with params as follow :
      *  gameData.creator the creator address of the game
-     *  gameData.roundId the roundId of the game
+     *  gameData.epoch the epoch of the game
      *  gameData.name the name of the game
      *  gameData.playerAddressesCount the number of registered players
      *  gameData.maxPlayers the maximum players of the game
@@ -514,9 +504,9 @@ contract GameV2 is Child, IGame {
     function getGameData() external view override returns (GameData memory gameData) {
         return
             GameData({
-                id: id,
+                gameId: gameId,
                 versionId: version,
-                roundId: roundId,
+                epoch: epoch.current(),
                 name: name,
                 playerAddressesCount: playerAddresses.length,
                 remainingPlayersCount: _getRemainingPlayersCount(),

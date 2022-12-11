@@ -28,100 +28,84 @@ import type {
 } from "../../common";
 
 export declare namespace Factory {
-  export type ChildStruct = {
+  export type VersionStruct = {
     id: PromiseOrValue<BigNumberish>;
-    versionId: PromiseOrValue<BigNumberish>;
-    creator: PromiseOrValue<string>;
     deployedAddress: PromiseOrValue<string>;
-    childCreationAmount: PromiseOrValue<BigNumberish>;
   };
 
-  export type ChildStructOutput = [
-    BigNumber,
-    BigNumber,
-    string,
-    string,
-    BigNumber
-  ] & {
+  export type VersionStructOutput = [BigNumber, string] & {
     id: BigNumber;
-    versionId: BigNumber;
-    creator: string;
     deployedAddress: string;
-    childCreationAmount: BigNumber;
   };
 }
 
 export interface FactoryInterface extends utils.Interface {
   functions: {
-    "childCreationAmount()": FunctionFragment;
-    "childs(uint256)": FunctionFragment;
-    "childsVersions(uint256)": FunctionFragment;
     "cronUpkeep()": FunctionFragment;
-    "getDeployedChilds()": FunctionFragment;
+    "getDeployedChildsVersions()": FunctionFragment;
+    "id()": FunctionFragment;
+    "itemCreationAmount()": FunctionFragment;
+    "items(uint256)": FunctionFragment;
     "latestVersionId()": FunctionFragment;
-    "nextId()": FunctionFragment;
     "owner()": FunctionFragment;
     "pause()": FunctionFragment;
     "pauseAll()": FunctionFragment;
     "paused()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "resumeAll()": FunctionFragment;
-    "setNewChild(address)": FunctionFragment;
+    "setNewVersion(address)": FunctionFragment;
     "transferAdminOwnership(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unpause()": FunctionFragment;
     "updateCronUpkeep(address)": FunctionFragment;
+    "versions(uint256)": FunctionFragment;
     "withdrawFunds()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "childCreationAmount"
-      | "childs"
-      | "childsVersions"
       | "cronUpkeep"
-      | "getDeployedChilds"
+      | "getDeployedChildsVersions"
+      | "id"
+      | "itemCreationAmount"
+      | "items"
       | "latestVersionId"
-      | "nextId"
       | "owner"
       | "pause"
       | "pauseAll"
       | "paused"
       | "renounceOwnership"
       | "resumeAll"
-      | "setNewChild"
+      | "setNewVersion"
       | "transferAdminOwnership"
       | "transferOwnership"
       | "unpause"
       | "updateCronUpkeep"
+      | "versions"
       | "withdrawFunds"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "childCreationAmount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "childs",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "childsVersions",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
   encodeFunctionData(
     functionFragment: "cronUpkeep",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getDeployedChilds",
+    functionFragment: "getDeployedChildsVersions",
     values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "id", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "itemCreationAmount",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "items",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "latestVersionId",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "nextId", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "pauseAll", values?: undefined): string;
@@ -132,7 +116,7 @@ export interface FactoryInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "resumeAll", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "setNewChild",
+    functionFragment: "setNewVersion",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -149,29 +133,29 @@ export interface FactoryInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "versions",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdrawFunds",
     values?: undefined
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "childCreationAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "childs", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "childsVersions",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "cronUpkeep", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getDeployedChilds",
+    functionFragment: "getDeployedChildsVersions",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "id", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "itemCreationAmount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "items", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "latestVersionId",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "nextId", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pauseAll", data: BytesLike): Result;
@@ -182,7 +166,7 @@ export interface FactoryInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "resumeAll", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setNewChild",
+    functionFragment: "setNewVersion",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -198,6 +182,7 @@ export interface FactoryInterface extends utils.Interface {
     functionFragment: "updateCronUpkeep",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "versions", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "withdrawFunds",
     data: BytesLike
@@ -306,9 +291,21 @@ export interface Factory extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    childCreationAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
+    cronUpkeep(overrides?: CallOverrides): Promise<[string]>;
 
-    childs(
+    getDeployedChildsVersions(
+      overrides?: CallOverrides
+    ): Promise<
+      [Factory.VersionStructOutput[]] & {
+        _itemsVersions: Factory.VersionStructOutput[];
+      }
+    >;
+
+    id(overrides?: CallOverrides): Promise<[BigNumber] & { _value: BigNumber }>;
+
+    itemCreationAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    items(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
@@ -317,28 +314,11 @@ export interface Factory extends BaseContract {
         versionId: BigNumber;
         creator: string;
         deployedAddress: string;
-        childCreationAmount: BigNumber;
+        itemCreationAmount: BigNumber;
       }
     >;
 
-    childsVersions(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, string] & { id: BigNumber; deployedAddress: string }
-    >;
-
-    cronUpkeep(overrides?: CallOverrides): Promise<[string]>;
-
-    getDeployedChilds(
-      overrides?: CallOverrides
-    ): Promise<
-      [Factory.ChildStructOutput[]] & { allChilds: Factory.ChildStructOutput[] }
-    >;
-
     latestVersionId(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    nextId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -360,8 +340,8 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    setNewChild(
-      _child: PromiseOrValue<string>,
+    setNewVersion(
+      _item: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -384,14 +364,29 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    versions(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, string] & { id: BigNumber; deployedAddress: string }
+    >;
+
     withdrawFunds(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
 
-  childCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
+  cronUpkeep(overrides?: CallOverrides): Promise<string>;
 
-  childs(
+  getDeployedChildsVersions(
+    overrides?: CallOverrides
+  ): Promise<Factory.VersionStructOutput[]>;
+
+  id(overrides?: CallOverrides): Promise<BigNumber>;
+
+  itemCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
+
+  items(
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
@@ -400,24 +395,11 @@ export interface Factory extends BaseContract {
       versionId: BigNumber;
       creator: string;
       deployedAddress: string;
-      childCreationAmount: BigNumber;
+      itemCreationAmount: BigNumber;
     }
   >;
 
-  childsVersions(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, string] & { id: BigNumber; deployedAddress: string }>;
-
-  cronUpkeep(overrides?: CallOverrides): Promise<string>;
-
-  getDeployedChilds(
-    overrides?: CallOverrides
-  ): Promise<Factory.ChildStructOutput[]>;
-
   latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
-
-  nextId(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -439,8 +421,8 @@ export interface Factory extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  setNewChild(
-    _child: PromiseOrValue<string>,
+  setNewVersion(
+    _item: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -463,14 +445,27 @@ export interface Factory extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  versions(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, string] & { id: BigNumber; deployedAddress: string }>;
+
   withdrawFunds(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    childCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
+    cronUpkeep(overrides?: CallOverrides): Promise<string>;
 
-    childs(
+    getDeployedChildsVersions(
+      overrides?: CallOverrides
+    ): Promise<Factory.VersionStructOutput[]>;
+
+    id(overrides?: CallOverrides): Promise<BigNumber>;
+
+    itemCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    items(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
@@ -479,26 +474,11 @@ export interface Factory extends BaseContract {
         versionId: BigNumber;
         creator: string;
         deployedAddress: string;
-        childCreationAmount: BigNumber;
+        itemCreationAmount: BigNumber;
       }
     >;
 
-    childsVersions(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, string] & { id: BigNumber; deployedAddress: string }
-    >;
-
-    cronUpkeep(overrides?: CallOverrides): Promise<string>;
-
-    getDeployedChilds(
-      overrides?: CallOverrides
-    ): Promise<Factory.ChildStructOutput[]>;
-
     latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nextId(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -512,8 +492,8 @@ export interface Factory extends BaseContract {
 
     resumeAll(overrides?: CallOverrides): Promise<void>;
 
-    setNewChild(
-      _child: PromiseOrValue<string>,
+    setNewVersion(
+      _item: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -533,6 +513,13 @@ export interface Factory extends BaseContract {
       _cronUpkeep: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    versions(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, string] & { id: BigNumber; deployedAddress: string }
+    >;
 
     withdrawFunds(overrides?: CallOverrides): Promise<void>;
   };
@@ -572,25 +559,20 @@ export interface Factory extends BaseContract {
   };
 
   estimateGas: {
-    childCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    childs(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    childsVersions(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     cronUpkeep(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getDeployedChilds(overrides?: CallOverrides): Promise<BigNumber>;
+    getDeployedChildsVersions(overrides?: CallOverrides): Promise<BigNumber>;
+
+    id(overrides?: CallOverrides): Promise<BigNumber>;
+
+    itemCreationAmount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    items(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     latestVersionId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nextId(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -612,8 +594,8 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    setNewChild(
-      _child: PromiseOrValue<string>,
+    setNewVersion(
+      _item: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -636,33 +618,35 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    versions(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     withdrawFunds(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    childCreationAmount(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    childs(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    childsVersions(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     cronUpkeep(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getDeployedChilds(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getDeployedChildsVersions(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    id(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    itemCreationAmount(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    items(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     latestVersionId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    nextId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -684,8 +668,8 @@ export interface Factory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    setNewChild(
-      _child: PromiseOrValue<string>,
+    setNewVersion(
+      _item: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -706,6 +690,11 @@ export interface Factory extends BaseContract {
     updateCronUpkeep(
       _cronUpkeep: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    versions(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdrawFunds(

@@ -49,7 +49,7 @@ const GameCard: React.FC<React.PropsWithChildren<GameCardProps>> = ({ game, acco
   const {
     name,
     versionId,
-    roundId,
+    epoch,
     id,
     isPaused,
     isInProgress,
@@ -59,7 +59,7 @@ const GameCard: React.FC<React.PropsWithChildren<GameCardProps>> = ({ game, acco
     remainingPlayersCount,
     playerAddressesCount,
     registrationAmount,
-    gameCreationAmount,
+    itemCreationAmount,
     address,
     prizepool,
     encodedCron,
@@ -124,7 +124,7 @@ const GameCard: React.FC<React.PropsWithChildren<GameCardProps>> = ({ game, acco
   })
   const isWonLastGames = !!lastGamePrize
   const lastGameWonAmount = isWonLastGames ? lastGamePrize.amountWon : new BigNumber('0')
-  const lastGameRoundId = isWonLastGames ? lastGamePrize.roundId : new BigNumber('0')
+  const lastGameepoch = isWonLastGames ? lastGamePrize.epoch : new BigNumber('0')
   const isPrizeClaimed = isWonLastGames ? lastGamePrize.prizeClaimed : true
 
   // TODO GUIGUI use RoundProgress to display a progressBar if necessary
@@ -139,7 +139,7 @@ const GameCard: React.FC<React.PropsWithChildren<GameCardProps>> = ({ game, acco
         <CardHeadingSection
           id={id}
           name={name}
-          roundId={roundId}
+          epoch={epoch}
           versionId={versionId}
           chainId={chainId}
           prizepool={prizepool}
@@ -168,7 +168,7 @@ const GameCard: React.FC<React.PropsWithChildren<GameCardProps>> = ({ game, acco
         <CardPlayerSection
           id={id}
           address={address}
-          roundId={roundId}
+          epoch={epoch}
           isInProgress={isInProgress}
           isRegistering={isRegistering}
           nextFromRange={nextFromRange}
@@ -179,11 +179,11 @@ const GameCard: React.FC<React.PropsWithChildren<GameCardProps>> = ({ game, acco
           isPlaying={isPlaying}
           isWonLastGames={isWonLastGames}
           lastGameWonAmount={lastGameWonAmount}
-          lastGameRoundId={lastGameRoundId}
+          lastGameepoch={lastGameepoch}
           isPrizeClaimed={isPrizeClaimed}
           isCanVoteSplitPot={isCanVoteSplitPot}
           isInTimeRange={isInTimeRange}
-          gameCreationAmount={gameCreationAmount}
+          itemCreationAmount={itemCreationAmount}
           registrationAmount={registrationAmount}
           creatorAmount={creatorAmount}
           treasuryAmount={treasuryAmount}

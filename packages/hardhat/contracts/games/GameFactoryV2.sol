@@ -2,6 +2,7 @@
 pragma solidity >=0.8.6;
 
 import "@openzeppelin/contracts/proxy/Clones.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
 import { IGame } from "../interfaces/IGame.sol";
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
@@ -9,9 +10,9 @@ import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 import { Factory } from "../abstracts/Factory.sol";
 import { Keeper } from "../keepers/Keeper.sol";
 
-import "hardhat/console.sol";
-
 contract GameFactoryV2 is Factory {
+    using Counters for Counters.Counter;
+
     uint256[] public authorizedAmounts;
     mapping(uint256 => AuthorizedAmount) public usedAuthorizedAmounts;
 
@@ -35,21 +36,21 @@ contract GameFactoryV2 is Factory {
     /**
      * @notice Called when a game is created
      */
-    event GameCreated(uint256 nextId, address gameAddress, uint256 implementationVersion, address creatorAddress);
+    event GameCreated(uint256 id, address gameAddress, uint256 implementationVersion, address creatorAddress);
 
     /**
      * @notice Constructor Tha initialised the factory configuration
      * @param _game the game implementation address
      * @param _cronUpkeep the keeper address
-     * @param _gameCreationAmount the game creation amount
+     * @param _itemCreationAmount the game creation amount
      * @param _authorizedAmounts the list of authorized amounts for game creation
      */
     constructor(
         address _game,
         address _cronUpkeep,
-        uint256 _gameCreationAmount,
+        uint256 _itemCreationAmount,
         uint256[] memory _authorizedAmounts
-    ) onlyIfAuthorizedAmountsIsNotEmpty(_authorizedAmounts) Factory(_game, _cronUpkeep, _gameCreationAmount) {
+    ) onlyIfAuthorizedAmountsIsNotEmpty(_authorizedAmounts) Factory(_game, _cronUpkeep, _itemCreationAmount) {
         for (uint256 i = 0; i < _authorizedAmounts.length; i++) {
             if (!_isExistAuthorizedAmounts(_authorizedAmounts[i])) {
                 authorizedAmounts.push(_authorizedAmounts[i]);
@@ -87,28 +88,28 @@ contract GameFactoryV2 is Factory {
         external
         payable
         whenNotPaused
-        onlyChildCreationAmount
+        onlyItemCreationAmount
         onlyAllowedRegistrationAmount(_registrationAmount)
         onlyIfNotUsedRegistrationAmounts(_registrationAmount)
         returns (address game)
     {
-        address latestGameV1Address = childsVersions[latestVersionId].deployedAddress;
+        address latestGameV1Address = versions[latestVersionId].deployedAddress;
         address payable newGameAddress = payable(Clones.clone(latestGameV1Address));
 
         usedAuthorizedAmounts[_registrationAmount].isUsed = true;
-        childs.push(
-            Child({
-                id: nextId,
+        items.push(
+            Item({
+                id: id.current(),
                 versionId: latestVersionId,
                 creator: msg.sender,
                 deployedAddress: newGameAddress,
-                childCreationAmount: childCreationAmount
+                itemCreationAmount: itemCreationAmount
             })
         );
 
         ICronUpkeep(cronUpkeep).addDelegator(newGameAddress);
 
-        Keeper keeper = new Keeper(cronUpkeep, _encodedCron);
+        Keeper keeper = new Keeper(cronUpkeep, "triggerDailyCheckpoint()", _encodedCron);
         ICronUpkeep(cronUpkeep).addDelegator(address(keeper));
 
         // Declare structure and initialize later to avoid stack too deep exception
@@ -119,7 +120,7 @@ contract GameFactoryV2 is Factory {
         initialization.keeper = address(keeper);
         initialization.name = _name;
         initialization.version = latestVersionId;
-        initialization.id = nextId;
+        initialization.gameId = id.current();
         initialization.playTimeRange = _playTimeRange;
         initialization.maxPlayers = _maxPlayers;
         initialization.registrationAmount = _registrationAmount;
@@ -128,14 +129,14 @@ contract GameFactoryV2 is Factory {
         initialization.encodedCron = _encodedCron;
         initialization.prizes = _prizes;
 
-        uint256 prizepool = msg.value - childCreationAmount;
+        uint256 prizepool = msg.value - itemCreationAmount;
         IGame(newGameAddress).initialize{ value: prizepool }(initialization);
 
         keeper.registerCronToUpkeep(newGameAddress);
         keeper.transferOwnership(newGameAddress);
 
-        emit GameCreated(nextId, newGameAddress, latestVersionId, msg.sender);
-        nextId += 1;
+        emit GameCreated(id.current(), newGameAddress, latestVersionId, msg.sender);
+        id.increment();
 
         return newGameAddress;
     }
@@ -161,11 +162,11 @@ contract GameFactoryV2 is Factory {
     ///
 
     /**
-     * @notice Get the list of deployed childsVersions
-     * @return allGames the list of childsVersions
+     * @notice Get the list of deployed itemsVersions
+     * @return allGames the list of itemsVersions
      */
-    function getDeployedGames() external view returns (Child[] memory allGames) {
-        return childs;
+    function getDeployedGames() external view returns (Item[] memory allGames) {
+        return items;
     }
 
     /**

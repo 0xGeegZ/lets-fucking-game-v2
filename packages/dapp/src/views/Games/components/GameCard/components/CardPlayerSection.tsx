@@ -26,9 +26,9 @@ const Container = styled.div`
 interface GameCardPlayerSectionProps {
   id: BigNumber
   address: string
-  roundId: BigNumber
+  epoch: BigNumber
   registrationAmount: BigNumber
-  gameCreationAmount: BigNumber
+  itemCreationAmount: BigNumber
   isInProgress: boolean
   isRegistering: boolean
   nextFromRange: string
@@ -41,7 +41,7 @@ interface GameCardPlayerSectionProps {
   isPlaying: boolean
   isWonLastGames: boolean
   lastGameWonAmount: BigNumber
-  lastGameRoundId: BigNumber
+  lastGameepoch: BigNumber
   isPrizeClaimed: boolean
   roundCount: BigNumber
   isCanVoteSplitPot: boolean
@@ -60,9 +60,9 @@ interface GameCardPlayerSectionProps {
 const CardPlayerSection: React.FC<React.PropsWithChildren<GameCardPlayerSectionProps>> = ({
   id,
   address,
-  roundId,
+  epoch,
   registrationAmount,
-  gameCreationAmount,
+  itemCreationAmount,
   isInProgress,
   isRegistering,
   nextFromRange,
@@ -75,7 +75,7 @@ const CardPlayerSection: React.FC<React.PropsWithChildren<GameCardPlayerSectionP
   isPlaying,
   isWonLastGames,
   lastGameWonAmount,
-  lastGameRoundId,
+  lastGameepoch,
   isPrizeClaimed,
   roundCount,
   isCanVoteSplitPot,
@@ -119,7 +119,7 @@ const CardPlayerSection: React.FC<React.PropsWithChildren<GameCardPlayerSectionP
             <Heading mr="4px" />
             <Text bold style={{ display: 'flex', alignItems: 'center' }}>
               {isReady ? (
-                <ClaimButton address={address} roundId={lastGameRoundId} />
+                <ClaimButton address={address} epoch={lastGameepoch} />
               ) : (
                 <Skeleton width={80} height={36} mb="4px" />
               )}

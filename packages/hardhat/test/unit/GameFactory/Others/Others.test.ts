@@ -42,11 +42,11 @@ describe('GameFactoryContract', function () {
     })
   })
 
-  context('GameFactory setNewChild', function () {
+  context('GameFactory setNewVersion', function () {
     describe('when called by non admin', function () {
       it('should revert with correct message', async function () {
         await expectRevert(
-          this.gameFactory.connect(this.alice).setNewChild(this.game.address),
+          this.gameFactory.connect(this.alice).setNewVersion(this.game.address),
           'Caller is not the admin'
         )
       })
@@ -56,9 +56,9 @@ describe('GameFactoryContract', function () {
       it('should add the new implementation version to games', async function () {
         await this.gameFactory
           .connect(this.owner)
-          .setNewChild(this.secondGameV1.address)
-        const responseGameV1s1 = await this.gameFactory.childs('0')
-        const responseGameV1s2 = await this.gameFactory.childs('1')
+          .setNewVersion(this.secondGameV1.address)
+        const responseGameV1s1 = await this.gameFactory.items('0')
+        const responseGameV1s2 = await this.gameFactory.items('1')
 
         expect(responseGameV1s1.id).to.be.equal('0')
         expect(responseGameV1s1.deployedAddress).to.be.equal(
@@ -208,7 +208,7 @@ describe('GameFactoryContract', function () {
               this.creatorFee,
               this.encodedCron,
               this.prizes,
-              { value: this.gameCreationAmount }
+              { value: this.itemCreationAmount }
             ),
           'Pausable: paused'
         )
@@ -235,7 +235,7 @@ describe('GameFactoryContract', function () {
             this.creatorFee,
             this.encodedCron,
             updatedPrizes,
-            { value: this.gameCreationAmount }
+            { value: this.itemCreationAmount }
           )
       })
 

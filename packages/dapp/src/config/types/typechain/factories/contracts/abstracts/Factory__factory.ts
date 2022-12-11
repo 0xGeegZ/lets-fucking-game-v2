@@ -112,7 +112,58 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "childCreationAmount",
+    name: "cronUpkeep",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getDeployedChildsVersions",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "id",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "deployedAddress",
+            type: "address",
+          },
+        ],
+        internalType: "struct Factory.Version[]",
+        name: "_itemsVersions",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "id",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "_value",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "itemCreationAmount",
     outputs: [
       {
         internalType: "uint256",
@@ -131,7 +182,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "childs",
+    name: "items",
     outputs: [
       {
         internalType: "uint256",
@@ -155,85 +206,8 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "childCreationAmount",
+        name: "itemCreationAmount",
         type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "childsVersions",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "deployedAddress",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "cronUpkeep",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getDeployedChilds",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "versionId",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "creator",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "deployedAddress",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "childCreationAmount",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct Factory.Child[]",
-        name: "allChilds",
-        type: "tuple[]",
       },
     ],
     stateMutability: "view",
@@ -242,19 +216,6 @@ const _abi = [
   {
     inputs: [],
     name: "latestVersionId",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "nextId",
     outputs: [
       {
         internalType: "uint256",
@@ -323,11 +284,11 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_child",
+        name: "_item",
         type: "address",
       },
     ],
-    name: "setNewChild",
+    name: "setNewVersion",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -376,6 +337,30 @@ const _abi = [
     name: "updateCronUpkeep",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "versions",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "deployedAddress",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {

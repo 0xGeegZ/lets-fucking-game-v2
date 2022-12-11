@@ -12,6 +12,13 @@ export const getGameFactoryV1Address = (chainId?: number) => {
   return internal[chainId || ChainId.BSC].GameFactory.address
 }
 
+export const getGameFactoryV2Address = (chainId?: number) => {
+  return internal[chainId || ChainId.BSC].GameFactoryV2.address
+}
+
+export const getGiveawayV1Address = (chainId?: number) => {
+  return internal[chainId || ChainId.BSC].GiveawayV1.address
+}
 // export const getMulticallAddress = (chainId?: number) => {
 //   return getAddress(addresses.multiCall, chainId)
 // }

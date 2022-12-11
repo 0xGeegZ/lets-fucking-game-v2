@@ -41,7 +41,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -174,7 +174,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -193,7 +193,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "roundId",
+        name: "epoch",
         type: "uint256",
       },
       {
@@ -319,7 +319,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_roundId",
+        name: "_epoch",
         type: "uint256",
       },
     ],
@@ -339,7 +339,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_roundId",
+        name: "_epoch",
         type: "uint256",
       },
     ],
@@ -385,7 +385,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_roundId",
+        name: "_epoch",
         type: "uint256",
       },
     ],
@@ -395,7 +395,12 @@ const _abi = [
         components: [
           {
             internalType: "uint256",
-            name: "roundId",
+            name: "epoch",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "userId",
             type: "uint256",
           },
           {
@@ -411,6 +416,21 @@ const _abi = [
           {
             internalType: "uint256",
             name: "position",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "standard",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "contractAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "tokenId",
             type: "uint256",
           },
           {

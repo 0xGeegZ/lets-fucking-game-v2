@@ -8,8 +8,6 @@ import { Cron as CronExternal } from "@chainlink/contracts/src/v0.8/libraries/ex
 
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 
-import "hardhat/console.sol";
-
 contract Keeper is Ownable, Pausable {
     uint256 private constant DEFAULT_CRON_UPKEEP_JOB_ID = 999;
 
@@ -17,6 +15,7 @@ contract Keeper is Ownable, Pausable {
 
     address public cronUpkeep;
     string public encodedCron;
+    string public handler;
 
     /**
      * @notice Called when the creator or admin call registerCronToUpkeep
@@ -31,10 +30,10 @@ contract Keeper is Ownable, Pausable {
      */
     event CronUpkeepUpdated(uint256 jobId, address cronUpkeep);
 
-    constructor(address _cronUpkeep, string memory _encodedCron) {
+    constructor(address _cronUpkeep, string memory _handler, string memory _encodedCron) {
         encodedCron = _encodedCron;
+        handler = _handler;
         cronUpkeep = _cronUpkeep;
-        // _registerCronToUpkeep();
     }
 
     /**
@@ -51,6 +50,14 @@ contract Keeper is Ownable, Pausable {
      */
     function getEncodedCron() external view onlyOwner returns (string memory _encodedCron) {
         return encodedCron;
+    }
+
+    /**
+     * @notice Return handler
+     * @dev Callable by only by owner
+     */
+    function getHandler() external view onlyOwner returns (string memory _handler) {
+        return handler;
     }
 
     /**
@@ -126,10 +133,9 @@ contract Keeper is Ownable, Pausable {
 
         bytes memory encodedCronBytes = CronExternal.toEncodedSpec(encodedCron);
 
-        console.log("_registerCronToUpkeep for target %s", _target);
         ICronUpkeep(cronUpkeep).createCronJobFromEncodedSpec(
             _target,
-            abi.encodeWithSignature("triggerDailyCheckpoint()"),
+            abi.encodeWithSignature(handler),
             encodedCronBytes
         );
     }

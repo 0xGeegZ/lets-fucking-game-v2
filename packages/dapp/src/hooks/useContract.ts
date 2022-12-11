@@ -4,8 +4,10 @@ import { useProviderOrSigner } from 'hooks/useProviderOrSigner'
 import { useMemo } from 'react'
 import { getMulticallAddress } from 'utils/addressHelpers'
 import {
-  getGameFactoryV1Contract,
+  getGameFactoryContract,
   getGameV1Contract,
+  getGameV2Contract,
+  getGiveawayV1Contract,
   getBep20Contract,
   getErc721Contract,
   getErc721CollectionContract,
@@ -31,20 +33,28 @@ import { useActiveChainId } from './useActiveChainId'
 /**
  * Helper hooks to get specific contracts (by ABI)
  */
-// TODO GUIGUI useGameFactoryV1Contract
-export const useGameFactoryV1Contract = () => {
-  // const { data: signer } = useSigner()
+export const useGameFactoryContract = () => {
   const providerOrSigner = useProviderOrSigner(true)
   const { chainId } = useActiveChainId()
-  return useMemo(() => getGameFactoryV1Contract(chainId, providerOrSigner), [chainId, providerOrSigner])
+  return useMemo(() => getGameFactoryContract(chainId, providerOrSigner), [chainId, providerOrSigner])
 }
 
-// TODO GUIGUI getGameV1Contract
 export const useGameV1Contract = (address: string) => {
-  // const { data: signer } = useSigner()
   const providerOrSigner = useProviderOrSigner(true)
   const { chainId } = useActiveChainId()
   return useMemo(() => getGameV1Contract(address, chainId, providerOrSigner), [address, chainId, providerOrSigner])
+}
+
+export const useGameV2Contract = (address: string) => {
+  const providerOrSigner = useProviderOrSigner(true)
+  const { chainId } = useActiveChainId()
+  return useMemo(() => getGameV2Contract(address, chainId, providerOrSigner), [address, chainId, providerOrSigner])
+}
+
+export const useGiveawayV1Contract = () => {
+  const providerOrSigner = useProviderOrSigner(true)
+  const { chainId } = useActiveChainId()
+  return useMemo(() => getGiveawayV1Contract(chainId, providerOrSigner), [chainId, providerOrSigner])
 }
 
 export const useERC20 = (address: string, withSignerIfPossible = true) => {

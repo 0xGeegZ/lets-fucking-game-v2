@@ -1,0 +1,34 @@
+workers_dev = true
+main = "src/index.ts"
+node_compat = true 
+compatibility_date = "2022-12-05"
+account_id="57ea62cb8de25b475b82030d1dfc5094"
+kv_namespaces = [
+  {binding = "USERS", id = "c232909686354aac8ea33ce8b2cf4045", preview_id = "5082d6e264284aaa8222e610246318d0"},
+]
+
+name = "giveaways-dev"
+[vars]
+KV_CACHE = false
+WORKER_BASE_URL="http://127.0.0.1:8787" 
+
+
+[env.staging]
+kv_namespaces = [
+  {binding = "USERS", id = "4c0f043b6bf54f1d96c1ad4e24b05d11"},
+]
+name = "giveaways-staging"
+[env.staging.vars]
+KV_CACHE = true
+WORKER_BASE_URL="http://127.0.0.1:8787" 
+
+
+[env.production]
+kv_namespaces = [
+  {binding = "USERS", id = "606074162d0742eba567d60ef97ef14b"},
+]
+name = "giveaways"
+[env.production.vars]
+KV_CACHE = true
+WORKER_BASE_URL="http://127.0.0.1:8787" 
+

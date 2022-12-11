@@ -52,24 +52,36 @@ export declare namespace IChild {
   };
 
   export type WinnerStruct = {
-    roundId: PromiseOrValue<BigNumberish>;
+    epoch: PromiseOrValue<BigNumberish>;
+    userId: PromiseOrValue<BigNumberish>;
     playerAddress: PromiseOrValue<string>;
     amountWon: PromiseOrValue<BigNumberish>;
     position: PromiseOrValue<BigNumberish>;
+    standard: PromiseOrValue<BigNumberish>;
+    contractAddress: PromiseOrValue<string>;
+    tokenId: PromiseOrValue<BigNumberish>;
     prizeClaimed: PromiseOrValue<boolean>;
   };
 
   export type WinnerStructOutput = [
     BigNumber,
+    BigNumber,
     string,
     BigNumber,
     BigNumber,
+    BigNumber,
+    string,
+    BigNumber,
     boolean
   ] & {
-    roundId: BigNumber;
+    epoch: BigNumber;
+    userId: BigNumber;
     playerAddress: string;
     amountWon: BigNumber;
     position: BigNumber;
+    standard: BigNumber;
+    contractAddress: string;
+    tokenId: BigNumber;
     prizeClaimed: boolean;
   };
 }
@@ -221,7 +233,7 @@ export type AdminOwnershipTransferredEventFilter =
 
 export interface ChildPrizeClaimedEventObject {
   claimer: string;
-  roundId: BigNumber;
+  epoch: BigNumber;
   amountClaimed: BigNumber;
 }
 export type ChildPrizeClaimedEvent = TypedEvent<
@@ -304,7 +316,7 @@ export type FailedTransferEventFilter = TypedEventFilter<FailedTransferEvent>;
 
 export interface GamePrizeClaimedEventObject {
   claimer: string;
-  roundId: BigNumber;
+  epoch: BigNumber;
   amountClaimed: BigNumber;
 }
 export type GamePrizeClaimedEvent = TypedEvent<
@@ -316,7 +328,7 @@ export type GamePrizeClaimedEventFilter =
   TypedEventFilter<GamePrizeClaimedEvent>;
 
 export interface PrizeAddedEventObject {
-  roundId: BigNumber;
+  epoch: BigNumber;
   position: BigNumber;
   amount: BigNumber;
   standard: BigNumber;
@@ -396,7 +408,7 @@ export interface IChild extends BaseContract {
     ): Promise<ContractTransaction>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -405,14 +417,14 @@ export interface IChild extends BaseContract {
     ): Promise<ContractTransaction>;
 
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [IChild.PrizeStructOutput[]] & { childPrizes: IChild.PrizeStructOutput[] }
     >;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [IChild.WinnerStructOutput[]] & {
@@ -455,7 +467,7 @@ export interface IChild extends BaseContract {
   ): Promise<ContractTransaction>;
 
   claimPrize(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _epoch: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -464,12 +476,12 @@ export interface IChild extends BaseContract {
   ): Promise<ContractTransaction>;
 
   getPrizes(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _epoch: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<IChild.PrizeStructOutput[]>;
 
   getWinners(
-    _roundId: PromiseOrValue<BigNumberish>,
+    _epoch: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<IChild.WinnerStructOutput[]>;
 
@@ -508,19 +520,19 @@ export interface IChild extends BaseContract {
     ): Promise<void>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     claimTreasuryFee(overrides?: CallOverrides): Promise<void>;
 
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<IChild.PrizeStructOutput[]>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<IChild.WinnerStructOutput[]>;
 
@@ -561,12 +573,12 @@ export interface IChild extends BaseContract {
 
     "ChildPrizeClaimed(address,uint256,uint256)"(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): ChildPrizeClaimedEventFilter;
     ChildPrizeClaimed(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): ChildPrizeClaimedEventFilter;
 
@@ -617,17 +629,17 @@ export interface IChild extends BaseContract {
 
     "GamePrizeClaimed(address,uint256,uint256)"(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): GamePrizeClaimedEventFilter;
     GamePrizeClaimed(
       claimer?: null,
-      roundId?: null,
+      epoch?: null,
       amountClaimed?: null
     ): GamePrizeClaimedEventFilter;
 
     "PrizeAdded(uint256,uint256,uint256,uint256,address,uint256)"(
-      roundId?: null,
+      epoch?: null,
       position?: null,
       amount?: null,
       standard?: null,
@@ -635,7 +647,7 @@ export interface IChild extends BaseContract {
       tokenId?: null
     ): PrizeAddedEventFilter;
     PrizeAdded(
-      roundId?: null,
+      epoch?: null,
       position?: null,
       amount?: null,
       standard?: null,
@@ -667,7 +679,7 @@ export interface IChild extends BaseContract {
     ): Promise<BigNumber>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -676,12 +688,12 @@ export interface IChild extends BaseContract {
     ): Promise<BigNumber>;
 
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -721,7 +733,7 @@ export interface IChild extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     claimPrize(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -730,12 +742,12 @@ export interface IChild extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getPrizes(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getWinners(
-      _roundId: PromiseOrValue<BigNumberish>,
+      _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

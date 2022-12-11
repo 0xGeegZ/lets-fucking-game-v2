@@ -3,7 +3,7 @@ import { useTranslation } from '@pancakeswap/localization'
 import { useToast } from '@pancakeswap/uikit'
 import useCatchTxError from 'hooks/useCatchTxError'
 import { ToastDescriptionWithTx } from 'components/Toast'
-import { useGameV1Contract } from 'hooks/useContract'
+import { useGameV2Contract } from 'hooks/useContract'
 import { parseEther, formatEther } from '@ethersproject/units'
 import { formatBytes32String } from '@ethersproject/strings'
 import { useGameContext } from 'views/GameForm/hooks/useGameContext'
@@ -20,7 +20,7 @@ export const useUpdateGame = (data) => {
   const { toastSuccess } = useToast()
   const addTransaction = useTransactionAdder()
 
-  const contract = useGameV1Contract(data.game.address)
+  const contract = useGameV2Contract(data.game.address)
   const { actions, currentStep } = useGameContext()
 
   const { fetchWithCatchTxError, ...rest /* , loading: isPending */ } = useCatchTxError()

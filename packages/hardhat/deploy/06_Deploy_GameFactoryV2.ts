@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat'
-import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { DeployFunction } from 'hardhat-deploy/types'
 
 import { gameConfig } from '../config/gameConfig'
 import { delay } from '../helpers/delay'
@@ -40,7 +40,7 @@ const func: DeployFunction = async function ({
 
   const { address: cronUpkeepAddress } = await deployments.get('CronUpkeep')
 
-  const gameCreationAmount = GAME_CREATION_AMOUNT
+  const itemCreationAmount = GAME_CREATION_AMOUNT
 
   const authorizedAmounts = AUTHORIZED_REGISTRATION_AMOUNTS.map((amount) =>
     ethers.utils.parseEther(`${amount}`)
@@ -50,7 +50,7 @@ const func: DeployFunction = async function ({
   const gameFactoryArgs = [
     gameAddress,
     cronUpkeepAddress,
-    gameCreationAmount,
+    itemCreationAmount,
     authorizedAmounts,
   ]
 
