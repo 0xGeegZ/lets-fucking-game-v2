@@ -49,8 +49,8 @@ export function UnsupportedNetworkModal({ pageSupportedChains }: { pageSupported
         {/* <div style={{ textAlign: 'center' }}>
           <Image
             layout="fixed"
-            width="194px"
-            height="175px"
+            width={194}
+            height={175}
             src="/images/check-your-network.png"
             alt="check your network"
           />
