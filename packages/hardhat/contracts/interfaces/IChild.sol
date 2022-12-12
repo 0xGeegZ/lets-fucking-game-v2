@@ -27,8 +27,7 @@ interface IChild {
     enum PrizeStandard {
         STANDARD,
         ERC20,
-        ERC721,
-        ERC1155
+        ERC721
     }
 
     /**
@@ -43,7 +42,6 @@ interface IChild {
          * 0 - NATIVE
          * 1 - ERC20
          * 2 - ERC721
-         * 3 - ERC1155
          */
         uint256 standard;
         address contractAddress;
@@ -155,6 +153,42 @@ interface IChild {
     ///
 
     /**
+     * @notice Add a token to allowed ERC20
+     * @param _token the new token address
+     * @dev Callable by admin
+     */
+    function addTokenERC20(address _token) external;
+
+    /**
+     * @notice Remove a token to allowed ERC20
+     * @param _token the token address to remove
+     * @dev Callable by admin
+     */
+    function removeTokenERC20(address _token) external;
+
+    /**
+     * @notice Add a token to allowed ERC721
+     * @param _token the new token address
+     * @dev Callable by admin
+     */
+    function addTokenERC721(address _token) external;
+
+    /**
+     * @notice Remove a token to allowed ERC721
+     * @param _token the token address to remove
+     * @dev Callable by admin
+     */
+    function removeTokenERC721(address _token) external;
+
+    /**
+     * @notice Get the list of token ERC721
+     * @param _account the token address to check
+     * @param _account the account to check
+     * @dev Callable by admin
+     */
+    function getERC721TokenIds(address _token, address _account) external view returns (uint[] memory);
+
+    /**
      * @notice Withdraw Treasury fee
      * @dev Callable by admin
      */
@@ -204,6 +238,31 @@ interface IChild {
      * @dev Callable by admin or factory
      */
     function withdrawFunds(address _receiver) external;
+
+    /**
+     * @notice Allow admin to withdraw Native from smart contract
+     * @param _receiver the receiver for the funds (admin or factory)
+     * @dev Callable by admin or factory
+     */
+    function withdrawNative(address _receiver) external;
+
+    /**
+     * @notice Allow admin to withdraw ERC20 from smart contract
+     * @param _contractAddress the contract address
+     * @param _receiver the receiver for the funds (admin or factory)
+     * @dev Callable by admin or factory
+     */
+    function withdrawERC20(address _contractAddress, address _receiver) external;
+
+    /**
+     * @notice Allow admin to withdraw ERC721 from smart contract
+     * @param _contractAddress the contract address
+     * @param _tokenId the token id
+     * @param _receiver the receiver for the funds (admin or factory)
+     * @dev Callable by admin or factory
+     */
+    function withdrawERC721(address _contractAddress, uint256 _tokenId, address _receiver) external;
+
     ///
     /// FALLBACK FUNCTIONS
     ///

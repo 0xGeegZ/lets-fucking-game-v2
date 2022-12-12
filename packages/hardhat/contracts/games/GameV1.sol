@@ -10,7 +10,7 @@ import { IKeeper } from "../interfaces/IKeeper.sol";
 
 import { Child } from "../abstracts/Child.sol";
 
-contract GameV2 is Child, IGame {
+contract GameV1 is Child, IGame {
     using Counters for Counters.Counter;
 
     bool private _isBase;
@@ -52,7 +52,10 @@ contract GameV2 is Child, IGame {
     /**
      * @notice Constructor that define itself as base
      */
-    constructor() Child() {
+    constructor(
+        address[] memory _allowedTokensERC20,
+        address[] memory _allowedTokensERC721
+    ) Child(_allowedTokensERC20, _allowedTokensERC721) {
         _isBase = true;
     }
 
@@ -673,7 +676,7 @@ contract GameV2 is Child, IGame {
      */
     function setCronUpkeep(
         address _cronUpkeep
-    ) external override whenPaused onlyAdminOrFactory onlyAddressInit(address(_cronUpkeep)) {
+    ) external override whenPaused onlyAdminOrFactory onlyAddressInit(_cronUpkeep) {
         ICronUpkeep(_cronUpkeep).addDelegator(address(keeper));
         IKeeper(keeper).setCronUpkeep(_cronUpkeep);
     }

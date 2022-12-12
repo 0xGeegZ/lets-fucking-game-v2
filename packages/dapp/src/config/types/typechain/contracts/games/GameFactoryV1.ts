@@ -52,7 +52,7 @@ export declare namespace IChild {
   };
 }
 
-export declare namespace GameFactoryV2 {
+export declare namespace GameFactoryV1 {
   export type AuthorizedAmountStruct = {
     amount: PromiseOrValue<BigNumberish>;
     isUsed: PromiseOrValue<boolean>;
@@ -98,7 +98,7 @@ export declare namespace Factory {
   };
 }
 
-export interface GameFactoryV2Interface extends utils.Interface {
+export interface GameFactoryV1Interface extends utils.Interface {
   functions: {
     "addAuthorizedAmounts(uint256[])": FunctionFragment;
     "authorizedAmounts(uint256)": FunctionFragment;
@@ -417,12 +417,12 @@ export type UnpausedEvent = TypedEvent<[string], UnpausedEventObject>;
 
 export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
 
-export interface GameFactoryV2 extends BaseContract {
+export interface GameFactoryV1 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: GameFactoryV2Interface;
+  interface: GameFactoryV1Interface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -472,8 +472,8 @@ export interface GameFactoryV2 extends BaseContract {
       _authorizedAmount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [GameFactoryV2.AuthorizedAmountStructOutput] & {
-        gameAuthorisedAmount: GameFactoryV2.AuthorizedAmountStructOutput;
+      [GameFactoryV1.AuthorizedAmountStructOutput] & {
+        gameAuthorisedAmount: GameFactoryV1.AuthorizedAmountStructOutput;
       }
     >;
 
@@ -602,7 +602,7 @@ export interface GameFactoryV2 extends BaseContract {
   getAuthorizedAmount(
     _authorizedAmount: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<GameFactoryV2.AuthorizedAmountStructOutput>;
+  ): Promise<GameFactoryV1.AuthorizedAmountStructOutput>;
 
   getAuthorizedAmounts(overrides?: CallOverrides): Promise<BigNumber[]>;
 
@@ -719,7 +719,7 @@ export interface GameFactoryV2 extends BaseContract {
     getAuthorizedAmount(
       _authorizedAmount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<GameFactoryV2.AuthorizedAmountStructOutput>;
+    ): Promise<GameFactoryV1.AuthorizedAmountStructOutput>;
 
     getAuthorizedAmounts(overrides?: CallOverrides): Promise<BigNumber[]>;
 

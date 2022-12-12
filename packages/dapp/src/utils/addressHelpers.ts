@@ -7,13 +7,8 @@ export const getAddress = (address: Address, chainId?: number): string => {
   return address[chainId] ? address[chainId] : address[ChainId.BSC]
 }
 
-// TODO GUIGUI getGameFactoryV1Address
 export const getGameFactoryV1Address = (chainId?: number) => {
-  return internal[chainId || ChainId.BSC].GameFactory.address
-}
-
-export const getGameFactoryV2Address = (chainId?: number) => {
-  return internal[chainId || ChainId.BSC].GameFactoryV2.address
+  return internal[chainId || ChainId.BSC].GameFactoryV1.address
 }
 
 export const getGiveawayV1Address = (chainId?: number) => {

@@ -11,8 +11,9 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 import { IKeeper } from "../interfaces/IKeeper.sol";
 
+import { KeeperHelpers } from "../libraries/KeeperHelpers.sol";
+
 import { Child } from "../abstracts/Child.sol";
-import { Keeper } from "../keepers/Keeper.sol";
 
 import "hardhat/console.sol";
 
@@ -21,9 +22,8 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     using EnumerableMap for EnumerableMap.UintToAddressMap;
     using Counters for Counters.Counter;
 
-    // address public cronUpkeep;
-    // address public keeper;
-    // string encodedCron;
+    address public cronUpkeep;
+    address public keeper;
 
     bytes32 public immutable jobId;
     uint256 private immutable fee;
@@ -101,11 +101,10 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         string memory _requestBaseURI,
         address _oracle,
         address _link,
-        // address _cronUpkeep,
-        // address _keeper,
-        // string memory _encodedCron
-        uint256 _treasuryFee
-    ) Child() {
+        uint256 _treasuryFee,
+        address[] memory _allowedTokensERC20,
+        address[] memory _allowedTokensERC721
+    ) Child(_allowedTokensERC20, _allowedTokensERC721) {
         setChainlinkToken(_link);
         setChainlinkOracle(_oracle);
         jobId = _jobId;
@@ -115,20 +114,6 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         treasuryFee = _treasuryFee;
         requestBaseURI = _requestBaseURI;
         owner = msg.sender;
-
-        // refresh giveaways retweets count from encodedCron (default every hour)
-        // encodedCron = _encodedCron;
-        // cronUpkeep = _cronUpkeep;
-
-        // V1
-        // keeper = _keeper;
-        // IKeeper(keeper).registerCronToUpkeep();
-
-        // V0
-        // Keeper keeperContract = new Keeper(cronUpkeep, "refreshActiveGiveawayStatus()", encodedCron);
-        // keeper = address(keeperContract);
-        // ICronUpkeep(cronUpkeep).addDelegator(address(keeper));
-        // keeperContract.registerCronToUpkeep();
     }
 
     ///
@@ -387,6 +372,62 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     ///
     /// ADMIN FUNCTIONS
     ///
+
+    /**
+     * @notice Setup the keeper and adding cron to upkeep
+     * @param _cronUpkeep the new keeper address
+     * @param _encodedCron the encodedCron
+     * @dev Callable by admin
+     */
+    function setupKeeper(
+        address _cronUpkeep,
+        string memory _encodedCron
+    ) external whenPaused onlyAdmin onlyAddressInit(_cronUpkeep) {
+        cronUpkeep = _cronUpkeep;
+        keeper = KeeperHelpers.createKeeper(cronUpkeep, "refreshActiveGiveawayStatus()", _encodedCron);
+        ICronUpkeep(cronUpkeep).addDelegator(address(keeper));
+        IKeeper(keeper).registerCronToUpkeep();
+        // WORKS
+        // cronUpkeep = CronUpkeep(_cronUpkeep);
+        // keeper = new Keeper(address(cronUpkeep), "refreshActiveGiveawayStatus()", _encodedCron);
+        // cronUpkeep.addDelegator(address(keeper));
+        // keeper.registerCronToUpkeep();
+
+        // OLD
+        // refresh giveaways retweets count from encodedCron (default every hour)
+        // encodedCron = _encodedCron;
+        // cronUpkeep = _cronUpkeep;
+
+        // V1
+        // keeper = _keeper;
+        // IKeeper(keeper).registerCronToUpkeep();
+
+        // V0
+        // Keeper keeperContract = new Keeper(cronUpkeep, "refreshActiveGiveawayStatus()", encodedCron);
+        // keeper = address(keeperContract);
+        // ICronUpkeep(cronUpkeep).addDelegator(address(keeper));
+        // keeperContract.registerCronToUpkeep();
+    }
+
+    /**
+     * @notice Pause the current giveaway and associated keeper job
+     * @dev Callable by admin or creator
+     */
+
+    function pauseGiveaways() external whenNotPaused onlyAdmin {
+        _pause();
+        IKeeper(keeper).pauseKeeper();
+    }
+
+    /**
+     * @notice Unpause the current giveaway and associated keeper job
+     * @dev Callable by admin or creator
+     */
+    function unpauseGiveaways() external whenPaused onlyAdmin {
+        _unpause();
+        IKeeper(keeper).unpauseKeeper();
+    }
+
     /**
      * @notice Witdraws LINK from the contract to the Owner
      * @dev only admin can call this function

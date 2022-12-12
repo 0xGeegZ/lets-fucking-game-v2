@@ -30,11 +30,17 @@ const func: DeployFunction = async function ({
     },
   }
 
+  const gameArgs = [[], []]
+
   const {
     address: gameAddress,
     newlyDeployed: gameNewlyDeployed,
     receipt: { gasUsed: gameGasUsed },
-  } = await deploy('GameV1', { ...options, ...libraries })
+  } = await deploy('GameV1', {
+    ...options,
+    ...libraries,
+    args: gameArgs,
+  })
 
   if (gameNewlyDeployed)
     log(

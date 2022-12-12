@@ -11,8 +11,8 @@ const func: DeployFunction = async function ({
   const { deploy, log } = deployments
 
   const chainId = await getChainId()
-  const game = await deployments.get('GameV2')
-  const gameFactory = await deployments.get('GameFactoryV2')
+  const game = await deployments.get('GameV1')
+  const gameFactory = await deployments.get('GameFactoryV1')
 
   const multiCall3 = await deployments.get('Multicall3')
 
@@ -21,13 +21,13 @@ const func: DeployFunction = async function ({
 
   saveContractData({
     [chainId]: {
-      GameFactoryV2: {
+      GameFactoryV1: {
         address: gameFactory.address,
         libraries: gameFactory.libraries || {},
         transactionHash: gameFactory.transactionHash,
         abi: gameFactory.abi,
       },
-      GameV2: {
+      GameV1: {
         address: game.address,
         libraries: game.libraries || {},
         transactionHash: game.transactionHash,

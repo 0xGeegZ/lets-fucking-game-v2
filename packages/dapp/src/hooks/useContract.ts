@@ -6,7 +6,6 @@ import { getMulticallAddress } from 'utils/addressHelpers'
 import {
   getGameFactoryContract,
   getGameV1Contract,
-  getGameV2Contract,
   getGiveawayV1Contract,
   getBep20Contract,
   getErc721Contract,
@@ -43,12 +42,6 @@ export const useGameV1Contract = (address: string) => {
   const providerOrSigner = useProviderOrSigner(true)
   const { chainId } = useActiveChainId()
   return useMemo(() => getGameV1Contract(address, chainId, providerOrSigner), [address, chainId, providerOrSigner])
-}
-
-export const useGameV2Contract = (address: string) => {
-  const providerOrSigner = useProviderOrSigner(true)
-  const { chainId } = useActiveChainId()
-  return useMemo(() => getGameV2Contract(address, chainId, providerOrSigner), [address, chainId, providerOrSigner])
 }
 
 export const useGiveawayV1Contract = () => {

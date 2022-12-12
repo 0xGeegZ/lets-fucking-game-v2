@@ -1,13 +1,14 @@
+/* eslint-disable camelcase */
 import { ChainId } from '@pancakeswap/sdk'
 import chunk from 'lodash/chunk'
 import { multicallv2 } from 'utils/multicall'
 import internal from 'config/internal/internal.json'
-import { GameFactory } from 'config/types/typechain'
+import { Factory } from 'config/types/typechain/contracts/games/GameFactoryV1'
 
 import { fetchGamePlayersData } from './fetchGamePlayerData'
 
 export const fetchPublicGamesData = async (
-  games: GameFactory.GameStructOutput[],
+  games: Factory.ItemStructOutput[],
   chainId = ChainId.BSC,
 ): Promise<any[]> => {
   const gameCalls = games.map((game) => {
@@ -19,7 +20,7 @@ export const fetchPublicGamesData = async (
   const chunkSize = gameCalls.length / games.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV2.abi,
+    abi: internal[chainId || ChainId.BSC].GameV1.abi,
     calls: gameCalls,
     chainId,
   })
@@ -31,7 +32,7 @@ export const fetchPublicGamesData = async (
 }
 
 export const fetchGamesCreatorAmounts = async (
-  games: GameFactory.GameStructOutput[],
+  games: Factory.ItemStructOutput[],
   chainId = ChainId.BSC,
 ): Promise<any[]> => {
   const gameCalls = games.map((game) => {
@@ -43,7 +44,7 @@ export const fetchGamesCreatorAmounts = async (
   const chunkSize = gameCalls.length / games.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV2.abi,
+    abi: internal[chainId || ChainId.BSC].GameV1.abi,
     calls: gameCalls,
     chainId,
   })
@@ -52,7 +53,7 @@ export const fetchGamesCreatorAmounts = async (
 }
 
 export const fetchGamesTreasuryAmounts = async (
-  games: GameFactory.GameStructOutput[],
+  games: Factory.ItemStructOutput[],
   chainId = ChainId.BSC,
 ): Promise<any[]> => {
   const gameCalls = games.map((game) => {
@@ -64,7 +65,7 @@ export const fetchGamesTreasuryAmounts = async (
   const chunkSize = gameCalls.length / games.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV2.abi,
+    abi: internal[chainId || ChainId.BSC].GameV1.abi,
     calls: gameCalls,
     chainId,
   })
@@ -73,7 +74,7 @@ export const fetchGamesTreasuryAmounts = async (
 }
 
 export const fetchGamesPlayersAddresses = async (
-  games: GameFactory.GameStructOutput[],
+  games: Factory.ItemStructOutput[],
   chainId = ChainId.BSC,
 ): Promise<any[]> => {
   const gameCalls = games.map((game) => {
@@ -85,7 +86,7 @@ export const fetchGamesPlayersAddresses = async (
   const chunkSize = gameCalls.length / games.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV2.abi,
+    abi: internal[chainId || ChainId.BSC].GameV1.abi,
     calls: gameCalls,
     chainId,
   })
@@ -110,7 +111,7 @@ export const fetchGamesPrizes = async (games: any[], chainId = ChainId.BSC): Pro
   const chunkSize = gameCalls.length / games.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV2.abi,
+    abi: internal[chainId || ChainId.BSC].GameV1.abi,
     calls: gameCalls,
     chainId,
   })
@@ -130,7 +131,7 @@ export const fetchGamesWinners = async (games: any[], chainId = ChainId.BSC): Pr
   const chunkSize = gameCalls.length / games.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV2.abi,
+    abi: internal[chainId || ChainId.BSC].GameV1.abi,
     calls: gameCalls,
     chainId,
   })

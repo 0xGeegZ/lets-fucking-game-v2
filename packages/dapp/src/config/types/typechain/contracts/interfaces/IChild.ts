@@ -89,36 +89,60 @@ export declare namespace IChild {
 export interface IChildInterface extends utils.Interface {
   functions: {
     "addPrizes((uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
+    "addTokenERC20(address)": FunctionFragment;
+    "addTokenERC721(address)": FunctionFragment;
     "claimPrize(uint256)": FunctionFragment;
     "claimTreasuryFee()": FunctionFragment;
+    "getERC721TokenIds(address,address)": FunctionFragment;
     "getPrizes(uint256)": FunctionFragment;
     "getWinners(uint256)": FunctionFragment;
     "pause()": FunctionFragment;
+    "removeTokenERC20(address)": FunctionFragment;
+    "removeTokenERC721(address)": FunctionFragment;
     "setTreasuryFee(uint256)": FunctionFragment;
     "transferAdminOwnership(address)": FunctionFragment;
     "transferFactoryOwnership(address)": FunctionFragment;
     "unpause()": FunctionFragment;
+    "withdrawERC20(address,address)": FunctionFragment;
+    "withdrawERC721(address,uint256,address)": FunctionFragment;
     "withdrawFunds(address)": FunctionFragment;
+    "withdrawNative(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "addPrizes"
+      | "addTokenERC20"
+      | "addTokenERC721"
       | "claimPrize"
       | "claimTreasuryFee"
+      | "getERC721TokenIds"
       | "getPrizes"
       | "getWinners"
       | "pause"
+      | "removeTokenERC20"
+      | "removeTokenERC721"
       | "setTreasuryFee"
       | "transferAdminOwnership"
       | "transferFactoryOwnership"
       | "unpause"
+      | "withdrawERC20"
+      | "withdrawERC721"
       | "withdrawFunds"
+      | "withdrawNative"
   ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "addPrizes",
     values: [IChild.PrizeStruct[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addTokenERC20",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addTokenERC721",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "claimPrize",
@@ -129,6 +153,10 @@ export interface IChildInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "getERC721TokenIds",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getPrizes",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -137,6 +165,14 @@ export interface IChildInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "removeTokenERC20",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeTokenERC721",
+    values: [PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(
     functionFragment: "setTreasuryFee",
     values: [PromiseOrValue<BigNumberish>]
@@ -151,19 +187,55 @@ export interface IChildInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "withdrawERC20",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawERC721",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdrawFunds",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawNative",
     values: [PromiseOrValue<string>]
   ): string;
 
   decodeFunctionResult(functionFragment: "addPrizes", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "addTokenERC20",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "addTokenERC721",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "claimPrize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "claimTreasuryFee",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getERC721TokenIds",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getPrizes", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getWinners", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "removeTokenERC20",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "removeTokenERC721",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "setTreasuryFee",
     data: BytesLike
@@ -178,7 +250,19 @@ export interface IChildInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "withdrawERC20",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawERC721",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "withdrawFunds",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawNative",
     data: BytesLike
   ): Result;
 
@@ -407,6 +491,16 @@ export interface IChild extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    addTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    addTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     claimPrize(
       _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -415,6 +509,12 @@ export interface IChild extends BaseContract {
     claimTreasuryFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    getERC721TokenIds(
+      _token: PromiseOrValue<string>,
+      _account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
 
     getPrizes(
       _epoch: PromiseOrValue<BigNumberish>,
@@ -433,6 +533,16 @@ export interface IChild extends BaseContract {
     >;
 
     pause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    removeTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    removeTokenERC721(
+      _token: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -455,7 +565,25 @@ export interface IChild extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    withdrawERC20(
+      _contractAddress: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawERC721(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     withdrawFunds(
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawNative(
       _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -466,6 +594,16 @@ export interface IChild extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  addTokenERC20(
+    _token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  addTokenERC721(
+    _token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   claimPrize(
     _epoch: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -474,6 +612,12 @@ export interface IChild extends BaseContract {
   claimTreasuryFee(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  getERC721TokenIds(
+    _token: PromiseOrValue<string>,
+    _account: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
 
   getPrizes(
     _epoch: PromiseOrValue<BigNumberish>,
@@ -486,6 +630,16 @@ export interface IChild extends BaseContract {
   ): Promise<IChild.WinnerStructOutput[]>;
 
   pause(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  removeTokenERC20(
+    _token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  removeTokenERC721(
+    _token: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -508,7 +662,25 @@ export interface IChild extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  withdrawERC20(
+    _contractAddress: PromiseOrValue<string>,
+    _receiver: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  withdrawERC721(
+    _contractAddress: PromiseOrValue<string>,
+    _tokenId: PromiseOrValue<BigNumberish>,
+    _receiver: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   withdrawFunds(
+    _receiver: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  withdrawNative(
     _receiver: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -519,12 +691,28 @@ export interface IChild extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    addTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    addTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     claimPrize(
       _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     claimTreasuryFee(overrides?: CallOverrides): Promise<void>;
+
+    getERC721TokenIds(
+      _token: PromiseOrValue<string>,
+      _account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
 
     getPrizes(
       _epoch: PromiseOrValue<BigNumberish>,
@@ -537,6 +725,16 @@ export interface IChild extends BaseContract {
     ): Promise<IChild.WinnerStructOutput[]>;
 
     pause(overrides?: CallOverrides): Promise<void>;
+
+    removeTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    removeTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,
@@ -555,7 +753,25 @@ export interface IChild extends BaseContract {
 
     unpause(overrides?: CallOverrides): Promise<void>;
 
+    withdrawERC20(
+      _contractAddress: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    withdrawERC721(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     withdrawFunds(
+      _receiver: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    withdrawNative(
       _receiver: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -678,6 +894,16 @@ export interface IChild extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    addTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    addTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     claimPrize(
       _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -685,6 +911,12 @@ export interface IChild extends BaseContract {
 
     claimTreasuryFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getERC721TokenIds(
+      _token: PromiseOrValue<string>,
+      _account: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getPrizes(
@@ -698,6 +930,16 @@ export interface IChild extends BaseContract {
     ): Promise<BigNumber>;
 
     pause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    removeTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    removeTokenERC721(
+      _token: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -720,7 +962,25 @@ export interface IChild extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    withdrawERC20(
+      _contractAddress: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    withdrawERC721(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     withdrawFunds(
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    withdrawNative(
       _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -732,6 +992,16 @@ export interface IChild extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    addTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    addTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     claimPrize(
       _epoch: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -739,6 +1009,12 @@ export interface IChild extends BaseContract {
 
     claimTreasuryFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getERC721TokenIds(
+      _token: PromiseOrValue<string>,
+      _account: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getPrizes(
@@ -752,6 +1028,16 @@ export interface IChild extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     pause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    removeTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    removeTokenERC721(
+      _token: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -774,7 +1060,25 @@ export interface IChild extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    withdrawERC20(
+      _contractAddress: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawERC721(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     withdrawFunds(
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawNative(
       _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

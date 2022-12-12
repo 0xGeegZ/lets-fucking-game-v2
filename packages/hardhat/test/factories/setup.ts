@@ -43,9 +43,9 @@ const setupTest = deployments.createFixture(
       },
     }
 
-    const gameFactoryContract = await deployments.get('GameFactoryV2')
+    const gameFactoryContract = await deployments.get('GameFactoryV1')
 
-    const gameContract = await deployments.get('GameV2', libraries)
+    const gameContract = await deployments.get('GameV1', libraries)
 
     const cronUpkeepContract = await deployments.get('CronUpkeep', libraries)
     const cronUpkeepSecondaryContract = await deployments.get(
@@ -53,13 +53,13 @@ const setupTest = deployments.createFixture(
       libraries
     )
 
-    const secondGameV1Contract = await deploy('GameV2', {
+    const secondGameV1Contract = await deploy('GameV1', {
       ...options,
       ...libraries,
     })
 
     // const gameInterface = await ethers.getContractFactory('GameV1', libraries)
-    const gameInterface = await ethers.getContractFactory('GameV2')
+    const gameInterface = await ethers.getContractFactory('GameV1')
 
     const secondGameV1 = new ethers.Contract(
       secondGameV1Contract.address,
@@ -89,7 +89,7 @@ const setupTest = deployments.createFixture(
     //  )
 
     const gameFactoryInterface = await ethers.getContractFactory(
-      'GameFactoryV2',
+      'GameFactoryV1',
       libraries
     )
 
@@ -124,12 +124,12 @@ const setupTest = deployments.createFixture(
     // const GameFactoryContract = await ethers.getContractFactory('GameFactory')
 
     const GameFactoryContract = await ethers.getContractFactory(
-      'GameFactoryV2',
+      'GameFactoryV1',
       libraries
     )
 
     // const GameV1Contract = await ethers.getContractFactory('GameV1', libraries)
-    const GameV1Contract = await ethers.getContractFactory('GameV2')
+    const GameV1Contract = await ethers.getContractFactory('GameV1')
 
     // Loading Giveaway contract
     const giveawayContract = await deployments.get('GiveawayV1')

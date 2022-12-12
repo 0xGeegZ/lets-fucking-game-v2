@@ -10,7 +10,7 @@ import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 import { Factory } from "../abstracts/Factory.sol";
 import { Keeper } from "../keepers/Keeper.sol";
 
-contract GameFactoryV2 is Factory {
+contract GameFactoryV1 is Factory {
     using Counters for Counters.Counter;
 
     uint256[] public authorizedAmounts;
@@ -151,9 +151,8 @@ contract GameFactoryV2 is Factory {
      * @return isExist true if exist false if not
      */
     function _isExistAuthorizedAmounts(uint256 _authorizedAmount) internal view returns (bool isExist) {
-        for (uint256 i = 0; i < authorizedAmounts.length; i++) {
+        for (uint256 i = 0; i < authorizedAmounts.length; i++)
             if (authorizedAmounts[i] == _authorizedAmount) return true;
-        }
         return false;
     }
 

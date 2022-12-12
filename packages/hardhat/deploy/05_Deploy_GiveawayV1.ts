@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat'
-import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { DeployFunction } from 'hardhat-deploy/types'
 
 import { giveawayConfig } from '../config/giveawayConfig'
 import { delay } from '../helpers/delay'
@@ -100,10 +100,12 @@ const func: DeployFunction = async function ({
     apiBaseUrl,
     '0xCC79157eb46F5624204f47AB42b3906cAA40eaB7',
     linkTokenAddress,
+    treasuryFee,
     // cronUpkeepAddress,
     // keeperAddress,
-    treasuryFee,
     // encodedCron,
+    [],
+    [],
   ]
 
   const {

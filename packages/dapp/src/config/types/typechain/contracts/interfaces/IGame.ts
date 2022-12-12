@@ -254,9 +254,12 @@ export declare namespace IGame {
 export interface IGameInterface extends utils.Interface {
   functions: {
     "addPrizes((uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
+    "addTokenERC20(address)": FunctionFragment;
+    "addTokenERC721(address)": FunctionFragment;
     "claimCreatorFee()": FunctionFragment;
     "claimPrize(uint256)": FunctionFragment;
     "claimTreasuryFee()": FunctionFragment;
+    "getERC721TokenIds(address,address)": FunctionFragment;
     "getGameData()": FunctionFragment;
     "getPlayer(address)": FunctionFragment;
     "getPlayerAddresses()": FunctionFragment;
@@ -270,6 +273,8 @@ export interface IGameInterface extends utils.Interface {
     "pause()": FunctionFragment;
     "playRound()": FunctionFragment;
     "registerForGame()": FunctionFragment;
+    "removeTokenERC20(address)": FunctionFragment;
+    "removeTokenERC721(address)": FunctionFragment;
     "setCreatorFee(uint256)": FunctionFragment;
     "setCronUpkeep(address)": FunctionFragment;
     "setEncodedCron(string)": FunctionFragment;
@@ -285,15 +290,21 @@ export interface IGameInterface extends utils.Interface {
     "triggerDailyCheckpoint()": FunctionFragment;
     "unpause()": FunctionFragment;
     "voteToSplitPot()": FunctionFragment;
+    "withdrawERC20(address,address)": FunctionFragment;
+    "withdrawERC721(address,uint256,address)": FunctionFragment;
     "withdrawFunds(address)": FunctionFragment;
+    "withdrawNative(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "addPrizes"
+      | "addTokenERC20"
+      | "addTokenERC721"
       | "claimCreatorFee"
       | "claimPrize"
       | "claimTreasuryFee"
+      | "getERC721TokenIds"
       | "getGameData"
       | "getPlayer"
       | "getPlayerAddresses"
@@ -307,6 +318,8 @@ export interface IGameInterface extends utils.Interface {
       | "pause"
       | "playRound"
       | "registerForGame"
+      | "removeTokenERC20"
+      | "removeTokenERC721"
       | "setCreatorFee"
       | "setCronUpkeep"
       | "setEncodedCron"
@@ -322,12 +335,23 @@ export interface IGameInterface extends utils.Interface {
       | "triggerDailyCheckpoint"
       | "unpause"
       | "voteToSplitPot"
+      | "withdrawERC20"
+      | "withdrawERC721"
       | "withdrawFunds"
+      | "withdrawNative"
   ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "addPrizes",
     values: [IChild.PrizeStruct[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addTokenERC20",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addTokenERC721",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "claimCreatorFee",
@@ -340,6 +364,10 @@ export interface IGameInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "claimTreasuryFee",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getERC721TokenIds",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getGameData",
@@ -386,6 +414,14 @@ export interface IGameInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "registerForGame",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeTokenERC20",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeTokenERC721",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "setCreatorFee",
@@ -442,11 +478,35 @@ export interface IGameInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "withdrawERC20",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawERC721",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdrawFunds",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawNative",
     values: [PromiseOrValue<string>]
   ): string;
 
   decodeFunctionResult(functionFragment: "addPrizes", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "addTokenERC20",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "addTokenERC721",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "claimCreatorFee",
     data: BytesLike
@@ -454,6 +514,10 @@ export interface IGameInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "claimPrize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "claimTreasuryFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getERC721TokenIds",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -488,6 +552,14 @@ export interface IGameInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "playRound", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "registerForGame",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "removeTokenERC20",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "removeTokenERC721",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -542,7 +614,19 @@ export interface IGameInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "withdrawERC20",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawERC721",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "withdrawFunds",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawNative",
     data: BytesLike
   ): Result;
 
@@ -891,6 +975,16 @@ export interface IGame extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    addTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    addTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     claimCreatorFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -903,6 +997,12 @@ export interface IGame extends BaseContract {
     claimTreasuryFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    getERC721TokenIds(
+      _token: PromiseOrValue<string>,
+      _account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
 
     getGameData(
       overrides?: CallOverrides
@@ -968,6 +1068,16 @@ export interface IGame extends BaseContract {
 
     registerForGame(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    removeTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    removeTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     setCreatorFee(
@@ -1041,7 +1151,25 @@ export interface IGame extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    withdrawERC20(
+      _contractAddress: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawERC721(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     withdrawFunds(
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawNative(
       _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -1050,6 +1178,16 @@ export interface IGame extends BaseContract {
   addPrizes(
     _prizes: IChild.PrizeStruct[],
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  addTokenERC20(
+    _token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  addTokenERC721(
+    _token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   claimCreatorFee(
@@ -1064,6 +1202,12 @@ export interface IGame extends BaseContract {
   claimTreasuryFee(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  getERC721TokenIds(
+    _token: PromiseOrValue<string>,
+    _account: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
 
   getGameData(overrides?: CallOverrides): Promise<IGame.GameDataStructOutput>;
 
@@ -1107,6 +1251,16 @@ export interface IGame extends BaseContract {
 
   registerForGame(
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  removeTokenERC20(
+    _token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  removeTokenERC721(
+    _token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   setCreatorFee(
@@ -1180,7 +1334,25 @@ export interface IGame extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  withdrawERC20(
+    _contractAddress: PromiseOrValue<string>,
+    _receiver: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  withdrawERC721(
+    _contractAddress: PromiseOrValue<string>,
+    _tokenId: PromiseOrValue<BigNumberish>,
+    _receiver: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   withdrawFunds(
+    _receiver: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  withdrawNative(
     _receiver: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -1188,6 +1360,16 @@ export interface IGame extends BaseContract {
   callStatic: {
     addPrizes(
       _prizes: IChild.PrizeStruct[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    addTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    addTokenERC721(
+      _token: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1199,6 +1381,12 @@ export interface IGame extends BaseContract {
     ): Promise<void>;
 
     claimTreasuryFee(overrides?: CallOverrides): Promise<void>;
+
+    getERC721TokenIds(
+      _token: PromiseOrValue<string>,
+      _account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
 
     getGameData(overrides?: CallOverrides): Promise<IGame.GameDataStructOutput>;
 
@@ -1237,6 +1425,16 @@ export interface IGame extends BaseContract {
     playRound(overrides?: CallOverrides): Promise<void>;
 
     registerForGame(overrides?: CallOverrides): Promise<void>;
+
+    removeTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    removeTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setCreatorFee(
       _creatorFee: PromiseOrValue<BigNumberish>,
@@ -1301,7 +1499,25 @@ export interface IGame extends BaseContract {
 
     voteToSplitPot(overrides?: CallOverrides): Promise<void>;
 
+    withdrawERC20(
+      _contractAddress: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    withdrawERC721(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     withdrawFunds(
+      _receiver: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    withdrawNative(
       _receiver: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1503,6 +1719,16 @@ export interface IGame extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    addTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    addTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     claimCreatorFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1514,6 +1740,12 @@ export interface IGame extends BaseContract {
 
     claimTreasuryFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getERC721TokenIds(
+      _token: PromiseOrValue<string>,
+      _account: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getGameData(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1558,6 +1790,16 @@ export interface IGame extends BaseContract {
 
     registerForGame(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    removeTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    removeTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     setCreatorFee(
@@ -1631,7 +1873,25 @@ export interface IGame extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    withdrawERC20(
+      _contractAddress: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    withdrawERC721(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     withdrawFunds(
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    withdrawNative(
       _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1641,6 +1901,16 @@ export interface IGame extends BaseContract {
     addPrizes(
       _prizes: IChild.PrizeStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    addTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    addTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     claimCreatorFee(
@@ -1654,6 +1924,12 @@ export interface IGame extends BaseContract {
 
     claimTreasuryFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getERC721TokenIds(
+      _token: PromiseOrValue<string>,
+      _account: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getGameData(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1708,6 +1984,16 @@ export interface IGame extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    removeTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    removeTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     setCreatorFee(
       _creatorFee: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1779,7 +2065,25 @@ export interface IGame extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    withdrawERC20(
+      _contractAddress: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawERC721(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     withdrawFunds(
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawNative(
       _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

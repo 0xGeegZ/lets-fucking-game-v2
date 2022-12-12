@@ -137,6 +137,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC721__factory>;
     getContractFactory(
+      name: "ERC721Enumerable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC721Enumerable__factory>;
+    getContractFactory(
+      name: "IERC721Enumerable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC721Enumerable__factory>;
+    getContractFactory(
       name: "IERC721Metadata",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC721Metadata__factory>;
@@ -165,29 +173,13 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Factory__factory>;
     getContractFactory(
-      name: "GameFactoryV2",
+      name: "GameFactoryV1",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.GameFactoryV2__factory>;
-    getContractFactory(
-      name: "GameV2",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.GameV2__factory>;
-    getContractFactory(
-      name: "GameFactory",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.GameFactory__factory>;
+    ): Promise<Contracts.GameFactoryV1__factory>;
     getContractFactory(
       name: "GameV1",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.GameV1__factory>;
-    getContractFactory(
-      name: "CronUpkeepInterface",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.CronUpkeepInterface__factory>;
-    getContractFactory(
-      name: "GameV1Interface",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.GameV1Interface__factory>;
     getContractFactory(
       name: "GiveawayV1",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -377,6 +369,16 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ERC721>;
     getContractAt(
+      name: "ERC721Enumerable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC721Enumerable>;
+    getContractAt(
+      name: "IERC721Enumerable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC721Enumerable>;
+    getContractAt(
       name: "IERC721Metadata",
       address: string,
       signer?: ethers.Signer
@@ -412,35 +414,15 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Factory>;
     getContractAt(
-      name: "GameFactoryV2",
+      name: "GameFactoryV1",
       address: string,
       signer?: ethers.Signer
-    ): Promise<Contracts.GameFactoryV2>;
-    getContractAt(
-      name: "GameV2",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.GameV2>;
-    getContractAt(
-      name: "GameFactory",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.GameFactory>;
+    ): Promise<Contracts.GameFactoryV1>;
     getContractAt(
       name: "GameV1",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.GameV1>;
-    getContractAt(
-      name: "CronUpkeepInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.CronUpkeepInterface>;
-    getContractAt(
-      name: "GameV1Interface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.GameV1Interface>;
     getContractAt(
       name: "GiveawayV1",
       address: string,

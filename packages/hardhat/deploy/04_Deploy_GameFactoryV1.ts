@@ -46,28 +46,30 @@ const func: DeployFunction = async function ({
     ethers.utils.parseEther(`${amount}`)
   )
 
-  log('Deploying GameFactory contract')
+  log('Deploying GameFactoryV1 contract')
   const gameFactoryArgs = [
     gameAddress,
     cronUpkeepAddress,
     itemCreationAmount,
     authorizedAmounts,
   ]
+
   const {
     address: gameFactoryAddress,
     newlyDeployed: gameFactoryNewlyDeployed,
     receipt: { gasUsed: gameFactoryGasUsed },
-  } = await deploy('GameFactory', {
+  } = await deploy('GameFactoryV1', {
     ...options,
+    ...libraries,
     args: gameFactoryArgs,
   })
 
   if (gameFactoryNewlyDeployed)
     log(
-      `✅ Contract GameFactory deployed at ${gameFactoryAddress} using ${gameFactoryGasUsed} gas`
+      `✅ Contract GameFactoryV1 deployed at ${gameFactoryAddress} using ${gameFactoryGasUsed} gas`
     )
 
-  log('Adding GameFactory to Keeper delegators')
+  log('Adding GameFactoryV1 to Keeper delegators')
   try {
     const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
       'CronUpkeep',
@@ -97,7 +99,7 @@ const func: DeployFunction = async function ({
 
   await delay(30 * 1000)
   try {
-    log(`✅ Verifying contract GameFactory`)
+    log(`✅ Verifying contract GameFactoryV1`)
     await hre.run('verify:verify', {
       address: gameFactoryAddress,
       constructorArguments: gameFactoryArgs,
