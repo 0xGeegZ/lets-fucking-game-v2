@@ -17,7 +17,13 @@ Originally created during the [ChainLink Hackathon Fall 2022](https://devpost.co
 
 We're excited to present the latest version of Let's Fucking Game at the [Fantom Hackathon Q1 2023](https://fantomq12023.devpost.com/).
 
-Hackathon version Release accessible [HERE](https://github.com/lets-fucking-game/lets-fucking-game/releases/tag/0.2.9).
+Hackathon version Release accessible [HERE](https://github.com/lets-fucking-game/lets-fucking-game-v2).
+
+[👉 Check our Smart Contract Here](./packages/hardhat/)
+
+[👉 Check our Smart Contract Code Coverage](https://htmlpreview.github.io/?https://github.com/lets-fucking-game/lets-fucking-game-v2/blob/dev/packages/hardhat/coverage/index.html)
+
+[👉 Check our Dapp here](./packages/dapp/)
 
 ## Contracts deployed on FANTOM TESTNET
 
@@ -70,9 +76,9 @@ Here are our stack details :
 
 Mono Repo boilerplate crafted from multiple other boilerplates. This help us to bootstrap this project in the best conditions :
 
-- [https://github.com/hackbg/chainlink-fullstack/](https://github.com/hackbg/chainlink-fullstack/) : For the monorepo configuration
-- [https://github.com/emretepedev/solidity-hardhat-typescript-boilerplate](https://github.com/emretepedev/solidity-hardhat-typescript-boilerplate) : For the Smart Contract Project configuration
-- [https://github.com/pancakeswap/pancake-frontend](https://github.com/pancakeswap/pancake-frontend) : For the front end project configuration
+- [Hackbg Monorepo Boilerplate](https://github.com/hackbg/chainlink-fullstack/): For the monorepo configuration
+- [Emretepedev Boilerplate](https://github.com/emretepedev/solidity-hardhat-typescript-boilerplate) : For the Smart Contract Project configuration
+- [PancakeSwap Frontend](https://github.com/pancakeswap/pancake-frontend) : For the front end project configuration and UI kit
 
 This help us to create a well structured project with a good potential of scalability
 
@@ -89,7 +95,7 @@ This help us to create a well structured project with a good potential of scalab
   - We store on chain the strict minimum of data to keep all the data on chain
   - Serverless architecture for an easy deployment and scalability
 
-[👉 SEE OUR SMART CONTRACTS CODE COVERAGE](https://htmlpreview.github.io/?https://github.com/lets-fucking-game/lets-fucking-game-v2/blob/dev/packages/hardhat/coverage/index.html)
+[👉 Check our Smart Contract Code Coverage](https://htmlpreview.github.io/?https://github.com/lets-fucking-game/lets-fucking-game-v2/blob/dev/packages/hardhat/coverage/index.html)
 
 ## Challenges we ran into
 
