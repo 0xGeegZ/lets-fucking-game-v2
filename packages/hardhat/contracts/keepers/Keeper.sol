@@ -7,8 +7,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import { Cron as CronExternal } from "@chainlink/contracts/src/v0.8/libraries/external/Cron.sol";
 
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
+import { IKeeper } from "../interfaces/IKeeper.sol";
 
-contract Keeper is Ownable, Pausable {
+contract Keeper is IKeeper, Ownable, Pausable {
     uint256 private constant DEFAULT_CRON_UPKEEP_JOB_ID = 999;
 
     uint256 private cronUpkeepJobId;
@@ -17,18 +18,9 @@ contract Keeper is Ownable, Pausable {
     string public encodedCron;
     string public handler;
 
-    /**
-     * @notice Called when the creator or admin call registerCronToUpkeep
-     */
-    event CronUpkeepRegistered(uint256 jobId, address cronUpkeep);
-    /**
-     * @notice Called when the creator or admin update encodedCron
-     */
-    event EncodedCronUpdated(uint256 jobId, string encodedCron);
-    /**
-     * @notice Called when the factory or admin update cronUpkeep
-     */
-    event CronUpkeepUpdated(uint256 jobId, address cronUpkeep);
+    ///
+    /// CONSTRUCTOR
+    ///
 
     constructor(address _cronUpkeep, string memory _handler, string memory _encodedCron) {
         encodedCron = _encodedCron;
@@ -36,35 +28,15 @@ contract Keeper is Ownable, Pausable {
         cronUpkeep = _cronUpkeep;
     }
 
-    /**
-     * @notice Return cronUpkeep
-     * @dev Callable by only by owner
-     */
-    function getCronUpkeep() external view onlyOwner returns (address _cronUpkeep) {
-        return cronUpkeep;
-    }
-
-    /**
-     * @notice Return encodedCron
-     * @dev Callable by only by owner
-     */
-    function getEncodedCron() external view onlyOwner returns (string memory _encodedCron) {
-        return encodedCron;
-    }
-
-    /**
-     * @notice Return handler
-     * @dev Callable by only by owner
-     */
-    function getHandler() external view onlyOwner returns (string memory _handler) {
-        return handler;
-    }
+    ///
+    /// MAIN FUNCTIONS
+    ///
 
     /**
      * @notice Register the cron to the upkeep contract
      * @dev Callable by only by owner
      */
-    function registerCronToUpkeep() external onlyOwner {
+    function registerCronToUpkeep() external override onlyOwner {
         _registerCronToUpkeep(owner());
         emit CronUpkeepRegistered(cronUpkeepJobId, address(cronUpkeep));
     }
@@ -73,9 +45,37 @@ contract Keeper is Ownable, Pausable {
      * @notice Register the cron to the upkeep contract
      * @dev Callable by only by owner
      */
-    function registerCronToUpkeep(address _target) external onlyOwner {
+    function registerCronToUpkeep(address _target) external override onlyOwner {
         _registerCronToUpkeep(_target);
         emit CronUpkeepRegistered(cronUpkeepJobId, address(cronUpkeep));
+    }
+
+    ///
+    /// GETTERS FUNCTIONS
+    ///
+
+    /**
+     * @notice Return cronUpkeep
+     * @dev Callable by only by owner
+     */
+    function getCronUpkeep() external view override onlyOwner returns (address _cronUpkeep) {
+        return cronUpkeep;
+    }
+
+    /**
+     * @notice Return encodedCron
+     * @dev Callable by only by owner
+     */
+    function getEncodedCron() external view override onlyOwner returns (string memory _encodedCron) {
+        return encodedCron;
+    }
+
+    /**
+     * @notice Return handler
+     * @dev Callable by only by owner
+     */
+    function getHandler() external view override onlyOwner returns (string memory _handler) {
+        return handler;
     }
 
     /**
@@ -83,7 +83,7 @@ contract Keeper is Ownable, Pausable {
      * @param _cronUpkeep the new keeper address
      * @dev Callable by only by owner
      */
-    function setCronUpkeep(address _cronUpkeep) external onlyOwner {
+    function setCronUpkeep(address _cronUpkeep) external override onlyOwner {
         cronUpkeep = _cronUpkeep;
         _registerCronToUpkeep(owner());
         emit CronUpkeepUpdated(cronUpkeepJobId, address(cronUpkeep));
@@ -94,15 +94,19 @@ contract Keeper is Ownable, Pausable {
      * @param _encodedCron the new encoded cron as * * * * *
      * @dev Callable by only by owner
      */
-    function setEncodedCron(string memory _encodedCron) external onlyOwner {
+    function setEncodedCron(string memory _encodedCron) external override onlyOwner {
         _setEncodedCron(_encodedCron);
     }
+
+    ///
+    /// ADMIN FUNCTIONS
+    ///
 
     /**
      * @notice Pause the current keeper and associated keeper job
      * @dev Callable by only by owner
      */
-    function pauseKeeper() external whenNotPaused {
+    function pauseKeeper() external override whenNotPaused {
         _pause();
         ICronUpkeep(cronUpkeep).deleteCronJob(cronUpkeepJobId);
         cronUpkeepJobId = DEFAULT_CRON_UPKEEP_JOB_ID;
@@ -112,13 +116,26 @@ contract Keeper is Ownable, Pausable {
      * @notice Unpause the current keeper and associated keeper job
      * @dev Callable by only by owner
      */
-    function unpauseKeeper() external whenPaused onlyIfKeeperDataInit {
+    function unpauseKeeper() external override whenPaused onlyIfKeeperDataInit {
         // check if cronUpkeepJobId has already been updated by calling setEncodedCron before unpausing game
         if (cronUpkeepJobId != DEFAULT_CRON_UPKEEP_JOB_ID) return;
 
         _unpause();
         _registerCronToUpkeep(owner());
     }
+
+    /**
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
+     * Can only be called by the current owner.
+     */
+    function transferOwnership(address newOwner) public override(IKeeper, Ownable) onlyOwner {
+        require(newOwner != address(0), "Ownable: new owner is the zero address");
+        _transferOwnership(newOwner);
+    }
+
+    ///
+    /// INTERNAL FUNCTIONS
+    ///
 
     function _setEncodedCron(string memory _encodedCron) internal whenPaused onlyOwner {
         require(bytes(_encodedCron).length != 0, "Keeper cron need to be initialised");

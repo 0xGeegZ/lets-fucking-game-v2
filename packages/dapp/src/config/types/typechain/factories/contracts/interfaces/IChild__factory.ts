@@ -149,25 +149,6 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "FailedTransfer",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
         name: "claimer",
         type: "address",
       },
@@ -318,6 +299,32 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
+    ],
+    name: "addTokenERC20",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
+    ],
+    name: "addTokenERC721",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "_epoch",
         type: "uint256",
@@ -457,6 +464,32 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
+    ],
+    name: "removeTokenERC20",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
+    ],
+    name: "removeTokenERC721",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "_treasuryFee",
         type: "uint256",
@@ -504,11 +537,65 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "_contractAddress",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_receiver",
+        type: "address",
+      },
+    ],
+    name: "withdrawERC20",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_contractAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_receiver",
+        type: "address",
+      },
+    ],
+    name: "withdrawERC721",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "_receiver",
         type: "address",
       },
     ],
     name: "withdrawFunds",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_receiver",
+        type: "address",
+      },
+    ],
+    name: "withdrawNative",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

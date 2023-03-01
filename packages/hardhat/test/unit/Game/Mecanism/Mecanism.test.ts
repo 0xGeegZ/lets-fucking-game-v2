@@ -928,9 +928,7 @@ describe('GameV1Contract - Mecanism', function () {
 
         expect(updatedPlayerAddressesList.length).to.equal(0)
         for (let i = 0; i < updatedPlayerAddressesList.length; i++) {
-          expect(updatedPlayerAddressesList[i]).to.equal(
-            '0x0000000000000000000000000000000000000000'
-          )
+          expect(updatedPlayerAddressesList[i]).to.equal(ethers.constants.Zero)
         }
 
         expect(updatedId).to.equal(previousId + 1)
@@ -953,7 +951,7 @@ describe('GameV1Contract - Mecanism', function () {
     })
   })
 
-  context('Claiming a prize', function () {
+  context('Claiming a prize with native token', function () {
     // TODO should won game with 1 player left for game with multiple winners
 
     describe('when the game does not exist', function () {
@@ -1000,7 +998,7 @@ describe('GameV1Contract - Mecanism', function () {
       })
     })
 
-    describe('when the prize for the game as been claimed already', function () {
+    describe('when the prize for the game as been already claimed', function () {
       it('should revert', async function () {
         const winnerIndex = 0
         const existantId = 0

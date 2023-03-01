@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/proxy/Clones.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
+import { TokenHelpers } from "../libraries/TokenHelpers.sol";
+
 import { IChild } from "../interfaces/IChild.sol";
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 import { IKeeper } from "../interfaces/IKeeper.sol";
@@ -82,25 +84,6 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
         cronUpkeep = _cronUpkeep;
         itemCreationAmount = _itemCreationAmount;
         versions.push(Version({ id: latestVersionId, deployedAddress: _item }));
-    }
-
-    ///
-    ///INTERNAL FUNCTIONS
-    ///
-    /**
-     * @notice Transfert funds
-     * @param _receiver the receiver address
-     * @param _amount the amount to transfert
-     * @dev TODO NEXT VERSION use SafeERC20 library from OpenZeppelin
-     */
-    function _safeTransfert(address _receiver, uint256 _amount) internal {
-        uint256 balance = address(this).balance;
-        if (balance < _amount) require(false, "Not enough in contract balance");
-        (bool success, ) = _receiver.call{ value: _amount }("");
-        if (!success) {
-            emit FailedTransfer(_receiver, _amount);
-            require(false, "Transfer failed.");
-        }
     }
 
     ///
@@ -204,7 +187,7 @@ abstract contract Factory is Pausable, Ownable, ReentrancyGuard {
      * @dev Callable by admin
      */
     function withdrawFunds() external onlyAdmin {
-        _safeTransfert(owner(), address(this).balance);
+        TokenHelpers.safeTransfert(owner(), address(this).balance);
     }
 
     ///

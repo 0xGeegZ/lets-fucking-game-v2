@@ -30,10 +30,13 @@ export interface IKeeperInterface extends utils.Interface {
   functions: {
     "getCronUpkeep()": FunctionFragment;
     "getEncodedCron()": FunctionFragment;
+    "getHandler()": FunctionFragment;
     "pauseKeeper()": FunctionFragment;
+    "registerCronToUpkeep(address)": FunctionFragment;
     "registerCronToUpkeep()": FunctionFragment;
     "setCronUpkeep(address)": FunctionFragment;
     "setEncodedCron(string)": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
     "unpauseKeeper()": FunctionFragment;
   };
 
@@ -41,10 +44,13 @@ export interface IKeeperInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "getCronUpkeep"
       | "getEncodedCron"
+      | "getHandler"
       | "pauseKeeper"
-      | "registerCronToUpkeep"
+      | "registerCronToUpkeep(address)"
+      | "registerCronToUpkeep()"
       | "setCronUpkeep"
       | "setEncodedCron"
+      | "transferOwnership"
       | "unpauseKeeper"
   ): FunctionFragment;
 
@@ -57,11 +63,19 @@ export interface IKeeperInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "getHandler",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "pauseKeeper",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "registerCronToUpkeep",
+    functionFragment: "registerCronToUpkeep(address)",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "registerCronToUpkeep()",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -70,6 +84,10 @@ export interface IKeeperInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setEncodedCron",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -85,12 +103,17 @@ export interface IKeeperInterface extends utils.Interface {
     functionFragment: "getEncodedCron",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getHandler", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "pauseKeeper",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "registerCronToUpkeep",
+    functionFragment: "registerCronToUpkeep(address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "registerCronToUpkeep()",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -99,6 +122,10 @@ export interface IKeeperInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setEncodedCron",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -188,11 +215,20 @@ export interface IKeeper extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string] & { _encodedCron: string }>;
 
+    getHandler(
+      overrides?: CallOverrides
+    ): Promise<[string] & { _handler: string }>;
+
     pauseKeeper(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    registerCronToUpkeep(
+    "registerCronToUpkeep(address)"(
+      _target: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "registerCronToUpkeep()"(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -206,6 +242,11 @@ export interface IKeeper extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     unpauseKeeper(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -215,11 +256,18 @@ export interface IKeeper extends BaseContract {
 
   getEncodedCron(overrides?: CallOverrides): Promise<string>;
 
+  getHandler(overrides?: CallOverrides): Promise<string>;
+
   pauseKeeper(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  registerCronToUpkeep(
+  "registerCronToUpkeep(address)"(
+    _target: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "registerCronToUpkeep()"(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -233,6 +281,11 @@ export interface IKeeper extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  transferOwnership(
+    newOwner: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   unpauseKeeper(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -242,9 +295,16 @@ export interface IKeeper extends BaseContract {
 
     getEncodedCron(overrides?: CallOverrides): Promise<string>;
 
+    getHandler(overrides?: CallOverrides): Promise<string>;
+
     pauseKeeper(overrides?: CallOverrides): Promise<void>;
 
-    registerCronToUpkeep(overrides?: CallOverrides): Promise<void>;
+    "registerCronToUpkeep(address)"(
+      _target: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "registerCronToUpkeep()"(overrides?: CallOverrides): Promise<void>;
 
     setCronUpkeep(
       _cronUpkeep: PromiseOrValue<string>,
@@ -253,6 +313,11 @@ export interface IKeeper extends BaseContract {
 
     setEncodedCron(
       _encodedCron: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -293,11 +358,18 @@ export interface IKeeper extends BaseContract {
 
     getEncodedCron(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getHandler(overrides?: CallOverrides): Promise<BigNumber>;
+
     pauseKeeper(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    registerCronToUpkeep(
+    "registerCronToUpkeep(address)"(
+      _target: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "registerCronToUpkeep()"(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -308,6 +380,11 @@ export interface IKeeper extends BaseContract {
 
     setEncodedCron(
       _encodedCron: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -321,11 +398,18 @@ export interface IKeeper extends BaseContract {
 
     getEncodedCron(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    getHandler(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     pauseKeeper(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    registerCronToUpkeep(
+    "registerCronToUpkeep(address)"(
+      _target: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "registerCronToUpkeep()"(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -336,6 +420,11 @@ export interface IKeeper extends BaseContract {
 
     setEncodedCron(
       _encodedCron: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

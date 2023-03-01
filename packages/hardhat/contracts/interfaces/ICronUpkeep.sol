@@ -29,12 +29,17 @@ interface ICronUpkeep {
     event CronJobCreated(uint256 indexed id, address target, bytes handler);
     event CronJobUpdated(uint256 indexed id, address target, bytes handler);
     event CronJobDeleted(uint256 indexed id);
+    event DelegatorAdded(address target);
+    event DelegatorRemoved(address target);
 
-    /**
-     * @notice Executes the cron job with id encoded in performData
-     * @param performData abi encoding of cron job ID and the cron job's next run-at datetime
-     */
-    function performUpkeep(bytes calldata performData) external;
+    error CallFailed(uint256 id, string reason);
+    error CronJobIDNotFound(uint256 id);
+    error DontNeedPerformUpkeep();
+    error ExceedsMaxJobs();
+    error InvalidHandler();
+    error TickInFuture();
+    error TickTooOld();
+    error TickDoesntMatchSpec();
 
     /**
      * @notice Creates a cron job from the given encoded spec
@@ -88,13 +93,6 @@ interface ICronUpkeep {
     function unpause() external;
 
     /**
-     * @notice Get the id of an eligible cron job
-     * @return upkeepNeeded signals if upkeep is needed, performData is an abi encoding
-     * of the id and "next tick" of the elligible cron job
-     */
-    function checkUpkeep(bytes calldata) external returns (bool, bytes memory);
-
-    /**
      * @notice gets a list of active cron job IDs
      * @return list of active cron job IDs
      */
@@ -107,13 +105,19 @@ interface ICronUpkeep {
     function getNextCronJobIDs() external view returns (uint256);
 
     /**
-   * @notice gets a cron job
-   * @param id the cron job ID
-   * @return target - the address a cron job forwards the eth tx to
-             handler - the encoded function sig to execute when forwarding a tx
-             cronString - the string representing the cron job
-             nextTick - the timestamp of the next time the cron job will run
-   */
+     * @notice gets a list of all delegators
+     * @return list of adelegators address
+     */
+    function getDelegators() external view returns (address[] memory);
+
+    /**
+     * @notice gets a cron job
+     * @param id the cron job ID
+     * @return target - the address a cron job forwards the eth tx to
+     *     handler - the encoded function sig to execute when forwarding a tx
+     *     cronString - the string representing the cron job
+     *     nextTick - the timestamp of the next time the cron job will run
+     */
     function getCronJob(
         uint256 id
     ) external view returns (address target, bytes memory handler, string memory cronString, uint256 nextTick);

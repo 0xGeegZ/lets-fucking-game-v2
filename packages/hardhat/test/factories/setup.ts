@@ -37,29 +37,53 @@ const setupTest = deployments.createFixture(
       deployer
     )
 
-    const libraries = {
+    const cronLibraries = {
       libraries: {
         Cron: cronExternalAddress,
       },
     }
 
-    const gameFactoryContract = await deployments.get('GameFactoryV2')
-
-    const gameContract = await deployments.get('GameV2', libraries)
-
-    const cronUpkeepContract = await deployments.get('CronUpkeep', libraries)
-    const cronUpkeepSecondaryContract = await deployments.get(
-      'CronUpkeepSecondary',
-      libraries
+    const { address: keeperHelpersAddress } = await deployments.get(
+      'KeeperHelpers'
+    )
+    const { address: tokenHelpersAddress } = await deployments.get(
+      'TokenHelpers'
     )
 
-    const secondGameV1Contract = await deploy('GameV2', {
+    const helpersLibrariesG = {
+      libraries: {
+        TokenHelpers: tokenHelpersAddress,
+      },
+    }
+
+    const helpersLibrariesGF = {
+      libraries: {
+        KeeperHelpers: keeperHelpersAddress,
+        TokenHelpers: tokenHelpersAddress,
+      },
+    }
+
+    const gameFactoryContract = await deployments.get('GameFactoryV1')
+
+    const gameContract = await deployments.get('GameV1')
+
+    const cronUpkeepContract = await deployments.get('CronUpkeep')
+    const cronUpkeepSecondaryContract = await deployments.get(
+      'CronUpkeepSecondary'
+    )
+
+    const gameArgs = [[], []]
+
+    const secondGameV1Contract = await deploy('GameV1', {
       ...options,
-      ...libraries,
+      ...helpersLibrariesG,
+      args: gameArgs,
     })
 
-    // const gameInterface = await ethers.getContractFactory('GameV1', libraries)
-    const gameInterface = await ethers.getContractFactory('GameV2')
+    const gameInterface = await ethers.getContractFactory(
+      'GameV1',
+      helpersLibrariesG
+    )
 
     const secondGameV1 = new ethers.Contract(
       secondGameV1Contract.address,
@@ -69,7 +93,7 @@ const setupTest = deployments.createFixture(
 
     const cronUpkeepInterface = await ethers.getContractFactory(
       'CronUpkeep',
-      libraries
+      cronLibraries
     )
 
     const cronUpkeep = new ethers.Contract(
@@ -84,13 +108,9 @@ const setupTest = deployments.createFixture(
       deployer
     )
 
-    //  const gameFactoryInterface = await ethers.getContractFactory(
-    //    'GameFactory'
-    //  )
-
     const gameFactoryInterface = await ethers.getContractFactory(
-      'GameFactoryV2',
-      libraries
+      'GameFactoryV1',
+      helpersLibrariesGF
     )
 
     const gameFactory = new ethers.Contract(
@@ -121,22 +141,22 @@ const setupTest = deployments.createFixture(
       deployer
     )
 
-    // const GameFactoryContract = await ethers.getContractFactory('GameFactory')
-
     const GameFactoryContract = await ethers.getContractFactory(
-      'GameFactoryV2',
-      libraries
+      'GameFactoryV1',
+      helpersLibrariesGF
     )
 
-    // const GameV1Contract = await ethers.getContractFactory('GameV1', libraries)
-    const GameV1Contract = await ethers.getContractFactory('GameV2')
+    const GameV1Contract = await ethers.getContractFactory(
+      'GameV1',
+      helpersLibrariesG
+    )
 
     // Loading Giveaway contract
     const giveawayContract = await deployments.get('GiveawayV1')
 
     const giveawayInterface = await ethers.getContractFactory(
-      'GiveawayV1'
-      // libraries
+      'GiveawayV1',
+      helpersLibrariesGF
     )
 
     const giveaway = new ethers.Contract(

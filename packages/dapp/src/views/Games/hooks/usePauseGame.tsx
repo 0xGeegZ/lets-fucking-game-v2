@@ -3,7 +3,7 @@ import { useTranslation } from '@pancakeswap/localization'
 import { useToast } from '@pancakeswap/uikit'
 import useCatchTxError from 'hooks/useCatchTxError'
 import { ToastDescriptionWithTx } from 'components/Toast'
-import { useGameV2Contract } from 'hooks/useContract'
+import { useGameV1Contract } from 'hooks/useContract'
 import { useTransactionAdder } from 'state/transactions/hooks'
 
 export const usePauseGame = (gameAddress: string) => {
@@ -11,7 +11,7 @@ export const usePauseGame = (gameAddress: string) => {
   const { toastSuccess } = useToast()
   const addTransaction = useTransactionAdder()
 
-  const contract = useGameV2Contract(gameAddress)
+  const contract = useGameV1Contract(gameAddress)
 
   const { fetchWithCatchTxError, loading: isPending } = useCatchTxError()
 

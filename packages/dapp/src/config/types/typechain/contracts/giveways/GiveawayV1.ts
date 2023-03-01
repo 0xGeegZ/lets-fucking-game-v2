@@ -86,7 +86,7 @@ export declare namespace IChild {
   };
 }
 
-export declare namespace GiveawayV1 {
+export declare namespace IGiveaway {
   export type GiveawayStruct = {
     name: PromiseOrValue<string>;
     image: PromiseOrValue<string>;
@@ -126,7 +126,11 @@ export interface GiveawayV1Interface extends utils.Interface {
   functions: {
     "MAX_TREASURY_FEE()": FunctionFragment;
     "addPrizes((uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
+    "addTokenERC20(address)": FunctionFragment;
+    "addTokenERC721(address)": FunctionFragment;
     "addUser(uint256,address)": FunctionFragment;
+    "allowedTokensERC20(uint256)": FunctionFragment;
+    "allowedTokensERC721(uint256)": FunctionFragment;
     "cancelRequest(bytes32,uint256,bytes4,uint256)": FunctionFragment;
     "checkUpkeep(bytes)": FunctionFragment;
     "claimPrize(uint256)": FunctionFragment;
@@ -147,29 +151,42 @@ export interface GiveawayV1Interface extends utils.Interface {
     "hasSignedUp()": FunctionFragment;
     "hasSignedUp(uint256)": FunctionFragment;
     "jobId()": FunctionFragment;
+    "keeper()": FunctionFragment;
     "owner()": FunctionFragment;
     "pause()": FunctionFragment;
+    "pauseGiveaways()": FunctionFragment;
     "paused()": FunctionFragment;
     "performUpkeep(bytes)": FunctionFragment;
     "refreshActiveGiveawayStatus()": FunctionFragment;
+    "removeTokenERC20(address)": FunctionFragment;
+    "removeTokenERC721(address)": FunctionFragment;
     "requestBaseURI()": FunctionFragment;
     "setRequestBaseURI(string)": FunctionFragment;
     "setTreasuryFee(uint256)": FunctionFragment;
+    "setupKeeper(address,string)": FunctionFragment;
     "signUp(uint256)": FunctionFragment;
     "transferAdminOwnership(address)": FunctionFragment;
     "transferFactoryOwnership(address)": FunctionFragment;
     "treasuryAmount()": FunctionFragment;
     "treasuryFee()": FunctionFragment;
     "unpause()": FunctionFragment;
+    "unpauseGiveaways()": FunctionFragment;
+    "withdrawERC20(address,address)": FunctionFragment;
+    "withdrawERC721(address,uint256,address)": FunctionFragment;
     "withdrawFunds(address)": FunctionFragment;
     "withdrawLink()": FunctionFragment;
+    "withdrawNative(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "MAX_TREASURY_FEE"
       | "addPrizes"
+      | "addTokenERC20"
+      | "addTokenERC721"
       | "addUser"
+      | "allowedTokensERC20"
+      | "allowedTokensERC721"
       | "cancelRequest"
       | "checkUpkeep"
       | "claimPrize"
@@ -190,22 +207,31 @@ export interface GiveawayV1Interface extends utils.Interface {
       | "hasSignedUp()"
       | "hasSignedUp(uint256)"
       | "jobId"
+      | "keeper"
       | "owner"
       | "pause"
+      | "pauseGiveaways"
       | "paused"
       | "performUpkeep"
       | "refreshActiveGiveawayStatus"
+      | "removeTokenERC20"
+      | "removeTokenERC721"
       | "requestBaseURI"
       | "setRequestBaseURI"
       | "setTreasuryFee"
+      | "setupKeeper"
       | "signUp"
       | "transferAdminOwnership"
       | "transferFactoryOwnership"
       | "treasuryAmount"
       | "treasuryFee"
       | "unpause"
+      | "unpauseGiveaways"
+      | "withdrawERC20"
+      | "withdrawERC721"
       | "withdrawFunds"
       | "withdrawLink"
+      | "withdrawNative"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -217,8 +243,24 @@ export interface GiveawayV1Interface extends utils.Interface {
     values: [IChild.PrizeStruct[]]
   ): string;
   encodeFunctionData(
+    functionFragment: "addTokenERC20",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addTokenERC721",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "addUser",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "allowedTokensERC20",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "allowedTokensERC721",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "cancelRequest",
@@ -316,8 +358,13 @@ export interface GiveawayV1Interface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "jobId", values?: undefined): string;
+  encodeFunctionData(functionFragment: "keeper", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "pauseGiveaways",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "performUpkeep",
@@ -326,6 +373,14 @@ export interface GiveawayV1Interface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "refreshActiveGiveawayStatus",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeTokenERC20",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeTokenERC721",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "requestBaseURI",
@@ -338,6 +393,10 @@ export interface GiveawayV1Interface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "setTreasuryFee",
     values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setupKeeper",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "signUp",
@@ -361,6 +420,22 @@ export interface GiveawayV1Interface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "unpauseGiveaways",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawERC20",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawERC721",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdrawFunds",
     values: [PromiseOrValue<string>]
   ): string;
@@ -368,13 +443,33 @@ export interface GiveawayV1Interface extends utils.Interface {
     functionFragment: "withdrawLink",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawNative",
+    values: [PromiseOrValue<string>]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "MAX_TREASURY_FEE",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "addPrizes", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "addTokenERC20",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "addTokenERC721",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "addUser", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "allowedTokensERC20",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "allowedTokensERC721",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "cancelRequest",
     data: BytesLike
@@ -434,8 +529,13 @@ export interface GiveawayV1Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "jobId", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "keeper", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "pauseGiveaways",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "performUpkeep",
@@ -443,6 +543,14 @@ export interface GiveawayV1Interface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "refreshActiveGiveawayStatus",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "removeTokenERC20",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "removeTokenERC721",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -455,6 +563,10 @@ export interface GiveawayV1Interface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setTreasuryFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setupKeeper",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "signUp", data: BytesLike): Result;
@@ -476,11 +588,27 @@ export interface GiveawayV1Interface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "unpauseGiveaways",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawERC20",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawERC721",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "withdrawFunds",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "withdrawLink",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawNative",
     data: BytesLike
   ): Result;
 
@@ -495,7 +623,6 @@ export interface GiveawayV1Interface extends utils.Interface {
     "CronUpkeepUpdated(uint256,address)": EventFragment;
     "EncodedCronUpdated(uint256,string)": EventFragment;
     "FactoryOwnershipTransferred(address,address)": EventFragment;
-    "FailedTransfer(address,uint256)": EventFragment;
     "GamePrizeClaimed(address,uint256,uint256)": EventFragment;
     "GiveawayCreated(uint256,uint256,uint256,uint256)": EventFragment;
     "GiveawayRefreshRequested(uint256,bytes32)": EventFragment;
@@ -527,7 +654,6 @@ export interface GiveawayV1Interface extends utils.Interface {
   getEvent(
     nameOrSignatureOrTopic: "FactoryOwnershipTransferred"
   ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FailedTransfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GamePrizeClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GiveawayCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GiveawayRefreshRequested"): EventFragment;
@@ -663,17 +789,6 @@ export type FactoryOwnershipTransferredEvent = TypedEvent<
 
 export type FactoryOwnershipTransferredEventFilter =
   TypedEventFilter<FactoryOwnershipTransferredEvent>;
-
-export interface FailedTransferEventObject {
-  receiver: string;
-  amount: BigNumber;
-}
-export type FailedTransferEvent = TypedEvent<
-  [string, BigNumber],
-  FailedTransferEventObject
->;
-
-export type FailedTransferEventFilter = TypedEventFilter<FailedTransferEvent>;
 
 export interface GamePrizeClaimedEventObject {
   claimer: string;
@@ -882,11 +997,31 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    addTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    addTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     addUser(
       _userId: PromiseOrValue<BigNumberish>,
       _userAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    allowedTokensERC20(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    allowedTokensERC721(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     cancelRequest(
       _requestId: PromiseOrValue<BytesLike>,
@@ -963,8 +1098,8 @@ export interface GiveawayV1 extends BaseContract {
     getGiveaways(
       overrides?: CallOverrides
     ): Promise<
-      [GiveawayV1.GiveawayStructOutput[]] & {
-        _giveaways: GiveawayV1.GiveawayStructOutput[];
+      [IGiveaway.GiveawayStructOutput[]] & {
+        _giveaways: IGiveaway.GiveawayStructOutput[];
       }
     >;
 
@@ -1025,9 +1160,15 @@ export interface GiveawayV1 extends BaseContract {
 
     jobId(overrides?: CallOverrides): Promise<[string]>;
 
+    keeper(overrides?: CallOverrides): Promise<[string]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     pause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    pauseGiveaways(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -1042,6 +1183,16 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    removeTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    removeTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     requestBaseURI(overrides?: CallOverrides): Promise<[string]>;
 
     setRequestBaseURI(
@@ -1051,6 +1202,12 @@ export interface GiveawayV1 extends BaseContract {
 
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setupKeeper(
+      _cronUpkeep: PromiseOrValue<string>,
+      _encodedCron: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -1077,12 +1234,34 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    unpauseGiveaways(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawERC20(
+      _contractAddress: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawERC721(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     withdrawFunds(
       _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     withdrawLink(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawNative(
+      _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
@@ -1094,11 +1273,31 @@ export interface GiveawayV1 extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  addTokenERC20(
+    _token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  addTokenERC721(
+    _token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   addUser(
     _userId: PromiseOrValue<BigNumberish>,
     _userAddress: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  allowedTokensERC20(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  allowedTokensERC721(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   cancelRequest(
     _requestId: PromiseOrValue<BytesLike>,
@@ -1170,7 +1369,7 @@ export interface GiveawayV1 extends BaseContract {
 
   getGiveaways(
     overrides?: CallOverrides
-  ): Promise<GiveawayV1.GiveawayStructOutput[]>;
+  ): Promise<IGiveaway.GiveawayStructOutput[]>;
 
   getPrizes(
     _epoch: PromiseOrValue<BigNumberish>,
@@ -1223,9 +1422,15 @@ export interface GiveawayV1 extends BaseContract {
 
   jobId(overrides?: CallOverrides): Promise<string>;
 
+  keeper(overrides?: CallOverrides): Promise<string>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   pause(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  pauseGiveaways(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1240,6 +1445,16 @@ export interface GiveawayV1 extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  removeTokenERC20(
+    _token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  removeTokenERC721(
+    _token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   requestBaseURI(overrides?: CallOverrides): Promise<string>;
 
   setRequestBaseURI(
@@ -1249,6 +1464,12 @@ export interface GiveawayV1 extends BaseContract {
 
   setTreasuryFee(
     _treasuryFee: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setupKeeper(
+    _cronUpkeep: PromiseOrValue<string>,
+    _encodedCron: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1275,12 +1496,34 @@ export interface GiveawayV1 extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  unpauseGiveaways(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  withdrawERC20(
+    _contractAddress: PromiseOrValue<string>,
+    _receiver: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  withdrawERC721(
+    _contractAddress: PromiseOrValue<string>,
+    _tokenId: PromiseOrValue<BigNumberish>,
+    _receiver: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   withdrawFunds(
     _receiver: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   withdrawLink(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  withdrawNative(
+    _receiver: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1292,11 +1535,31 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    addTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    addTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     addUser(
       _userId: PromiseOrValue<BigNumberish>,
       _userAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    allowedTokensERC20(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    allowedTokensERC721(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     cancelRequest(
       _requestId: PromiseOrValue<BytesLike>,
@@ -1368,7 +1631,7 @@ export interface GiveawayV1 extends BaseContract {
 
     getGiveaways(
       overrides?: CallOverrides
-    ): Promise<GiveawayV1.GiveawayStructOutput[]>;
+    ): Promise<IGiveaway.GiveawayStructOutput[]>;
 
     getPrizes(
       _epoch: PromiseOrValue<BigNumberish>,
@@ -1421,9 +1684,13 @@ export interface GiveawayV1 extends BaseContract {
 
     jobId(overrides?: CallOverrides): Promise<string>;
 
+    keeper(overrides?: CallOverrides): Promise<string>;
+
     owner(overrides?: CallOverrides): Promise<string>;
 
     pause(overrides?: CallOverrides): Promise<void>;
+
+    pauseGiveaways(overrides?: CallOverrides): Promise<void>;
 
     paused(overrides?: CallOverrides): Promise<boolean>;
 
@@ -1434,6 +1701,16 @@ export interface GiveawayV1 extends BaseContract {
 
     refreshActiveGiveawayStatus(overrides?: CallOverrides): Promise<void>;
 
+    removeTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    removeTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     requestBaseURI(overrides?: CallOverrides): Promise<string>;
 
     setRequestBaseURI(
@@ -1443,6 +1720,12 @@ export interface GiveawayV1 extends BaseContract {
 
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setupKeeper(
+      _cronUpkeep: PromiseOrValue<string>,
+      _encodedCron: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1467,12 +1750,32 @@ export interface GiveawayV1 extends BaseContract {
 
     unpause(overrides?: CallOverrides): Promise<void>;
 
+    unpauseGiveaways(overrides?: CallOverrides): Promise<void>;
+
+    withdrawERC20(
+      _contractAddress: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    withdrawERC721(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     withdrawFunds(
       _receiver: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     withdrawLink(overrides?: CallOverrides): Promise<void>;
+
+    withdrawNative(
+      _receiver: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -1555,12 +1858,6 @@ export interface GiveawayV1 extends BaseContract {
       oldFactory?: null,
       newFactory?: null
     ): FactoryOwnershipTransferredEventFilter;
-
-    "FailedTransfer(address,uint256)"(
-      receiver?: null,
-      amount?: null
-    ): FailedTransferEventFilter;
-    FailedTransfer(receiver?: null, amount?: null): FailedTransferEventFilter;
 
     "GamePrizeClaimed(address,uint256,uint256)"(
       claimer?: null,
@@ -1705,10 +2002,30 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    addTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    addTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     addUser(
       _userId: PromiseOrValue<BigNumberish>,
       _userAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    allowedTokensERC20(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    allowedTokensERC721(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     cancelRequest(
@@ -1810,9 +2127,15 @@ export interface GiveawayV1 extends BaseContract {
 
     jobId(overrides?: CallOverrides): Promise<BigNumber>;
 
+    keeper(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     pause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    pauseGiveaways(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1827,6 +2150,16 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    removeTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    removeTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     requestBaseURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     setRequestBaseURI(
@@ -1836,6 +2169,12 @@ export interface GiveawayV1 extends BaseContract {
 
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setupKeeper(
+      _cronUpkeep: PromiseOrValue<string>,
+      _encodedCron: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1862,12 +2201,34 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    unpauseGiveaways(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    withdrawERC20(
+      _contractAddress: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    withdrawERC721(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     withdrawFunds(
       _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     withdrawLink(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    withdrawNative(
+      _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
@@ -1880,10 +2241,30 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    addTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    addTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     addUser(
       _userId: PromiseOrValue<BigNumberish>,
       _userAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    allowedTokensERC20(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    allowedTokensERC721(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     cancelRequest(
@@ -1985,9 +2366,15 @@ export interface GiveawayV1 extends BaseContract {
 
     jobId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    keeper(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     pause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    pauseGiveaways(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2002,6 +2389,16 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    removeTokenERC20(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    removeTokenERC721(
+      _token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     requestBaseURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setRequestBaseURI(
@@ -2011,6 +2408,12 @@ export interface GiveawayV1 extends BaseContract {
 
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setupKeeper(
+      _cronUpkeep: PromiseOrValue<string>,
+      _encodedCron: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2037,12 +2440,34 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    unpauseGiveaways(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawERC20(
+      _contractAddress: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawERC721(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     withdrawFunds(
       _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     withdrawLink(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawNative(
+      _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

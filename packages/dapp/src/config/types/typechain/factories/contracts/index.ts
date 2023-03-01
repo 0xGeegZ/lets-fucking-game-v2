@@ -6,4 +6,5 @@ export * as games from "./games";
 export * as giveways from "./giveways";
 export * as interfaces from "./interfaces";
 export * as keepers from "./keepers";
+export * as libraries from "./libraries";
 export * as multicall from "./multicall";

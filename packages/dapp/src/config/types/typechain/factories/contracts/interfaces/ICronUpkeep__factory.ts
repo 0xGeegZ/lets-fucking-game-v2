@@ -11,6 +11,63 @@ import type {
 
 const _abi = [
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "reason",
+        type: "string",
+      },
+    ],
+    name: "CallFailed",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+    ],
+    name: "CronJobIDNotFound",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "DontNeedPerformUpkeep",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "ExceedsMaxJobs",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "InvalidHandler",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "TickDoesntMatchSpec",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "TickInFuture",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "TickTooOld",
+    type: "error",
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -93,6 +150,32 @@ const _abi = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "target",
+        type: "address",
+      },
+    ],
+    name: "DelegatorAdded",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "target",
+        type: "address",
+      },
+    ],
+    name: "DelegatorRemoved",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -102,30 +185,6 @@ const _abi = [
     ],
     name: "addDelegator",
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes",
-      },
-    ],
-    name: "checkUpkeep",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes",
-      },
-    ],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -214,6 +273,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "getDelegators",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "getNextCronJobIDs",
     outputs: [
       {
@@ -228,19 +300,6 @@ const _abi = [
   {
     inputs: [],
     name: "pause",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "performData",
-        type: "bytes",
-      },
-    ],
-    name: "performUpkeep",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

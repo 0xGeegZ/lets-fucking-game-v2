@@ -4,4 +4,5 @@
 export type { IChild } from "./IChild";
 export type { ICronUpkeep } from "./ICronUpkeep";
 export type { IGame } from "./IGame";
+export type { IGiveaway } from "./IGiveaway";
 export type { IKeeper } from "./IKeeper";

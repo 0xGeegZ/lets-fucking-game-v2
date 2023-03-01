@@ -5,13 +5,12 @@ import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 import { IKeeper } from "../interfaces/IKeeper.sol";
 import { IChild } from "../interfaces/IChild.sol";
+
+import { TokenHelpers } from "../libraries/TokenHelpers.sol";
 
 abstract contract Child is IChild, ReentrancyGuard, Pausable {
     using Address for address;
@@ -27,6 +26,9 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
     uint256 public treasuryFee; // treasury rate (e.g. 200 = 2%, 150 = 1.50%)
     uint256 public treasuryAmount; // treasury amount that was not claimed
 
+    address[] public allowedTokensERC20;
+    address[] public allowedTokensERC721;
+
     mapping(uint256 => Winner[]) winners;
     mapping(uint256 => Prize[]) prizes;
 
@@ -36,8 +38,13 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
 
     /**
      * @notice Constructor
+     * @param _allowedTokensERC20 list of allowed ERC20 tokens
+     * @param _allowedTokensERC721 list of allowed ERC721 tokens
      */
-    constructor() {}
+    constructor(address[] memory _allowedTokensERC20, address[] memory _allowedTokensERC721) {
+        allowedTokensERC20 = _allowedTokensERC20;
+        allowedTokensERC721 = _allowedTokensERC721;
+    }
 
     ///
     /// MAIN FUNCTIONS
@@ -60,6 +67,7 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
 
     /**
      * @notice Function that is called by a winner to claim his prize
+     * @param _epoch the epoch to the game to claim
      * @dev TODO NEXT VERSION Update claim process according to prize type
      */
     function claimPrize(uint256 _epoch) external override onlyIfEpoch(_epoch) {
@@ -71,27 +79,20 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
                 winners[_epoch][i].prizeClaimed = true;
                 emit ChildPrizeClaimed(msg.sender, _epoch, winners[_epoch][i].amountWon);
 
-                if (winners[_epoch][i].standard == 0) _transfertPrizeNative(winners[_epoch][i]);
+                if (winners[_epoch][i].standard == 0)
+                    TokenHelpers.safeTransfert(winners[_epoch][i].playerAddress, winners[_epoch][i].amountWon);
                 else if (winners[_epoch][i].standard == 1)
-                    _transfertPrizeERC20(
+                    TokenHelpers.transfertERC20(
                         winners[_epoch][i].contractAddress,
                         address(this),
                         winners[_epoch][i].playerAddress,
                         winners[_epoch][i].amountWon
                     );
                 else if (winners[_epoch][i].standard == 2)
-                    _transfertPrizeERC721(
+                    TokenHelpers.transfertERC721(
                         winners[_epoch][i].contractAddress,
                         address(this),
                         winners[_epoch][i].playerAddress,
-                        winners[_epoch][i].tokenId
-                    );
-                else if (winners[_epoch][i].standard == 3)
-                    _transfertPrizeERC1155(
-                        winners[_epoch][i].contractAddress,
-                        address(this),
-                        winners[_epoch][i].playerAddress,
-                        winners[_epoch][i].amountWon,
                         winners[_epoch][i].tokenId
                     );
                 else require(false, "Prize type not supported");
@@ -104,30 +105,6 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
     ///
     /// INTERNAL FUNCTIONS
     ///
-
-    function _transfertPrizeNative(Winner memory _winner) private {
-        _safeTransfert(_winner.playerAddress, _winner.amountWon);
-    }
-
-    function _transfertPrizeERC20(address contractAddress, address _from, address _to, uint256 _amount) private {
-        bool success = IERC20(contractAddress).transferFrom(_from, _to, _amount);
-        if (!success) require(false, "Amount transfert failed");
-    }
-
-    function _transfertPrizeERC721(address contractAddress, address _from, address _to, uint256 _tokenId) private {
-        ERC721(contractAddress).transferFrom(_from, _to, _tokenId);
-    }
-
-    // function _transfertPrizeERC1155(Winner memory _winner) private {
-    function _transfertPrizeERC1155(
-        address contractAddress,
-        address _from,
-        address _to,
-        uint256 _tokenId,
-        uint256 _amount
-    ) private {
-        ERC1155(contractAddress).safeTransferFrom(_from, _to, _tokenId, _amount, "");
-    }
 
     /**
      * @notice Internal function for prizes adding management
@@ -145,11 +122,9 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
      */
     function _addPrize(Prize memory _prize) internal {
         if (_prize.standard == 1)
-            _transfertPrizeERC20(_prize.contractAddress, msg.sender, address(this), _prize.amount);
+            TokenHelpers.transfertERC20(_prize.contractAddress, msg.sender, address(this), _prize.amount);
         else if (_prize.standard == 2)
-            _transfertPrizeERC721(_prize.contractAddress, msg.sender, address(this), _prize.tokenId);
-        else if (_prize.standard == 3)
-            _transfertPrizeERC1155(_prize.contractAddress, msg.sender, address(this), _prize.amount, _prize.tokenId);
+            TokenHelpers.transfertERC721(_prize.contractAddress, msg.sender, address(this), _prize.tokenId);
 
         prizes[epoch.current()].push(_prize);
         emit PrizeAdded(
@@ -189,21 +164,6 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @notice Transfert funds
-     * @param _receiver the receiver address
-     * @param _amount the amount to transfert
-     * @dev TODO NEXT VERSION use SafeERC20 library from OpenZeppelin
-     */
-    function _safeTransfert(address _receiver, uint256 _amount) internal onlyIfEnoughtBalance(_amount) {
-        (bool success, ) = _receiver.call{ value: _amount }("");
-
-        if (!success) {
-            emit FailedTransfer(_receiver, _amount);
-            require(false, "Transfer failed.");
-        }
-    }
-
-    /**
      * @notice get prize for given giveaway and current position
      * @param _epoch round id
      * @param _position position of prize
@@ -217,6 +177,28 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
         }
         Prize memory defaultPrize;
         return (false, defaultPrize);
+    }
+
+    /**
+     * @notice Check if token already exist in allowed ERC20 tokens
+     * @param _allowedToken the authorized amount to check
+     * @return isExist true if exist false if not
+     */
+    function _isExistAllowedERC20(address _allowedToken) internal view returns (bool isExist, uint256 index) {
+        for (uint256 i = 0; i < allowedTokensERC20.length; i++)
+            if (allowedTokensERC20[i] == _allowedToken) return (true, i);
+        return (false, 0);
+    }
+
+    /**
+     * @notice Check if token already exist in allowed ERC721 tokens
+     * @param _allowedToken the authorized amount to check
+     * @return isExist true if exist false if not
+     */
+    function _isExistAllowedERC721(address _allowedToken) internal view returns (bool isExist, uint256 index) {
+        for (uint256 i = 0; i < allowedTokensERC721.length; i++)
+            if (allowedTokensERC721[i] == _allowedToken) return (true, i);
+        return (false, 0);
     }
 
     ///
@@ -261,6 +243,46 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
     ///
 
     /**
+     * @notice Add a token to allowed ERC20
+     * @param _token the new token address
+     * @dev Callable by admin
+     */
+    function addTokenERC20(address _token) external override onlyAdmin onlyAddressInit(_token) {
+        (bool isExist, ) = _isExistAllowedERC20(_token);
+        if (!isExist) allowedTokensERC20.push(_token);
+    }
+
+    /**
+     * @notice Remove a token to allowed ERC20
+     * @param _token the token address to remove
+     * @dev Callable by admin
+     */
+    function removeTokenERC20(address _token) external override onlyAdmin onlyAddressInit(_token) {
+        (bool isExist, uint256 index) = _isExistAllowedERC20(_token);
+        if (isExist) delete allowedTokensERC20[index];
+    }
+
+    /**
+     * @notice Add a token to allowed ERC721
+     * @param _token the new token address
+     * @dev Callable by admin
+     */
+    function addTokenERC721(address _token) external override onlyAdmin onlyAddressInit(_token) {
+        (bool isExist, ) = _isExistAllowedERC721(_token);
+        if (!isExist) allowedTokensERC721.push(_token);
+    }
+
+    /**
+     * @notice Remove a token to allowed ERC721
+     * @param _token the token address to remove
+     * @dev Callable by admin
+     */
+    function removeTokenERC721(address _token) external override onlyAdmin onlyAddressInit(_token) {
+        (bool isExist, uint256 index) = _isExistAllowedERC721(_token);
+        if (isExist) delete allowedTokensERC721[index];
+    }
+
+    /**
      * @notice Withdraw Treasury fee
      * @dev Callable by admin
      */
@@ -274,7 +296,7 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
         uint256 currentTreasuryAmount = treasuryAmount;
         treasuryAmount = 0;
         emit TreasuryFeeClaimed(currentTreasuryAmount);
-        _safeTransfert(owner, currentTreasuryAmount);
+        TokenHelpers.safeTransfert(owner, currentTreasuryAmount);
     }
 
     /**
@@ -321,25 +343,75 @@ abstract contract Child is IChild, ReentrancyGuard, Pausable {
 
     /**
      * @notice Allow admin to withdraw all funds of smart contract
+     *  This will transfert all funds for ERC20 & ERC721 and Native token at the end
      * @param _receiver the receiver for the funds (admin or factory)
      * @dev Callable by admin or factory
      */
     function withdrawFunds(address _receiver) external override onlyAdminOrFactory {
-        _safeTransfert(_receiver, address(this).balance);
+        for (uint256 i = 0; i < allowedTokensERC20.length; i++)
+            if (TokenHelpers.getERC20Balance(allowedTokensERC20[i], address(this)) > 0)
+                withdrawERC20(allowedTokensERC20[i], _receiver);
+
+        for (uint256 i = 0; i < allowedTokensERC721.length; i++) {
+            uint[] memory tokenIdsERC721 = TokenHelpers.getERC721TokenIds(allowedTokensERC721[i], address(this));
+            for (uint256 j = 0; j < tokenIdsERC721.length; j++)
+                withdrawERC721(allowedTokensERC721[i], tokenIdsERC721[j], _receiver);
+        }
+
+        withdrawNative(_receiver);
+    }
+
+    /**
+     * @notice Allow admin to withdraw Native from smart contract
+     * @param _receiver the receiver for the funds (admin or factory)
+     * @dev Callable by admin or factory
+     */
+    function withdrawNative(address _receiver) public override onlyAdminOrFactory {
+        TokenHelpers.safeTransfert(_receiver, address(this).balance);
+    }
+
+    /**
+     * @notice Allow admin to withdraw ERC20 from smart contract
+     * @param _contractAddress the contract address
+     * @param _receiver the receiver for the funds (admin or factory)
+     * @dev Callable by admin or factory
+     */
+    function withdrawERC20(address _contractAddress, address _receiver) public override onlyAdminOrFactory {
+        TokenHelpers.transfertERC20(
+            _contractAddress,
+            address(this),
+            _receiver,
+            TokenHelpers.getERC20Balance(_contractAddress, address(this))
+        );
+    }
+
+    /**
+     * @notice Allow admin to withdraw ERC721 from smart contract
+     * @param _contractAddress the contract address
+     * @param _tokenId the token id
+     * @param _receiver the receiver for the funds (admin or factory)
+     * @dev Callable by admin or factory
+     */
+    function withdrawERC721(
+        address _contractAddress,
+        uint256 _tokenId,
+        address _receiver
+    ) public override onlyAdminOrFactory {
+        TokenHelpers.transfertERC721(_contractAddress, address(this), _receiver, _tokenId);
     }
 
     ///
     /// FALLBACK FUNCTIONS
     ///
 
-    // /**
-    //  * @notice Called for empty calldata (and any value)
-    //  */
+    /**
+     * @notice Called for empty calldata (and any value)
+     */
     // receive() external payable virtual;
 
-    // /**
-    //  * @notice Called when no other function matches (not even the receive function). Optionally payable
-    //  */
+    /**
+     * @notice Called when no other function matches (not even the receive function). Optionally payable
+     */
     // fallback() external payable virtual;
 
     ///

@@ -30,14 +30,13 @@ import type {
 export interface ICronUpkeepInterface extends utils.Interface {
   functions: {
     "addDelegator(address)": FunctionFragment;
-    "checkUpkeep(bytes)": FunctionFragment;
     "createCronJobFromEncodedSpec(address,bytes,bytes)": FunctionFragment;
     "deleteCronJob(uint256)": FunctionFragment;
     "getActiveCronJobIDs()": FunctionFragment;
     "getCronJob(uint256)": FunctionFragment;
+    "getDelegators()": FunctionFragment;
     "getNextCronJobIDs()": FunctionFragment;
     "pause()": FunctionFragment;
-    "performUpkeep(bytes)": FunctionFragment;
     "removeDelegator(address)": FunctionFragment;
     "unpause()": FunctionFragment;
     "updateCronJob(uint256,address,bytes,bytes)": FunctionFragment;
@@ -46,14 +45,13 @@ export interface ICronUpkeepInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "addDelegator"
-      | "checkUpkeep"
       | "createCronJobFromEncodedSpec"
       | "deleteCronJob"
       | "getActiveCronJobIDs"
       | "getCronJob"
+      | "getDelegators"
       | "getNextCronJobIDs"
       | "pause"
-      | "performUpkeep"
       | "removeDelegator"
       | "unpause"
       | "updateCronJob"
@@ -62,10 +60,6 @@ export interface ICronUpkeepInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "addDelegator",
     values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "checkUpkeep",
-    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "createCronJobFromEncodedSpec",
@@ -88,14 +82,14 @@ export interface ICronUpkeepInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "getDelegators",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "getNextCronJobIDs",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "performUpkeep",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
   encodeFunctionData(
     functionFragment: "removeDelegator",
     values: [PromiseOrValue<string>]
@@ -116,10 +110,6 @@ export interface ICronUpkeepInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "checkUpkeep",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "createCronJobFromEncodedSpec",
     data: BytesLike
   ): Result;
@@ -133,14 +123,14 @@ export interface ICronUpkeepInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "getCronJob", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "getDelegators",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getNextCronJobIDs",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "performUpkeep",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "removeDelegator",
     data: BytesLike
@@ -156,12 +146,16 @@ export interface ICronUpkeepInterface extends utils.Interface {
     "CronJobDeleted(uint256)": EventFragment;
     "CronJobExecuted(uint256,uint256)": EventFragment;
     "CronJobUpdated(uint256,address,bytes)": EventFragment;
+    "DelegatorAdded(address)": EventFragment;
+    "DelegatorRemoved(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "CronJobCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CronJobDeleted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CronJobExecuted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CronJobUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DelegatorAdded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DelegatorRemoved"): EventFragment;
 }
 
 export interface CronJobCreatedEventObject {
@@ -209,6 +203,27 @@ export type CronJobUpdatedEvent = TypedEvent<
 
 export type CronJobUpdatedEventFilter = TypedEventFilter<CronJobUpdatedEvent>;
 
+export interface DelegatorAddedEventObject {
+  target: string;
+}
+export type DelegatorAddedEvent = TypedEvent<
+  [string],
+  DelegatorAddedEventObject
+>;
+
+export type DelegatorAddedEventFilter = TypedEventFilter<DelegatorAddedEvent>;
+
+export interface DelegatorRemovedEventObject {
+  target: string;
+}
+export type DelegatorRemovedEvent = TypedEvent<
+  [string],
+  DelegatorRemovedEventObject
+>;
+
+export type DelegatorRemovedEventFilter =
+  TypedEventFilter<DelegatorRemovedEvent>;
+
 export interface ICronUpkeep extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
@@ -241,11 +256,6 @@ export interface ICronUpkeep extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    checkUpkeep(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     createCronJobFromEncodedSpec(
       target: PromiseOrValue<string>,
       handler: PromiseOrValue<BytesLike>,
@@ -272,14 +282,11 @@ export interface ICronUpkeep extends BaseContract {
       }
     >;
 
+    getDelegators(overrides?: CallOverrides): Promise<[string[]]>;
+
     getNextCronJobIDs(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     pause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    performUpkeep(
-      performData: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -303,11 +310,6 @@ export interface ICronUpkeep extends BaseContract {
 
   addDelegator(
     delegator: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  checkUpkeep(
-    arg0: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -337,14 +339,11 @@ export interface ICronUpkeep extends BaseContract {
     }
   >;
 
+  getDelegators(overrides?: CallOverrides): Promise<string[]>;
+
   getNextCronJobIDs(overrides?: CallOverrides): Promise<BigNumber>;
 
   pause(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  performUpkeep(
-    performData: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -370,11 +369,6 @@ export interface ICronUpkeep extends BaseContract {
       delegator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    checkUpkeep(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[boolean, string]>;
 
     createCronJobFromEncodedSpec(
       target: PromiseOrValue<string>,
@@ -402,14 +396,11 @@ export interface ICronUpkeep extends BaseContract {
       }
     >;
 
+    getDelegators(overrides?: CallOverrides): Promise<string[]>;
+
     getNextCronJobIDs(overrides?: CallOverrides): Promise<BigNumber>;
 
     pause(overrides?: CallOverrides): Promise<void>;
-
-    performUpkeep(
-      performData: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     removeDelegator(
       delegator: PromiseOrValue<string>,
@@ -465,16 +456,17 @@ export interface ICronUpkeep extends BaseContract {
       target?: null,
       handler?: null
     ): CronJobUpdatedEventFilter;
+
+    "DelegatorAdded(address)"(target?: null): DelegatorAddedEventFilter;
+    DelegatorAdded(target?: null): DelegatorAddedEventFilter;
+
+    "DelegatorRemoved(address)"(target?: null): DelegatorRemovedEventFilter;
+    DelegatorRemoved(target?: null): DelegatorRemovedEventFilter;
   };
 
   estimateGas: {
     addDelegator(
       delegator: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    checkUpkeep(
-      arg0: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -497,14 +489,11 @@ export interface ICronUpkeep extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getDelegators(overrides?: CallOverrides): Promise<BigNumber>;
+
     getNextCronJobIDs(overrides?: CallOverrides): Promise<BigNumber>;
 
     pause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    performUpkeep(
-      performData: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -532,11 +521,6 @@ export interface ICronUpkeep extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    checkUpkeep(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     createCronJobFromEncodedSpec(
       target: PromiseOrValue<string>,
       handler: PromiseOrValue<BytesLike>,
@@ -558,14 +542,11 @@ export interface ICronUpkeep extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getDelegators(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getNextCronJobIDs(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     pause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    performUpkeep(
-      performData: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

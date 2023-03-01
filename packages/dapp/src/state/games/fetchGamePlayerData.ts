@@ -25,7 +25,7 @@ export const fetchGamesPlayerData = async (
   })
 
   const gamesMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV2.abi,
+    abi: internal[chainId || ChainId.BSC].GameV1.abi,
     calls: gameCalls,
     chainId,
   })
@@ -48,7 +48,7 @@ export const fetchGamesPlayerData = async (
 
 export const fetchGamePlayerData = async (game: any, playerAddress: string, chainId = ChainId.BSC): Promise<any[]> => {
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV2.abi,
+    abi: internal[chainId || ChainId.BSC].GameV1.abi,
     calls: [
       {
         address: game.address,
@@ -73,7 +73,7 @@ export const fetchGamePlayersData = async (game: any, chainId = ChainId.BSC): Pr
   const chunkSize = gameCalls.length / game.playerAddresses.length
 
   const gameMultiCallResult = await multicallv2({
-    abi: internal[chainId || ChainId.BSC].GameV2.abi,
+    abi: internal[chainId || ChainId.BSC].GameV1.abi,
     calls: gameCalls,
     chainId,
   })
