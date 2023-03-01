@@ -51,11 +51,21 @@ const func: DeployFunction = async function ({
 
   log('Deploying GiveawayV1 contract')
   const { address: cronUpkeepAddress } = await deployments.get('CronUpkeep')
-
   const { address: cronExternalAddress } = await deployments.get('CronExternal')
   const libraries = {
     libraries: {
       Cron: cronExternalAddress,
+    },
+  }
+
+  const { address: keeperHelpersAddress } = await deployments.get(
+    'KeeperHelpers'
+  )
+  const { address: tokenHelpersAddress } = await deployments.get('TokenHelpers')
+  const helpersLibraries = {
+    libraries: {
+      KeeperHelpers: keeperHelpersAddress,
+      TokenHelpers: tokenHelpersAddress,
     },
   }
 
@@ -114,7 +124,7 @@ const func: DeployFunction = async function ({
     receipt: { gasUsed: giveawayGasUsed },
   } = await deploy('GiveawayV1', {
     ...options,
-    ...libraries,
+    ...helpersLibraries,
     args: giveawayArgs,
   })
 

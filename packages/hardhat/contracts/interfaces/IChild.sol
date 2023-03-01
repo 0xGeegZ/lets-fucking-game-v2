@@ -80,10 +80,6 @@ interface IChild {
      */
     event FactoryOwnershipTransferred(address oldFactory, address newFactory);
     /**
-     * @notice Called when a transfert have failed
-     */
-    event FailedTransfer(address receiver, uint256 amount);
-    /**
      * @notice Called when the contract have receive funds via receive() or fallback() function
      */
     event Received(address sender, uint256 amount);
@@ -179,14 +175,6 @@ interface IChild {
      * @dev Callable by admin
      */
     function removeTokenERC721(address _token) external;
-
-    /**
-     * @notice Get the list of token ERC721
-     * @param _account the token address to check
-     * @param _account the account to check
-     * @dev Callable by admin
-     */
-    function getERC721TokenIds(address _token, address _account) external view returns (uint[] memory);
 
     /**
      * @notice Withdraw Treasury fee

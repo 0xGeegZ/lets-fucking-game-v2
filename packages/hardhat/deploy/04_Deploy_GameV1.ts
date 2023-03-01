@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat'
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
+import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { delay } from '../helpers/delay'
 
@@ -23,10 +23,10 @@ const func: DeployFunction = async function ({
   }
 
   log('Deploying GameV1 contract')
-  const { address: cronExternalAddress } = await deployments.get('CronExternal')
-  const libraries = {
+  const { address: tokenHelpersAddress } = await deployments.get('TokenHelpers')
+  const helpersLibraries = {
     libraries: {
-      Cron: cronExternalAddress,
+      TokenHelpers: tokenHelpersAddress,
     },
   }
 
@@ -38,7 +38,7 @@ const func: DeployFunction = async function ({
     receipt: { gasUsed: gameGasUsed },
   } = await deploy('GameV1', {
     ...options,
-    ...libraries,
+    ...helpersLibraries,
     args: gameArgs,
   })
 
@@ -48,12 +48,17 @@ const func: DeployFunction = async function ({
     )
 
   log('Adding GameV1 to Keeper delegators')
+  const { address: cronExternalAddress } = await deployments.get('CronExternal')
+  const cronLibraries = {
+    libraries: {
+      Cron: cronExternalAddress,
+    },
+  }
 
   const { address: cronUpkeepAddress } = await deployments.get('CronUpkeep')
-
   const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
     'CronUpkeep',
-    libraries
+    cronLibraries
   )
 
   const cronUpkeep = new ethers.Contract(

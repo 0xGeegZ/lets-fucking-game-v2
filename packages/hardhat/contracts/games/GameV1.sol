@@ -8,6 +8,8 @@ import { IChild } from "../interfaces/IChild.sol";
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 import { IKeeper } from "../interfaces/IKeeper.sol";
 
+import { TokenHelpers } from "../libraries/TokenHelpers.sol";
+
 import { Child } from "../abstracts/Child.sol";
 
 contract GameV1 is Child, IGame {
@@ -20,8 +22,6 @@ contract GameV1 is Child, IGame {
     address public creator;
 
     address public keeper;
-
-    uint256 private cronUpkeepJobId;
 
     uint256 public registrationAmount;
 
@@ -348,6 +348,13 @@ contract GameV1 is Child, IGame {
         }
     }
 
+    /**
+     * @notice Add winner for given giveaway
+     * @param _position position of winner
+     * @param _playerAddress winner address
+     * @param _amount amount
+     * TODO NEXT VERSION : Standardize this function and pass it to child smart contract
+     */
     function _addWinner(uint256 _position, address _playerAddress, uint256 _amount) internal {
         uint256 treasuryRoundAmount = (_amount * treasuryFee) / 10000;
         uint256 creatorRoundAmount = (_amount * creatorFee) / 10000;
@@ -704,7 +711,7 @@ contract GameV1 is Child, IGame {
         uint256 currentCreatorAmount = creatorAmount;
         creatorAmount = 0;
         emit CreatorFeeClaimed(currentCreatorAmount);
-        _safeTransfert(creator, currentCreatorAmount);
+        TokenHelpers.safeTransfert(creator, currentCreatorAmount);
     }
 
     /**

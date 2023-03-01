@@ -270,7 +270,6 @@ export interface GameV1Interface extends utils.Interface {
     "factory()": FunctionFragment;
     "gameId()": FunctionFragment;
     "getCronUpkeep()": FunctionFragment;
-    "getERC721TokenIds(address,address)": FunctionFragment;
     "getEncodedCron()": FunctionFragment;
     "getGameData()": FunctionFragment;
     "getPlayer(address)": FunctionFragment;
@@ -340,7 +339,6 @@ export interface GameV1Interface extends utils.Interface {
       | "factory"
       | "gameId"
       | "getCronUpkeep"
-      | "getERC721TokenIds"
       | "getEncodedCron"
       | "getGameData"
       | "getPlayer"
@@ -446,10 +444,6 @@ export interface GameV1Interface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getCronUpkeep",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getERC721TokenIds",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getEncodedCron",
@@ -669,10 +663,6 @@ export interface GameV1Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getERC721TokenIds",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getEncodedCron",
     data: BytesLike
   ): Result;
@@ -825,7 +815,6 @@ export interface GameV1Interface extends utils.Interface {
     "CronUpkeepUpdated(uint256,address)": EventFragment;
     "EncodedCronUpdated(uint256,string)": EventFragment;
     "FactoryOwnershipTransferred(address,address)": EventFragment;
-    "FailedTransfer(address,uint256)": EventFragment;
     "GameLost(uint256,address,uint256)": EventFragment;
     "GamePrizeClaimed(address,uint256,uint256)": EventFragment;
     "GameSplitted(uint256,uint256,uint256)": EventFragment;
@@ -855,7 +844,6 @@ export interface GameV1Interface extends utils.Interface {
   getEvent(
     nameOrSignatureOrTopic: "FactoryOwnershipTransferred"
   ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FailedTransfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GameLost"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GamePrizeClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GameSplitted"): EventFragment;
@@ -959,17 +947,6 @@ export type FactoryOwnershipTransferredEvent = TypedEvent<
 
 export type FactoryOwnershipTransferredEventFilter =
   TypedEventFilter<FactoryOwnershipTransferredEvent>;
-
-export interface FailedTransferEventObject {
-  receiver: string;
-  amount: BigNumber;
-}
-export type FailedTransferEvent = TypedEvent<
-  [string, BigNumber],
-  FailedTransferEventObject
->;
-
-export type FailedTransferEventFilter = TypedEventFilter<FailedTransferEvent>;
 
 export interface GameLostEventObject {
   epoch: BigNumber;
@@ -1234,12 +1211,6 @@ export interface GameV1 extends BaseContract {
     getCronUpkeep(
       overrides?: CallOverrides
     ): Promise<[string] & { _cronUpkeep: string }>;
-
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
 
     getEncodedCron(
       overrides?: CallOverrides
@@ -1524,12 +1495,6 @@ export interface GameV1 extends BaseContract {
 
   getCronUpkeep(overrides?: CallOverrides): Promise<string>;
 
-  getERC721TokenIds(
-    _token: PromiseOrValue<string>,
-    _account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
-
   getEncodedCron(overrides?: CallOverrides): Promise<string>;
 
   getGameData(overrides?: CallOverrides): Promise<IGame.GameDataStructOutput>;
@@ -1785,12 +1750,6 @@ export interface GameV1 extends BaseContract {
 
     getCronUpkeep(overrides?: CallOverrides): Promise<string>;
 
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
-
     getEncodedCron(overrides?: CallOverrides): Promise<string>;
 
     getGameData(overrides?: CallOverrides): Promise<IGame.GameDataStructOutput>;
@@ -2040,12 +1999,6 @@ export interface GameV1 extends BaseContract {
       newFactory?: null
     ): FactoryOwnershipTransferredEventFilter;
 
-    "FailedTransfer(address,uint256)"(
-      receiver?: null,
-      amount?: null
-    ): FailedTransferEventFilter;
-    FailedTransfer(receiver?: null, amount?: null): FailedTransferEventFilter;
-
     "GameLost(uint256,address,uint256)"(
       epoch?: null,
       playerAddress?: null,
@@ -2232,12 +2185,6 @@ export interface GameV1 extends BaseContract {
     gameId(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCronUpkeep(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     getEncodedCron(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2478,12 +2425,6 @@ export interface GameV1 extends BaseContract {
     gameId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getCronUpkeep(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     getEncodedCron(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

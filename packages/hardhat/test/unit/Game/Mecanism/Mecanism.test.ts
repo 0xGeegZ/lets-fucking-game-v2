@@ -928,9 +928,7 @@ describe('GameV1Contract - Mecanism', function () {
 
         expect(updatedPlayerAddressesList.length).to.equal(0)
         for (let i = 0; i < updatedPlayerAddressesList.length; i++) {
-          expect(updatedPlayerAddressesList[i]).to.equal(
-            '0x0000000000000000000000000000000000000000'
-          )
+          expect(updatedPlayerAddressesList[i]).to.equal(ethers.constants.Zero)
         }
 
         expect(updatedId).to.equal(previousId + 1)

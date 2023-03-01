@@ -259,7 +259,6 @@ export interface IGameInterface extends utils.Interface {
     "claimCreatorFee()": FunctionFragment;
     "claimPrize(uint256)": FunctionFragment;
     "claimTreasuryFee()": FunctionFragment;
-    "getERC721TokenIds(address,address)": FunctionFragment;
     "getGameData()": FunctionFragment;
     "getPlayer(address)": FunctionFragment;
     "getPlayerAddresses()": FunctionFragment;
@@ -304,7 +303,6 @@ export interface IGameInterface extends utils.Interface {
       | "claimCreatorFee"
       | "claimPrize"
       | "claimTreasuryFee"
-      | "getERC721TokenIds"
       | "getGameData"
       | "getPlayer"
       | "getPlayerAddresses"
@@ -364,10 +362,6 @@ export interface IGameInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "claimTreasuryFee",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getERC721TokenIds",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getGameData",
@@ -517,10 +511,6 @@ export interface IGameInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getERC721TokenIds",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getGameData",
     data: BytesLike
   ): Result;
@@ -638,7 +628,6 @@ export interface IGameInterface extends utils.Interface {
     "CronUpkeepUpdated(uint256,address)": EventFragment;
     "EncodedCronUpdated(uint256,string)": EventFragment;
     "FactoryOwnershipTransferred(address,address)": EventFragment;
-    "FailedTransfer(address,uint256)": EventFragment;
     "GameLost(uint256,address,uint256)": EventFragment;
     "GamePrizeClaimed(address,uint256,uint256)": EventFragment;
     "GameSplitted(uint256,uint256,uint256)": EventFragment;
@@ -666,7 +655,6 @@ export interface IGameInterface extends utils.Interface {
   getEvent(
     nameOrSignatureOrTopic: "FactoryOwnershipTransferred"
   ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FailedTransfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GameLost"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GamePrizeClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GameSplitted"): EventFragment;
@@ -768,17 +756,6 @@ export type FactoryOwnershipTransferredEvent = TypedEvent<
 
 export type FactoryOwnershipTransferredEventFilter =
   TypedEventFilter<FactoryOwnershipTransferredEvent>;
-
-export interface FailedTransferEventObject {
-  receiver: string;
-  amount: BigNumber;
-}
-export type FailedTransferEvent = TypedEvent<
-  [string, BigNumber],
-  FailedTransferEventObject
->;
-
-export type FailedTransferEventFilter = TypedEventFilter<FailedTransferEvent>;
 
 export interface GameLostEventObject {
   epoch: BigNumber;
@@ -998,12 +975,6 @@ export interface IGame extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
-
     getGameData(
       overrides?: CallOverrides
     ): Promise<
@@ -1203,12 +1174,6 @@ export interface IGame extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getERC721TokenIds(
-    _token: PromiseOrValue<string>,
-    _account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
-
   getGameData(overrides?: CallOverrides): Promise<IGame.GameDataStructOutput>;
 
   getPlayer(
@@ -1381,12 +1346,6 @@ export interface IGame extends BaseContract {
     ): Promise<void>;
 
     claimTreasuryFee(overrides?: CallOverrides): Promise<void>;
-
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
 
     getGameData(overrides?: CallOverrides): Promise<IGame.GameDataStructOutput>;
 
@@ -1583,12 +1542,6 @@ export interface IGame extends BaseContract {
       newFactory?: null
     ): FactoryOwnershipTransferredEventFilter;
 
-    "FailedTransfer(address,uint256)"(
-      receiver?: null,
-      amount?: null
-    ): FailedTransferEventFilter;
-    FailedTransfer(receiver?: null, amount?: null): FailedTransferEventFilter;
-
     "GameLost(uint256,address,uint256)"(
       epoch?: null,
       playerAddress?: null,
@@ -1740,12 +1693,6 @@ export interface IGame extends BaseContract {
 
     claimTreasuryFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getGameData(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1924,12 +1871,6 @@ export interface IGame extends BaseContract {
 
     claimTreasuryFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getGameData(overrides?: CallOverrides): Promise<PopulatedTransaction>;

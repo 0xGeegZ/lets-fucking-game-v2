@@ -19,12 +19,17 @@ const func: DeployFunction = async function ({
   if (!currentGiveawayConfig)
     throw new Error('No game config found for chain id', chainId)
 
-  // const { address: cronExternalAddress } = await deployments.get('CronExternal')
-  // const libraries = {
-  //   libraries: {
-  //     Cron: cronExternalAddress,
-  //   },
-  // }
+  const { address: keeperHelpersAddress } = await deployments.get(
+    'KeeperHelpers'
+  )
+  const { address: tokenHelpersAddress } = await deployments.get('TokenHelpers')
+
+  const helpersLibraries = {
+    libraries: {
+      KeeperHelpers: keeperHelpersAddress,
+      TokenHelpers: tokenHelpersAddress,
+    },
+  }
 
   const name = currentGiveawayConfig.NAME_DEFAULT
   const image = currentGiveawayConfig.IMAGE_DEFAULT
@@ -46,8 +51,8 @@ const func: DeployFunction = async function ({
 
   const { address: giveawayAddress } = await deployments.get('GiveawayV1')
   const { interface: giveawayInterface } = await ethers.getContractFactory(
-    'GiveawayV1'
-    // libraries
+    'GiveawayV1',
+    helpersLibraries
   )
 
   const giveaway = new ethers.Contract(
@@ -68,6 +73,8 @@ const func: DeployFunction = async function ({
     { value: giveawayAmount }
   )
   log(`✅ New giveaway created`)
+
+  // TODO add giveaway to delegators when implemented
 }
 
 func.tags = ['all', 'test', 'dev', 'staging', 'create-giveaways']

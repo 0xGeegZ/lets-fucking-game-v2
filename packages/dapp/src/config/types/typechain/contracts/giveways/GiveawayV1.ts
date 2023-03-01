@@ -86,7 +86,7 @@ export declare namespace IChild {
   };
 }
 
-export declare namespace GiveawayV1 {
+export declare namespace IGiveaway {
   export type GiveawayStruct = {
     name: PromiseOrValue<string>;
     image: PromiseOrValue<string>;
@@ -136,13 +136,11 @@ export interface GiveawayV1Interface extends utils.Interface {
     "claimPrize(uint256)": FunctionFragment;
     "claimTreasuryFee()": FunctionFragment;
     "createGiveaway(string,string,uint256,uint256,uint256,uint256,(uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
-    "cronUpkeep()": FunctionFragment;
     "epoch()": FunctionFragment;
     "factory()": FunctionFragment;
     "fulfillGiveawayWinner(bytes32,uint256,bytes)": FunctionFragment;
     "fulfillRefreshGiveaway(bytes32,uint256,uint256)": FunctionFragment;
     "fulfillSignUp(bytes32,uint256,bool)": FunctionFragment;
-    "getERC721TokenIds(address,address)": FunctionFragment;
     "getGiveawayRefreshURI(uint256)": FunctionFragment;
     "getGiveawayURI(uint256)": FunctionFragment;
     "getGiveaways()": FunctionFragment;
@@ -194,13 +192,11 @@ export interface GiveawayV1Interface extends utils.Interface {
       | "claimPrize"
       | "claimTreasuryFee"
       | "createGiveaway"
-      | "cronUpkeep"
       | "epoch"
       | "factory"
       | "fulfillGiveawayWinner"
       | "fulfillRefreshGiveaway"
       | "fulfillSignUp"
-      | "getERC721TokenIds"
       | "getGiveawayRefreshURI"
       | "getGiveawayURI"
       | "getGiveaways"
@@ -299,10 +295,6 @@ export interface GiveawayV1Interface extends utils.Interface {
       IChild.PrizeStruct[]
     ]
   ): string;
-  encodeFunctionData(
-    functionFragment: "cronUpkeep",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "epoch", values?: undefined): string;
   encodeFunctionData(functionFragment: "factory", values?: undefined): string;
   encodeFunctionData(
@@ -328,10 +320,6 @@ export interface GiveawayV1Interface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<boolean>
     ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getERC721TokenIds",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getGiveawayRefreshURI",
@@ -499,7 +487,6 @@ export interface GiveawayV1Interface extends utils.Interface {
     functionFragment: "createGiveaway",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "cronUpkeep", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "epoch", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "factory", data: BytesLike): Result;
   decodeFunctionResult(
@@ -512,10 +499,6 @@ export interface GiveawayV1Interface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "fulfillSignUp",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getERC721TokenIds",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -640,7 +623,6 @@ export interface GiveawayV1Interface extends utils.Interface {
     "CronUpkeepUpdated(uint256,address)": EventFragment;
     "EncodedCronUpdated(uint256,string)": EventFragment;
     "FactoryOwnershipTransferred(address,address)": EventFragment;
-    "FailedTransfer(address,uint256)": EventFragment;
     "GamePrizeClaimed(address,uint256,uint256)": EventFragment;
     "GiveawayCreated(uint256,uint256,uint256,uint256)": EventFragment;
     "GiveawayRefreshRequested(uint256,bytes32)": EventFragment;
@@ -672,7 +654,6 @@ export interface GiveawayV1Interface extends utils.Interface {
   getEvent(
     nameOrSignatureOrTopic: "FactoryOwnershipTransferred"
   ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FailedTransfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GamePrizeClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GiveawayCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GiveawayRefreshRequested"): EventFragment;
@@ -808,17 +789,6 @@ export type FactoryOwnershipTransferredEvent = TypedEvent<
 
 export type FactoryOwnershipTransferredEventFilter =
   TypedEventFilter<FactoryOwnershipTransferredEvent>;
-
-export interface FailedTransferEventObject {
-  receiver: string;
-  amount: BigNumber;
-}
-export type FailedTransferEvent = TypedEvent<
-  [string, BigNumber],
-  FailedTransferEventObject
->;
-
-export type FailedTransferEventFilter = TypedEventFilter<FailedTransferEvent>;
 
 export interface GamePrizeClaimedEventObject {
   claimer: string;
@@ -1088,8 +1058,6 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    cronUpkeep(overrides?: CallOverrides): Promise<[string]>;
-
     epoch(
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { _value: BigNumber }>;
@@ -1117,12 +1085,6 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
-
     getGiveawayRefreshURI(
       _giveawayId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1136,8 +1098,8 @@ export interface GiveawayV1 extends BaseContract {
     getGiveaways(
       overrides?: CallOverrides
     ): Promise<
-      [GiveawayV1.GiveawayStructOutput[]] & {
-        _giveaways: GiveawayV1.GiveawayStructOutput[];
+      [IGiveaway.GiveawayStructOutput[]] & {
+        _giveaways: IGiveaway.GiveawayStructOutput[];
       }
     >;
 
@@ -1370,8 +1332,6 @@ export interface GiveawayV1 extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  cronUpkeep(overrides?: CallOverrides): Promise<string>;
-
   epoch(overrides?: CallOverrides): Promise<BigNumber>;
 
   factory(overrides?: CallOverrides): Promise<string>;
@@ -1397,12 +1357,6 @@ export interface GiveawayV1 extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getERC721TokenIds(
-    _token: PromiseOrValue<string>,
-    _account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
-
   getGiveawayRefreshURI(
     _giveawayId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -1415,7 +1369,7 @@ export interface GiveawayV1 extends BaseContract {
 
   getGiveaways(
     overrides?: CallOverrides
-  ): Promise<GiveawayV1.GiveawayStructOutput[]>;
+  ): Promise<IGiveaway.GiveawayStructOutput[]>;
 
   getPrizes(
     _epoch: PromiseOrValue<BigNumberish>,
@@ -1640,8 +1594,6 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    cronUpkeep(overrides?: CallOverrides): Promise<string>;
-
     epoch(overrides?: CallOverrides): Promise<BigNumber>;
 
     factory(overrides?: CallOverrides): Promise<string>;
@@ -1667,12 +1619,6 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
-
     getGiveawayRefreshURI(
       _giveawayId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1685,7 +1631,7 @@ export interface GiveawayV1 extends BaseContract {
 
     getGiveaways(
       overrides?: CallOverrides
-    ): Promise<GiveawayV1.GiveawayStructOutput[]>;
+    ): Promise<IGiveaway.GiveawayStructOutput[]>;
 
     getPrizes(
       _epoch: PromiseOrValue<BigNumberish>,
@@ -1913,12 +1859,6 @@ export interface GiveawayV1 extends BaseContract {
       newFactory?: null
     ): FactoryOwnershipTransferredEventFilter;
 
-    "FailedTransfer(address,uint256)"(
-      receiver?: null,
-      amount?: null
-    ): FailedTransferEventFilter;
-    FailedTransfer(receiver?: null, amount?: null): FailedTransferEventFilter;
-
     "GamePrizeClaimed(address,uint256,uint256)"(
       claimer?: null,
       epoch?: null,
@@ -2121,8 +2061,6 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    cronUpkeep(overrides?: CallOverrides): Promise<BigNumber>;
-
     epoch(overrides?: CallOverrides): Promise<BigNumber>;
 
     factory(overrides?: CallOverrides): Promise<BigNumber>;
@@ -2146,12 +2084,6 @@ export interface GiveawayV1 extends BaseContract {
       _userId: PromiseOrValue<BigNumberish>,
       _hasSignedUp: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getGiveawayRefreshURI(
@@ -2368,8 +2300,6 @@ export interface GiveawayV1 extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    cronUpkeep(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     epoch(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     factory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -2393,12 +2323,6 @@ export interface GiveawayV1 extends BaseContract {
       _userId: PromiseOrValue<BigNumberish>,
       _hasSignedUp: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getGiveawayRefreshURI(

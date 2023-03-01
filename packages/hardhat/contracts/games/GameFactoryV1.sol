@@ -6,9 +6,11 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 import { IGame } from "../interfaces/IGame.sol";
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
+import { IKeeper } from "../interfaces/IKeeper.sol";
+
+import { KeeperHelpers } from "../libraries/KeeperHelpers.sol";
 
 import { Factory } from "../abstracts/Factory.sol";
-import { Keeper } from "../keepers/Keeper.sol";
 
 contract GameFactoryV1 is Factory {
     using Counters for Counters.Counter;
@@ -109,15 +111,15 @@ contract GameFactoryV1 is Factory {
 
         ICronUpkeep(cronUpkeep).addDelegator(newGameAddress);
 
-        Keeper keeper = new Keeper(cronUpkeep, "triggerDailyCheckpoint()", _encodedCron);
-        ICronUpkeep(cronUpkeep).addDelegator(address(keeper));
+        address keeper = KeeperHelpers.createKeeper(cronUpkeep, _encodedCron, "triggerDailyCheckpoint()");
+        ICronUpkeep(cronUpkeep).addDelegator(keeper);
 
         // Declare structure and initialize later to avoid stack too deep exception
         IGame.Initialization memory initialization;
         initialization.creator = msg.sender;
         initialization.owner = owner();
         initialization.cronUpkeep = cronUpkeep;
-        initialization.keeper = address(keeper);
+        initialization.keeper = keeper;
         initialization.name = _name;
         initialization.version = latestVersionId;
         initialization.gameId = id.current();
@@ -132,8 +134,8 @@ contract GameFactoryV1 is Factory {
         uint256 prizepool = msg.value - itemCreationAmount;
         IGame(newGameAddress).initialize{ value: prizepool }(initialization);
 
-        keeper.registerCronToUpkeep(newGameAddress);
-        keeper.transferOwnership(newGameAddress);
+        IKeeper(keeper).registerCronToUpkeep(newGameAddress);
+        IKeeper(keeper).transferOwnership(newGameAddress);
 
         emit GameCreated(id.current(), newGameAddress, latestVersionId, msg.sender);
         id.increment();
