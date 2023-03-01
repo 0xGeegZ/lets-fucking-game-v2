@@ -2,8 +2,8 @@ node_modules
 .env
 
 # Coverage
-# coverage
-# coverage.json
+coverage
+coverage.json
 
 # Typescript
 typechain
