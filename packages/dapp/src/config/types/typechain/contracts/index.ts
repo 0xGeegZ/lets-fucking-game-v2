@@ -11,5 +11,7 @@ import type * as interfaces from "./interfaces";
 export type { interfaces };
 import type * as keepers from "./keepers";
 export type { keepers };
+import type * as libraries from "./libraries";
+export type { libraries };
 import type * as multicall from "./multicall";
 export type { multicall };

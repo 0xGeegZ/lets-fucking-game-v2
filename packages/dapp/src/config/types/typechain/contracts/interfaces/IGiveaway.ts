@@ -86,72 +86,124 @@ export declare namespace IChild {
   };
 }
 
-export interface ChildInterface extends utils.Interface {
+export declare namespace IGiveaway {
+  export type GiveawayStruct = {
+    name: PromiseOrValue<string>;
+    image: PromiseOrValue<string>;
+    creator: PromiseOrValue<string>;
+    userId: PromiseOrValue<BigNumberish>;
+    tweetId: PromiseOrValue<BigNumberish>;
+    endTimestamp: PromiseOrValue<BigNumberish>;
+    retweetCount: PromiseOrValue<BigNumberish>;
+    retweetMaxCount: PromiseOrValue<BigNumberish>;
+    isEnded: PromiseOrValue<boolean>;
+  };
+
+  export type GiveawayStructOutput = [
+    string,
+    string,
+    string,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    boolean
+  ] & {
+    name: string;
+    image: string;
+    creator: string;
+    userId: BigNumber;
+    tweetId: BigNumber;
+    endTimestamp: BigNumber;
+    retweetCount: BigNumber;
+    retweetMaxCount: BigNumber;
+    isEnded: boolean;
+  };
+}
+
+export interface IGiveawayInterface extends utils.Interface {
   functions: {
-    "MAX_TREASURY_FEE()": FunctionFragment;
     "addPrizes((uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
     "addTokenERC20(address)": FunctionFragment;
     "addTokenERC721(address)": FunctionFragment;
-    "allowedTokensERC20(uint256)": FunctionFragment;
-    "allowedTokensERC721(uint256)": FunctionFragment;
+    "addUser(uint256,address)": FunctionFragment;
+    "cancelRequest(bytes32,uint256,bytes4,uint256)": FunctionFragment;
     "claimPrize(uint256)": FunctionFragment;
     "claimTreasuryFee()": FunctionFragment;
-    "epoch()": FunctionFragment;
-    "factory()": FunctionFragment;
+    "createGiveaway(string,string,uint256,uint256,uint256,uint256,(uint256,uint256,uint256,address,uint256)[])": FunctionFragment;
+    "fulfillGiveawayWinner(bytes32,uint256,bytes)": FunctionFragment;
+    "fulfillRefreshGiveaway(bytes32,uint256,uint256)": FunctionFragment;
+    "fulfillSignUp(bytes32,uint256,bool)": FunctionFragment;
+    "getGiveawayRefreshURI(uint256)": FunctionFragment;
+    "getGiveawayURI(uint256)": FunctionFragment;
+    "getGiveaways()": FunctionFragment;
     "getPrizes(uint256)": FunctionFragment;
+    "getSignUpURI(uint256)": FunctionFragment;
     "getWinners(uint256)": FunctionFragment;
-    "owner()": FunctionFragment;
+    "hasSignedUp()": FunctionFragment;
+    "hasSignedUp(uint256)": FunctionFragment;
     "pause()": FunctionFragment;
-    "paused()": FunctionFragment;
+    "pauseGiveaways()": FunctionFragment;
+    "refreshActiveGiveawayStatus()": FunctionFragment;
     "removeTokenERC20(address)": FunctionFragment;
     "removeTokenERC721(address)": FunctionFragment;
+    "setRequestBaseURI(string)": FunctionFragment;
     "setTreasuryFee(uint256)": FunctionFragment;
+    "setupKeeper(address,string)": FunctionFragment;
+    "signUp(uint256)": FunctionFragment;
     "transferAdminOwnership(address)": FunctionFragment;
     "transferFactoryOwnership(address)": FunctionFragment;
-    "treasuryAmount()": FunctionFragment;
-    "treasuryFee()": FunctionFragment;
     "unpause()": FunctionFragment;
+    "unpauseGiveaways()": FunctionFragment;
     "withdrawERC20(address,address)": FunctionFragment;
     "withdrawERC721(address,uint256,address)": FunctionFragment;
     "withdrawFunds(address)": FunctionFragment;
+    "withdrawLink()": FunctionFragment;
     "withdrawNative(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "MAX_TREASURY_FEE"
       | "addPrizes"
       | "addTokenERC20"
       | "addTokenERC721"
-      | "allowedTokensERC20"
-      | "allowedTokensERC721"
+      | "addUser"
+      | "cancelRequest"
       | "claimPrize"
       | "claimTreasuryFee"
-      | "epoch"
-      | "factory"
+      | "createGiveaway"
+      | "fulfillGiveawayWinner"
+      | "fulfillRefreshGiveaway"
+      | "fulfillSignUp"
+      | "getGiveawayRefreshURI"
+      | "getGiveawayURI"
+      | "getGiveaways"
       | "getPrizes"
+      | "getSignUpURI"
       | "getWinners"
-      | "owner"
+      | "hasSignedUp()"
+      | "hasSignedUp(uint256)"
       | "pause"
-      | "paused"
+      | "pauseGiveaways"
+      | "refreshActiveGiveawayStatus"
       | "removeTokenERC20"
       | "removeTokenERC721"
+      | "setRequestBaseURI"
       | "setTreasuryFee"
+      | "setupKeeper"
+      | "signUp"
       | "transferAdminOwnership"
       | "transferFactoryOwnership"
-      | "treasuryAmount"
-      | "treasuryFee"
       | "unpause"
+      | "unpauseGiveaways"
       | "withdrawERC20"
       | "withdrawERC721"
       | "withdrawFunds"
+      | "withdrawLink"
       | "withdrawNative"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "MAX_TREASURY_FEE",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "addPrizes",
     values: [IChild.PrizeStruct[]]
@@ -165,12 +217,17 @@ export interface ChildInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "allowedTokensERC20",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "addUser",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "allowedTokensERC721",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "cancelRequest",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "claimPrize",
@@ -180,19 +237,83 @@ export interface ChildInterface extends utils.Interface {
     functionFragment: "claimTreasuryFee",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "epoch", values?: undefined): string;
-  encodeFunctionData(functionFragment: "factory", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "createGiveaway",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      IChild.PrizeStruct[]
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "fulfillGiveawayWinner",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "fulfillRefreshGiveaway",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "fulfillSignUp",
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<boolean>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getGiveawayRefreshURI",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getGiveawayURI",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getGiveaways",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "getPrizes",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getSignUpURI",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getWinners",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "hasSignedUp()",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hasSignedUp(uint256)",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "pauseGiveaways",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "refreshActiveGiveawayStatus",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "removeTokenERC20",
     values: [PromiseOrValue<string>]
@@ -202,7 +323,19 @@ export interface ChildInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "setRequestBaseURI",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setTreasuryFee",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setupKeeper",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "signUp",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -213,15 +346,11 @@ export interface ChildInterface extends utils.Interface {
     functionFragment: "transferFactoryOwnership",
     values: [PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(
-    functionFragment: "treasuryAmount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "treasuryFee",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "unpauseGiveaways",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "withdrawERC20",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
@@ -239,14 +368,14 @@ export interface ChildInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "withdrawLink",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdrawNative",
     values: [PromiseOrValue<string>]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "MAX_TREASURY_FEE",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "addPrizes", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "addTokenERC20",
@@ -256,12 +385,9 @@ export interface ChildInterface extends utils.Interface {
     functionFragment: "addTokenERC721",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "addUser", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "allowedTokensERC20",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "allowedTokensERC721",
+    functionFragment: "cancelRequest",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "claimPrize", data: BytesLike): Result;
@@ -269,13 +395,57 @@ export interface ChildInterface extends utils.Interface {
     functionFragment: "claimTreasuryFee",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "epoch", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "factory", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "createGiveaway",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "fulfillGiveawayWinner",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "fulfillRefreshGiveaway",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "fulfillSignUp",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getGiveawayRefreshURI",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getGiveawayURI",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getGiveaways",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getPrizes", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getSignUpURI",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getWinners", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "hasSignedUp()",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "hasSignedUp(uint256)",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "pauseGiveaways",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "refreshActiveGiveawayStatus",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "removeTokenERC20",
     data: BytesLike
@@ -285,9 +455,18 @@ export interface ChildInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setRequestBaseURI",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setTreasuryFee",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "setupKeeper",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "signUp", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferAdminOwnership",
     data: BytesLike
@@ -296,15 +475,11 @@ export interface ChildInterface extends utils.Interface {
     functionFragment: "transferFactoryOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "treasuryAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "treasuryFee",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "unpauseGiveaways",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "withdrawERC20",
     data: BytesLike
@@ -315,6 +490,10 @@ export interface ChildInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "withdrawFunds",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawLink",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -331,12 +510,18 @@ export interface ChildInterface extends utils.Interface {
     "EncodedCronUpdated(uint256,string)": EventFragment;
     "FactoryOwnershipTransferred(address,address)": EventFragment;
     "GamePrizeClaimed(address,uint256,uint256)": EventFragment;
-    "Paused(address)": EventFragment;
+    "GiveawayCreated(uint256,uint256,uint256,uint256)": EventFragment;
+    "GiveawayRefreshRequested(uint256,bytes32)": EventFragment;
+    "GiveawayRefreshed(uint256,uint256)": EventFragment;
+    "GiveawayWinnerRequested(uint256,bytes32)": EventFragment;
+    "PerformUpkeepExecuted(uint256,uint256)": EventFragment;
     "PrizeAdded(uint256,uint256,uint256,uint256,address,uint256)": EventFragment;
     "Received(address,uint256)": EventFragment;
+    "SignUpRequested(uint256,bytes32)": EventFragment;
+    "SignedUp(uint256,address)": EventFragment;
     "TreasuryFeeClaimed(uint256)": EventFragment;
     "TreasuryFeeClaimedByFactory(uint256)": EventFragment;
-    "Unpaused(address)": EventFragment;
+    "WinnerAdded(uint256,uint256,uint256,address,uint256,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "AdminOwnershipTransferred"): EventFragment;
@@ -351,14 +536,20 @@ export interface ChildInterface extends utils.Interface {
     nameOrSignatureOrTopic: "FactoryOwnershipTransferred"
   ): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GamePrizeClaimed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GiveawayCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GiveawayRefreshRequested"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GiveawayRefreshed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GiveawayWinnerRequested"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PerformUpkeepExecuted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PrizeAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Received"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "SignUpRequested"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "SignedUp"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TreasuryFeeClaimed"): EventFragment;
   getEvent(
     nameOrSignatureOrTopic: "TreasuryFeeClaimedByFactory"
   ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "WinnerAdded"): EventFragment;
 }
 
 export interface AdminOwnershipTransferredEventObject {
@@ -458,12 +649,66 @@ export type GamePrizeClaimedEvent = TypedEvent<
 export type GamePrizeClaimedEventFilter =
   TypedEventFilter<GamePrizeClaimedEvent>;
 
-export interface PausedEventObject {
-  account: string;
+export interface GiveawayCreatedEventObject {
+  epoch: BigNumber;
+  userId: BigNumber;
+  tweetId: BigNumber;
+  prizesLength: BigNumber;
 }
-export type PausedEvent = TypedEvent<[string], PausedEventObject>;
+export type GiveawayCreatedEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber, BigNumber],
+  GiveawayCreatedEventObject
+>;
 
-export type PausedEventFilter = TypedEventFilter<PausedEvent>;
+export type GiveawayCreatedEventFilter = TypedEventFilter<GiveawayCreatedEvent>;
+
+export interface GiveawayRefreshRequestedEventObject {
+  userId: BigNumber;
+  requestId: string;
+}
+export type GiveawayRefreshRequestedEvent = TypedEvent<
+  [BigNumber, string],
+  GiveawayRefreshRequestedEventObject
+>;
+
+export type GiveawayRefreshRequestedEventFilter =
+  TypedEventFilter<GiveawayRefreshRequestedEvent>;
+
+export interface GiveawayRefreshedEventObject {
+  giveawayId: BigNumber;
+  timestamp: BigNumber;
+}
+export type GiveawayRefreshedEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  GiveawayRefreshedEventObject
+>;
+
+export type GiveawayRefreshedEventFilter =
+  TypedEventFilter<GiveawayRefreshedEvent>;
+
+export interface GiveawayWinnerRequestedEventObject {
+  giveawayId: BigNumber;
+  requestId: string;
+}
+export type GiveawayWinnerRequestedEvent = TypedEvent<
+  [BigNumber, string],
+  GiveawayWinnerRequestedEventObject
+>;
+
+export type GiveawayWinnerRequestedEventFilter =
+  TypedEventFilter<GiveawayWinnerRequestedEvent>;
+
+export interface PerformUpkeepExecutedEventObject {
+  giveawayId: BigNumber;
+  timestamp: BigNumber;
+}
+export type PerformUpkeepExecutedEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  PerformUpkeepExecutedEventObject
+>;
+
+export type PerformUpkeepExecutedEventFilter =
+  TypedEventFilter<PerformUpkeepExecutedEvent>;
 
 export interface PrizeAddedEventObject {
   epoch: BigNumber;
@@ -491,6 +736,28 @@ export type ReceivedEvent = TypedEvent<
 
 export type ReceivedEventFilter = TypedEventFilter<ReceivedEvent>;
 
+export interface SignUpRequestedEventObject {
+  userId: BigNumber;
+  requestId: string;
+}
+export type SignUpRequestedEvent = TypedEvent<
+  [BigNumber, string],
+  SignUpRequestedEventObject
+>;
+
+export type SignUpRequestedEventFilter = TypedEventFilter<SignUpRequestedEvent>;
+
+export interface SignedUpEventObject {
+  userId: BigNumber;
+  userAddress: string;
+}
+export type SignedUpEvent = TypedEvent<
+  [BigNumber, string],
+  SignedUpEventObject
+>;
+
+export type SignedUpEventFilter = TypedEventFilter<SignedUpEvent>;
+
 export interface TreasuryFeeClaimedEventObject {
   amount: BigNumber;
 }
@@ -513,19 +780,27 @@ export type TreasuryFeeClaimedByFactoryEvent = TypedEvent<
 export type TreasuryFeeClaimedByFactoryEventFilter =
   TypedEventFilter<TreasuryFeeClaimedByFactoryEvent>;
 
-export interface UnpausedEventObject {
-  account: string;
+export interface WinnerAddedEventObject {
+  giveawayId: BigNumber;
+  position: BigNumber;
+  winnerId: BigNumber;
+  contractAddress: string;
+  amount: BigNumber;
+  tokenId: BigNumber;
 }
-export type UnpausedEvent = TypedEvent<[string], UnpausedEventObject>;
+export type WinnerAddedEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber, string, BigNumber, BigNumber],
+  WinnerAddedEventObject
+>;
 
-export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
+export type WinnerAddedEventFilter = TypedEventFilter<WinnerAddedEvent>;
 
-export interface Child extends BaseContract {
+export interface IGiveaway extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: ChildInterface;
+  interface: IGiveawayInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -547,8 +822,6 @@ export interface Child extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    MAX_TREASURY_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     addPrizes(
       _prizes: IChild.PrizeStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -564,15 +837,19 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    allowedTokensERC20(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    addUser(
+      _userId: PromiseOrValue<BigNumberish>,
+      _userAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-    allowedTokensERC721(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    cancelRequest(
+      _requestId: PromiseOrValue<BytesLike>,
+      _payment: PromiseOrValue<BigNumberish>,
+      _callbackFunctionId: PromiseOrValue<BytesLike>,
+      _expiration: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     claimPrize(
       _epoch: PromiseOrValue<BigNumberish>,
@@ -583,11 +860,55 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    epoch(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { _value: BigNumber }>;
+    createGiveaway(
+      _name: PromiseOrValue<string>,
+      _image: PromiseOrValue<string>,
+      _userId: PromiseOrValue<BigNumberish>,
+      _tweetId: PromiseOrValue<BigNumberish>,
+      _endTimestamp: PromiseOrValue<BigNumberish>,
+      _retweetMaxCount: PromiseOrValue<BigNumberish>,
+      _prizes: IChild.PrizeStruct[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-    factory(overrides?: CallOverrides): Promise<[string]>;
+    fulfillGiveawayWinner(
+      _requestId: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _payload: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    fulfillRefreshGiveaway(
+      _requestId: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _retweetCount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    fulfillSignUp(
+      _requestId: PromiseOrValue<BytesLike>,
+      _userId: PromiseOrValue<BigNumberish>,
+      _hasSignedUp: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    getGiveawayRefreshURI(
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string] & { _giveawayURI: string }>;
+
+    getGiveawayURI(
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string] & { _giveawayURI: string }>;
+
+    getGiveaways(
+      overrides?: CallOverrides
+    ): Promise<
+      [IGiveaway.GiveawayStructOutput[]] & {
+        _giveaways: IGiveaway.GiveawayStructOutput[];
+      }
+    >;
 
     getPrizes(
       _epoch: PromiseOrValue<BigNumberish>,
@@ -595,6 +916,11 @@ export interface Child extends BaseContract {
     ): Promise<
       [IChild.PrizeStructOutput[]] & { childPrizes: IChild.PrizeStructOutput[] }
     >;
+
+    getSignUpURI(
+      _userId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string] & { _signUpURI: string }>;
 
     getWinners(
       _epoch: PromiseOrValue<BigNumberish>,
@@ -605,13 +931,24 @@ export interface Child extends BaseContract {
       }
     >;
 
-    owner(overrides?: CallOverrides): Promise<[string]>;
+    "hasSignedUp()"(overrides?: CallOverrides): Promise<[boolean]>;
+
+    "hasSignedUp(uint256)"(
+      _userId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     pause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    paused(overrides?: CallOverrides): Promise<[boolean]>;
+    pauseGiveaways(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    refreshActiveGiveawayStatus(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     removeTokenERC20(
       _token: PromiseOrValue<string>,
@@ -623,8 +960,24 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    setRequestBaseURI(
+      _requestBaseURI: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setupKeeper(
+      _cronUpkeep: PromiseOrValue<string>,
+      _encodedCron: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    signUp(
+      _userId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -638,11 +991,11 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    treasuryAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    treasuryFee(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     unpause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    unpauseGiveaways(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -664,13 +1017,15 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    withdrawLink(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     withdrawNative(
       _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
-
-  MAX_TREASURY_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
   addPrizes(
     _prizes: IChild.PrizeStruct[],
@@ -687,15 +1042,19 @@ export interface Child extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  allowedTokensERC20(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  addUser(
+    _userId: PromiseOrValue<BigNumberish>,
+    _userAddress: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  allowedTokensERC721(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  cancelRequest(
+    _requestId: PromiseOrValue<BytesLike>,
+    _payment: PromiseOrValue<BigNumberish>,
+    _callbackFunctionId: PromiseOrValue<BytesLike>,
+    _expiration: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   claimPrize(
     _epoch: PromiseOrValue<BigNumberish>,
@@ -706,27 +1065,85 @@ export interface Child extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  epoch(overrides?: CallOverrides): Promise<BigNumber>;
+  createGiveaway(
+    _name: PromiseOrValue<string>,
+    _image: PromiseOrValue<string>,
+    _userId: PromiseOrValue<BigNumberish>,
+    _tweetId: PromiseOrValue<BigNumberish>,
+    _endTimestamp: PromiseOrValue<BigNumberish>,
+    _retweetMaxCount: PromiseOrValue<BigNumberish>,
+    _prizes: IChild.PrizeStruct[],
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  factory(overrides?: CallOverrides): Promise<string>;
+  fulfillGiveawayWinner(
+    _requestId: PromiseOrValue<BytesLike>,
+    _giveawayId: PromiseOrValue<BigNumberish>,
+    _payload: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  fulfillRefreshGiveaway(
+    _requestId: PromiseOrValue<BytesLike>,
+    _giveawayId: PromiseOrValue<BigNumberish>,
+    _retweetCount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  fulfillSignUp(
+    _requestId: PromiseOrValue<BytesLike>,
+    _userId: PromiseOrValue<BigNumberish>,
+    _hasSignedUp: PromiseOrValue<boolean>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  getGiveawayRefreshURI(
+    _giveawayId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getGiveawayURI(
+    _giveawayId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getGiveaways(
+    overrides?: CallOverrides
+  ): Promise<IGiveaway.GiveawayStructOutput[]>;
 
   getPrizes(
     _epoch: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<IChild.PrizeStructOutput[]>;
 
+  getSignUpURI(
+    _userId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   getWinners(
     _epoch: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<IChild.WinnerStructOutput[]>;
 
-  owner(overrides?: CallOverrides): Promise<string>;
+  "hasSignedUp()"(overrides?: CallOverrides): Promise<boolean>;
+
+  "hasSignedUp(uint256)"(
+    _userId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   pause(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  paused(overrides?: CallOverrides): Promise<boolean>;
+  pauseGiveaways(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  refreshActiveGiveawayStatus(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   removeTokenERC20(
     _token: PromiseOrValue<string>,
@@ -738,8 +1155,24 @@ export interface Child extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  setRequestBaseURI(
+    _requestBaseURI: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   setTreasuryFee(
     _treasuryFee: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setupKeeper(
+    _cronUpkeep: PromiseOrValue<string>,
+    _encodedCron: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  signUp(
+    _userId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -753,11 +1186,11 @@ export interface Child extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  treasuryAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-  treasuryFee(overrides?: CallOverrides): Promise<BigNumber>;
-
   unpause(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  unpauseGiveaways(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -779,14 +1212,16 @@ export interface Child extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  withdrawLink(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   withdrawNative(
     _receiver: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    MAX_TREASURY_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
     addPrizes(
       _prizes: IChild.PrizeStruct[],
       overrides?: CallOverrides
@@ -802,15 +1237,19 @@ export interface Child extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    allowedTokensERC20(
-      arg0: PromiseOrValue<BigNumberish>,
+    addUser(
+      _userId: PromiseOrValue<BigNumberish>,
+      _userAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<void>;
 
-    allowedTokensERC721(
-      arg0: PromiseOrValue<BigNumberish>,
+    cancelRequest(
+      _requestId: PromiseOrValue<BytesLike>,
+      _payment: PromiseOrValue<BigNumberish>,
+      _callbackFunctionId: PromiseOrValue<BytesLike>,
+      _expiration: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<void>;
 
     claimPrize(
       _epoch: PromiseOrValue<BigNumberish>,
@@ -819,25 +1258,79 @@ export interface Child extends BaseContract {
 
     claimTreasuryFee(overrides?: CallOverrides): Promise<void>;
 
-    epoch(overrides?: CallOverrides): Promise<BigNumber>;
+    createGiveaway(
+      _name: PromiseOrValue<string>,
+      _image: PromiseOrValue<string>,
+      _userId: PromiseOrValue<BigNumberish>,
+      _tweetId: PromiseOrValue<BigNumberish>,
+      _endTimestamp: PromiseOrValue<BigNumberish>,
+      _retweetMaxCount: PromiseOrValue<BigNumberish>,
+      _prizes: IChild.PrizeStruct[],
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    factory(overrides?: CallOverrides): Promise<string>;
+    fulfillGiveawayWinner(
+      _requestId: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _payload: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    fulfillRefreshGiveaway(
+      _requestId: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _retweetCount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    fulfillSignUp(
+      _requestId: PromiseOrValue<BytesLike>,
+      _userId: PromiseOrValue<BigNumberish>,
+      _hasSignedUp: PromiseOrValue<boolean>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    getGiveawayRefreshURI(
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getGiveawayURI(
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getGiveaways(
+      overrides?: CallOverrides
+    ): Promise<IGiveaway.GiveawayStructOutput[]>;
 
     getPrizes(
       _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<IChild.PrizeStructOutput[]>;
 
+    getSignUpURI(
+      _userId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     getWinners(
       _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<IChild.WinnerStructOutput[]>;
 
-    owner(overrides?: CallOverrides): Promise<string>;
+    "hasSignedUp()"(overrides?: CallOverrides): Promise<boolean>;
+
+    "hasSignedUp(uint256)"(
+      _userId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     pause(overrides?: CallOverrides): Promise<void>;
 
-    paused(overrides?: CallOverrides): Promise<boolean>;
+    pauseGiveaways(overrides?: CallOverrides): Promise<void>;
+
+    refreshActiveGiveawayStatus(overrides?: CallOverrides): Promise<void>;
 
     removeTokenERC20(
       _token: PromiseOrValue<string>,
@@ -849,8 +1342,24 @@ export interface Child extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setRequestBaseURI(
+      _requestBaseURI: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setupKeeper(
+      _cronUpkeep: PromiseOrValue<string>,
+      _encodedCron: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    signUp(
+      _userId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -864,11 +1373,9 @@ export interface Child extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    treasuryAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    treasuryFee(overrides?: CallOverrides): Promise<BigNumber>;
-
     unpause(overrides?: CallOverrides): Promise<void>;
+
+    unpauseGiveaways(overrides?: CallOverrides): Promise<void>;
 
     withdrawERC20(
       _contractAddress: PromiseOrValue<string>,
@@ -887,6 +1394,8 @@ export interface Child extends BaseContract {
       _receiver: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    withdrawLink(overrides?: CallOverrides): Promise<void>;
 
     withdrawNative(
       _receiver: PromiseOrValue<string>,
@@ -965,8 +1474,54 @@ export interface Child extends BaseContract {
       amountClaimed?: null
     ): GamePrizeClaimedEventFilter;
 
-    "Paused(address)"(account?: null): PausedEventFilter;
-    Paused(account?: null): PausedEventFilter;
+    "GiveawayCreated(uint256,uint256,uint256,uint256)"(
+      epoch?: null,
+      userId?: null,
+      tweetId?: null,
+      prizesLength?: null
+    ): GiveawayCreatedEventFilter;
+    GiveawayCreated(
+      epoch?: null,
+      userId?: null,
+      tweetId?: null,
+      prizesLength?: null
+    ): GiveawayCreatedEventFilter;
+
+    "GiveawayRefreshRequested(uint256,bytes32)"(
+      userId?: PromiseOrValue<BigNumberish> | null,
+      requestId?: PromiseOrValue<BytesLike> | null
+    ): GiveawayRefreshRequestedEventFilter;
+    GiveawayRefreshRequested(
+      userId?: PromiseOrValue<BigNumberish> | null,
+      requestId?: PromiseOrValue<BytesLike> | null
+    ): GiveawayRefreshRequestedEventFilter;
+
+    "GiveawayRefreshed(uint256,uint256)"(
+      giveawayId?: PromiseOrValue<BigNumberish> | null,
+      timestamp?: null
+    ): GiveawayRefreshedEventFilter;
+    GiveawayRefreshed(
+      giveawayId?: PromiseOrValue<BigNumberish> | null,
+      timestamp?: null
+    ): GiveawayRefreshedEventFilter;
+
+    "GiveawayWinnerRequested(uint256,bytes32)"(
+      giveawayId?: PromiseOrValue<BigNumberish> | null,
+      requestId?: PromiseOrValue<BytesLike> | null
+    ): GiveawayWinnerRequestedEventFilter;
+    GiveawayWinnerRequested(
+      giveawayId?: PromiseOrValue<BigNumberish> | null,
+      requestId?: PromiseOrValue<BytesLike> | null
+    ): GiveawayWinnerRequestedEventFilter;
+
+    "PerformUpkeepExecuted(uint256,uint256)"(
+      giveawayId?: PromiseOrValue<BigNumberish> | null,
+      timestamp?: null
+    ): PerformUpkeepExecutedEventFilter;
+    PerformUpkeepExecuted(
+      giveawayId?: PromiseOrValue<BigNumberish> | null,
+      timestamp?: null
+    ): PerformUpkeepExecutedEventFilter;
 
     "PrizeAdded(uint256,uint256,uint256,uint256,address,uint256)"(
       epoch?: null,
@@ -991,6 +1546,24 @@ export interface Child extends BaseContract {
     ): ReceivedEventFilter;
     Received(sender?: null, amount?: null): ReceivedEventFilter;
 
+    "SignUpRequested(uint256,bytes32)"(
+      userId?: PromiseOrValue<BigNumberish> | null,
+      requestId?: PromiseOrValue<BytesLike> | null
+    ): SignUpRequestedEventFilter;
+    SignUpRequested(
+      userId?: PromiseOrValue<BigNumberish> | null,
+      requestId?: PromiseOrValue<BytesLike> | null
+    ): SignUpRequestedEventFilter;
+
+    "SignedUp(uint256,address)"(
+      userId?: PromiseOrValue<BigNumberish> | null,
+      userAddress?: null
+    ): SignedUpEventFilter;
+    SignedUp(
+      userId?: PromiseOrValue<BigNumberish> | null,
+      userAddress?: null
+    ): SignedUpEventFilter;
+
     "TreasuryFeeClaimed(uint256)"(amount?: null): TreasuryFeeClaimedEventFilter;
     TreasuryFeeClaimed(amount?: null): TreasuryFeeClaimedEventFilter;
 
@@ -1001,13 +1574,25 @@ export interface Child extends BaseContract {
       amount?: null
     ): TreasuryFeeClaimedByFactoryEventFilter;
 
-    "Unpaused(address)"(account?: null): UnpausedEventFilter;
-    Unpaused(account?: null): UnpausedEventFilter;
+    "WinnerAdded(uint256,uint256,uint256,address,uint256,uint256)"(
+      giveawayId?: null,
+      position?: null,
+      winnerId?: null,
+      contractAddress?: null,
+      amount?: null,
+      tokenId?: null
+    ): WinnerAddedEventFilter;
+    WinnerAdded(
+      giveawayId?: null,
+      position?: null,
+      winnerId?: null,
+      contractAddress?: null,
+      amount?: null,
+      tokenId?: null
+    ): WinnerAddedEventFilter;
   };
 
   estimateGas: {
-    MAX_TREASURY_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
     addPrizes(
       _prizes: IChild.PrizeStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -1023,14 +1608,18 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    allowedTokensERC20(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+    addUser(
+      _userId: PromiseOrValue<BigNumberish>,
+      _userAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    allowedTokensERC721(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+    cancelRequest(
+      _requestId: PromiseOrValue<BytesLike>,
+      _payment: PromiseOrValue<BigNumberish>,
+      _callbackFunctionId: PromiseOrValue<BytesLike>,
+      _expiration: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     claimPrize(
@@ -1042,12 +1631,57 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    epoch(overrides?: CallOverrides): Promise<BigNumber>;
+    createGiveaway(
+      _name: PromiseOrValue<string>,
+      _image: PromiseOrValue<string>,
+      _userId: PromiseOrValue<BigNumberish>,
+      _tweetId: PromiseOrValue<BigNumberish>,
+      _endTimestamp: PromiseOrValue<BigNumberish>,
+      _retweetMaxCount: PromiseOrValue<BigNumberish>,
+      _prizes: IChild.PrizeStruct[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
-    factory(overrides?: CallOverrides): Promise<BigNumber>;
+    fulfillGiveawayWinner(
+      _requestId: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _payload: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    fulfillRefreshGiveaway(
+      _requestId: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _retweetCount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    fulfillSignUp(
+      _requestId: PromiseOrValue<BytesLike>,
+      _userId: PromiseOrValue<BigNumberish>,
+      _hasSignedUp: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getGiveawayRefreshURI(
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getGiveawayURI(
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getGiveaways(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPrizes(
       _epoch: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getSignUpURI(
+      _userId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1056,13 +1690,24 @@ export interface Child extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
+    "hasSignedUp()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "hasSignedUp(uint256)"(
+      _userId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     pause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    paused(overrides?: CallOverrides): Promise<BigNumber>;
+    pauseGiveaways(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    refreshActiveGiveawayStatus(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
     removeTokenERC20(
       _token: PromiseOrValue<string>,
@@ -1074,8 +1719,24 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    setRequestBaseURI(
+      _requestBaseURI: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setupKeeper(
+      _cronUpkeep: PromiseOrValue<string>,
+      _encodedCron: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    signUp(
+      _userId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1089,11 +1750,11 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    treasuryAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    treasuryFee(overrides?: CallOverrides): Promise<BigNumber>;
-
     unpause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    unpauseGiveaways(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1112,6 +1773,10 @@ export interface Child extends BaseContract {
 
     withdrawFunds(
       _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    withdrawLink(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1122,8 +1787,6 @@ export interface Child extends BaseContract {
   };
 
   populateTransaction: {
-    MAX_TREASURY_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     addPrizes(
       _prizes: IChild.PrizeStruct[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -1139,14 +1802,18 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    allowedTokensERC20(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+    addUser(
+      _userId: PromiseOrValue<BigNumberish>,
+      _userAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    allowedTokensERC721(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+    cancelRequest(
+      _requestId: PromiseOrValue<BytesLike>,
+      _payment: PromiseOrValue<BigNumberish>,
+      _callbackFunctionId: PromiseOrValue<BytesLike>,
+      _expiration: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     claimPrize(
@@ -1158,12 +1825,57 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    epoch(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    createGiveaway(
+      _name: PromiseOrValue<string>,
+      _image: PromiseOrValue<string>,
+      _userId: PromiseOrValue<BigNumberish>,
+      _tweetId: PromiseOrValue<BigNumberish>,
+      _endTimestamp: PromiseOrValue<BigNumberish>,
+      _retweetMaxCount: PromiseOrValue<BigNumberish>,
+      _prizes: IChild.PrizeStruct[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
-    factory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    fulfillGiveawayWinner(
+      _requestId: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _payload: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    fulfillRefreshGiveaway(
+      _requestId: PromiseOrValue<BytesLike>,
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      _retweetCount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    fulfillSignUp(
+      _requestId: PromiseOrValue<BytesLike>,
+      _userId: PromiseOrValue<BigNumberish>,
+      _hasSignedUp: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getGiveawayRefreshURI(
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getGiveawayURI(
+      _giveawayId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getGiveaways(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getPrizes(
       _epoch: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getSignUpURI(
+      _userId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1172,13 +1884,24 @@ export interface Child extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "hasSignedUp()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "hasSignedUp(uint256)"(
+      _userId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     pause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    pauseGiveaways(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    refreshActiveGiveawayStatus(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     removeTokenERC20(
       _token: PromiseOrValue<string>,
@@ -1190,8 +1913,24 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    setRequestBaseURI(
+      _requestBaseURI: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     setTreasuryFee(
       _treasuryFee: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setupKeeper(
+      _cronUpkeep: PromiseOrValue<string>,
+      _encodedCron: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    signUp(
+      _userId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1205,11 +1944,11 @@ export interface Child extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    treasuryAmount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    treasuryFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     unpause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    unpauseGiveaways(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1228,6 +1967,10 @@ export interface Child extends BaseContract {
 
     withdrawFunds(
       _receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawLink(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

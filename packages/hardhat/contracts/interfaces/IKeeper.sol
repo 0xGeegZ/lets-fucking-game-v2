@@ -28,10 +28,22 @@ interface IKeeper {
     function getEncodedCron() external view returns (string memory _encodedCron);
 
     /**
+     * @notice Return handler
+     * @dev Callable by only by owner
+     */
+    function getHandler() external view returns (string memory _handler);
+
+    /**
      * @notice Register the cron to the upkeep contract
      * @dev Callable by only by owner
      */
     function registerCronToUpkeep() external;
+
+    /**
+     * @notice Register the cron to the upkeep contract
+     * @dev Callable by only by owner
+     */
+    function registerCronToUpkeep(address _target) external;
 
     /**
      * @notice Set the keeper address
@@ -58,4 +70,10 @@ interface IKeeper {
      * @dev Callable by only by owner
      */
     function unpauseKeeper() external;
+
+    /**
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
+     * Can only be called by the current owner.
+     */
+    function transferOwnership(address newOwner) external;
 }

@@ -93,7 +93,6 @@ export interface IChildInterface extends utils.Interface {
     "addTokenERC721(address)": FunctionFragment;
     "claimPrize(uint256)": FunctionFragment;
     "claimTreasuryFee()": FunctionFragment;
-    "getERC721TokenIds(address,address)": FunctionFragment;
     "getPrizes(uint256)": FunctionFragment;
     "getWinners(uint256)": FunctionFragment;
     "pause()": FunctionFragment;
@@ -116,7 +115,6 @@ export interface IChildInterface extends utils.Interface {
       | "addTokenERC721"
       | "claimPrize"
       | "claimTreasuryFee"
-      | "getERC721TokenIds"
       | "getPrizes"
       | "getWinners"
       | "pause"
@@ -151,10 +149,6 @@ export interface IChildInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "claimTreasuryFee",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getERC721TokenIds",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getPrizes",
@@ -221,10 +215,6 @@ export interface IChildInterface extends utils.Interface {
     functionFragment: "claimTreasuryFee",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "getERC721TokenIds",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "getPrizes", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getWinners", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
@@ -274,7 +264,6 @@ export interface IChildInterface extends utils.Interface {
     "CronUpkeepUpdated(uint256,address)": EventFragment;
     "EncodedCronUpdated(uint256,string)": EventFragment;
     "FactoryOwnershipTransferred(address,address)": EventFragment;
-    "FailedTransfer(address,uint256)": EventFragment;
     "GamePrizeClaimed(address,uint256,uint256)": EventFragment;
     "PrizeAdded(uint256,uint256,uint256,uint256,address,uint256)": EventFragment;
     "Received(address,uint256)": EventFragment;
@@ -293,7 +282,6 @@ export interface IChildInterface extends utils.Interface {
   getEvent(
     nameOrSignatureOrTopic: "FactoryOwnershipTransferred"
   ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FailedTransfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GamePrizeClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PrizeAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Received"): EventFragment;
@@ -386,17 +374,6 @@ export type FactoryOwnershipTransferredEvent = TypedEvent<
 
 export type FactoryOwnershipTransferredEventFilter =
   TypedEventFilter<FactoryOwnershipTransferredEvent>;
-
-export interface FailedTransferEventObject {
-  receiver: string;
-  amount: BigNumber;
-}
-export type FailedTransferEvent = TypedEvent<
-  [string, BigNumber],
-  FailedTransferEventObject
->;
-
-export type FailedTransferEventFilter = TypedEventFilter<FailedTransferEvent>;
 
 export interface GamePrizeClaimedEventObject {
   claimer: string;
@@ -510,12 +487,6 @@ export interface IChild extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
-
     getPrizes(
       _epoch: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -613,12 +584,6 @@ export interface IChild extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getERC721TokenIds(
-    _token: PromiseOrValue<string>,
-    _account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
-
   getPrizes(
     _epoch: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -707,12 +672,6 @@ export interface IChild extends BaseContract {
     ): Promise<void>;
 
     claimTreasuryFee(overrides?: CallOverrides): Promise<void>;
-
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
 
     getPrizes(
       _epoch: PromiseOrValue<BigNumberish>,
@@ -837,12 +796,6 @@ export interface IChild extends BaseContract {
       newFactory?: null
     ): FactoryOwnershipTransferredEventFilter;
 
-    "FailedTransfer(address,uint256)"(
-      receiver?: null,
-      amount?: null
-    ): FailedTransferEventFilter;
-    FailedTransfer(receiver?: null, amount?: null): FailedTransferEventFilter;
-
     "GamePrizeClaimed(address,uint256,uint256)"(
       claimer?: null,
       epoch?: null,
@@ -911,12 +864,6 @@ export interface IChild extends BaseContract {
 
     claimTreasuryFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getPrizes(
@@ -1009,12 +956,6 @@ export interface IChild extends BaseContract {
 
     claimTreasuryFee(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    getERC721TokenIds(
-      _token: PromiseOrValue<string>,
-      _account: PromiseOrValue<string>,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getPrizes(

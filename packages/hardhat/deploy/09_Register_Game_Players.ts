@@ -23,29 +23,45 @@ const func: DeployFunction = async function ({
   if (!REGISTRATION_AMOUNT_DEFAULT)
     throw new Error('No game config found for chain id', chainId)
 
-  const { address: cronExternalAddress } = await deployments.get('CronExternal')
-  const libraries = {
+  // const { address: cronExternalAddress } = await deployments.get('CronExternal')
+  // const libraries = {
+  //   libraries: {
+  //     Cron: cronExternalAddress,
+  //   },
+  // }
+  const { address: tokenHelpersAddress } = await deployments.get('TokenHelpers')
+  const helpersLibrariesG = {
     libraries: {
-      Cron: cronExternalAddress,
+      TokenHelpers: tokenHelpersAddress,
     },
   }
 
-  // const { interface: gameInterface } = await ethers.getContractFactory(
-  //   'GameV1'
-  //   libraries
-  // )
+  const { interface: gameInterface } = await ethers.getContractFactory(
+    'GameV1',
+    helpersLibrariesG
+  )
 
   // const { interface: gameFactoryInterface } = await ethers.getContractFactory(
   //   'GameFactory',
   // )
 
-  const { interface: gameInterface } = await ethers.getContractFactory('GameV1')
+  // const { interface: gameInterface } = await ethers.getContractFactory('GameV1')
+
+  const { address: keeperHelpersAddress } = await deployments.get(
+    'KeeperHelpers'
+  )
+  const helpersLibrariesGF = {
+    libraries: {
+      KeeperHelpers: keeperHelpersAddress,
+      TokenHelpers: tokenHelpersAddress,
+    },
+  }
 
   const { address: gameFactoryAddress } = await deployments.get('GameFactoryV1')
 
   const { interface: gameFactoryInterface } = await ethers.getContractFactory(
     'GameFactoryV1',
-    libraries
+    helpersLibrariesGF
   )
 
   const gameFactory = new ethers.Contract(

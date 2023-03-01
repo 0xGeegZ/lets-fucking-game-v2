@@ -29,10 +29,15 @@ const func: DeployFunction = async function ({
     log: true,
   }
 
-  const { address: cronExternalAddress } = await deployments.get('CronExternal')
-  const libraries = {
+  const { address: keeperHelpersAddress } = await deployments.get(
+    'KeeperHelpers'
+  )
+  const { address: tokenHelpersAddress } = await deployments.get('TokenHelpers')
+
+  const helpersLibraries = {
     libraries: {
-      Cron: cronExternalAddress,
+      KeeperHelpers: keeperHelpersAddress,
+      TokenHelpers: tokenHelpersAddress,
     },
   }
 
@@ -60,7 +65,7 @@ const func: DeployFunction = async function ({
     receipt: { gasUsed: gameFactoryGasUsed },
   } = await deploy('GameFactoryV1', {
     ...options,
-    ...libraries,
+    ...helpersLibraries,
     args: gameFactoryArgs,
   })
 
@@ -70,10 +75,17 @@ const func: DeployFunction = async function ({
     )
 
   log('Adding GameFactoryV1 to Keeper delegators')
+  const { address: cronExternalAddress } = await deployments.get('CronExternal')
+  const cronLibraries = {
+    libraries: {
+      Cron: cronExternalAddress,
+    },
+  }
+
   try {
     const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
       'CronUpkeep',
-      libraries
+      cronLibraries
     )
 
     const cronUpkeep = new ethers.Contract(

@@ -2,12 +2,12 @@
 pragma solidity >=0.8.6;
 
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
+
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+import { IGiveaway } from "../interfaces/IGiveaway.sol";
 import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
 import { IKeeper } from "../interfaces/IKeeper.sol";
 
@@ -15,14 +15,11 @@ import { KeeperHelpers } from "../libraries/KeeperHelpers.sol";
 
 import { Child } from "../abstracts/Child.sol";
 
-import "hardhat/console.sol";
-
-contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
+contract GiveawayV1 is Child, IGiveaway, ChainlinkClient, KeeperCompatibleInterface {
     using Chainlink for Chainlink.Request;
     using EnumerableMap for EnumerableMap.UintToAddressMap;
     using Counters for Counters.Counter;
 
-    address public cronUpkeep;
     address public keeper;
 
     bytes32 public immutable jobId;
@@ -30,63 +27,8 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
 
     string public requestBaseURI;
 
-    struct Giveaway {
-        string name;
-        string image;
-        address creator;
-        uint256 userId;
-        uint256 tweetId;
-        uint256 endTimestamp;
-        // will be refreshed periodically with upkeep
-        uint256 retweetCount;
-        // should be zero if no retweetMaxCount
-        uint256 retweetMaxCount;
-        bool isEnded;
-    }
-
     mapping(uint256 => Giveaway) public giveaways;
-
     EnumerableMap.UintToAddressMap private users;
-
-    /**
-     * @notice Called when a new giveaway is created
-     */
-    event GiveawayCreated(uint256 epoch, uint256 userId, uint256 tweetId, uint256 prizesLength);
-    /**
-     * @notice Called when a winner is added
-     */
-    event WinnerAdded(
-        uint256 giveawayId,
-        uint256 position,
-        uint256 winnerId,
-        address contractAddress,
-        uint256 amount,
-        uint256 tokenId
-    );
-    /**
-     * @notice Called when a giveaway is refreshed
-     */
-    event GiveawayRefreshed(uint256 indexed giveawayId, uint256 timestamp);
-    /**
-     * @notice Called when a request to draw winners is made
-     */
-    event GiveawayWinnerRequested(uint256 indexed giveawayId, bytes32 indexed requestId);
-    /**
-     * @notice Called when a request to sign up is made
-     */
-    event SignUpRequested(uint256 indexed userId, bytes32 indexed requestId);
-    /**
-     * @notice Called when a request to refresh a giveaway is made
-     */
-    event GiveawayRefreshRequested(uint256 indexed userId, bytes32 indexed requestId);
-    /**
-     * @notice Called when perform upkeep is executed
-     */
-    event PerformUpkeepExecuted(uint256 indexed giveawayId, uint256 timestamp);
-    /**
-     * @notice Called when a user signed up
-     */
-    event SignedUp(uint256 indexed userId, address userAddress);
 
     ///
     /// CONSTRUCTOR
@@ -131,8 +73,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         uint256 _endTimestamp,
         uint256 _retweetMaxCount,
         Prize[] memory _prizes
-    ) external payable {
-        console.log("createGiveaway for round %s and prizes %s", epoch.current(), _prizes.length);
+    ) external payable override {
         giveaways[epoch.current()] = Giveaway({
             name: _name,
             image: _image,
@@ -160,8 +101,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     /**
      * @notice Function that allow user to sign up to giveaway and claim wonned giveaways
      */
-    function signUp(uint256 _userId) external {
-        console.log("Sign up for user %s and address %s", _userId, msg.sender);
+    function signUp(uint256 _userId) external override {
         users.set(_userId, msg.sender);
 
         emit SignedUp(_userId, msg.sender);
@@ -172,14 +112,14 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Check if user has signed up
      * @param _userId - twitter user id
      */
-    function hasSignedUp(uint256 _userId) external view returns (bool) {
+    function hasSignedUp(uint256 _userId) external view override returns (bool) {
         return users.contains(_userId);
     }
 
     /**
      * @notice Check if caller has signed up
      */
-    function hasSignedUp() external view returns (bool) {
+    function hasSignedUp() external view override returns (bool) {
         bool found = false;
         for (uint256 idx = 0; idx < users.length(); idx++) if (users.get(idx) == msg.sender) found = true;
         return found;
@@ -200,13 +140,8 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         bytes32 _requestId,
         uint256 _giveawayId,
         bytes calldata _payload
-    ) public recordChainlinkFulfillment(_requestId) {
+    ) public override recordChainlinkFulfillment(_requestId) {
         (uint256[] memory winnersIds, uint256[] memory winnersPositions) = abi.decode(_payload, (uint256[], uint256[]));
-        console.log(
-            "fulfillGiveawayWinner winnersIds %s winnersPositions %s",
-            winnersIds.length,
-            winnersPositions.length
-        );
         giveaways[_giveawayId].isEnded = true;
 
         for (uint256 i = 0; i < winnersIds.length; i++) {
@@ -228,9 +163,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         bytes32 _requestId,
         uint256 _userId,
         bool _hasSignedUp
-    ) public recordChainlinkFulfillment(_requestId) {
-        console.log("fulfillSignUp %s _userId %s _hasSignedUp %s", _userId, _hasSignedUp);
-
+    ) public override recordChainlinkFulfillment(_requestId) {
         if (!_hasSignedUp) users.remove(_userId);
 
         address user = users.get(_userId);
@@ -250,8 +183,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         bytes32 _requestId,
         uint256 _giveawayId,
         uint256 _retweetCount
-    ) public recordChainlinkFulfillment(_requestId) {
-        console.log("fulfillRefreshGiveway %s _giveawayId %s _retweetCount %s", _giveawayId, _retweetCount);
+    ) public override recordChainlinkFulfillment(_requestId) {
         giveaways[_giveawayId].retweetCount = _retweetCount;
         if (_isGiveawayCouldEnded(giveaways[_giveawayId])) _performGiveawayWinner(_giveawayId);
     }
@@ -262,8 +194,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     /**
      * @notice Refresh all active giveaways retweet count
      */
-    function refreshActiveGiveawayStatus() external whenNotPaused {
-        console.log("refreshActiveGiveawayStatus rounds %s", epoch.current());
+    function refreshActiveGiveawayStatus() external override whenNotPaused {
         for (uint256 round = 0; round < epoch.current(); round++)
             if (!giveaways[round].isEnded) {
                 _requestRefreshGiveaway(round);
@@ -277,7 +208,6 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      */
     function performUpkeep(bytes calldata _performData) external override whenNotPaused {
         uint256 giveawayId = abi.decode(_performData, (uint256));
-        console.log("performUpkeep giveawayId %s", giveawayId);
         _performGiveawayWinner(giveawayId);
     }
 
@@ -310,8 +240,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     /**
      * @notice Return URI for giveaway endpoint
      */
-    function getGiveawayURI(uint256 _giveawayId) public view returns (string memory _giveawayURI) {
-        console.log("getGiveawayURI requestBaseURI %s _giveawayId %s", requestBaseURI, _giveawayId);
+    function getGiveawayURI(uint256 _giveawayId) public view override returns (string memory _giveawayURI) {
         return
             string(
                 abi.encodePacked(
@@ -319,14 +248,14 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
                     "/chains/",
                     block.chainid,
                     "/giveaways/",
-                    Strings.toString(_giveawayId),
+                    _giveawayId,
                     "/winners",
                     "?prizes=",
-                    Strings.toString(prizes[_giveawayId].length),
+                    prizes[_giveawayId].length,
                     "&tweetId",
-                    Strings.toString(giveaways[_giveawayId].tweetId),
+                    giveaways[_giveawayId].tweetId,
                     "&retweetMaxCount",
-                    Strings.toString(giveaways[_giveawayId].retweetMaxCount)
+                    giveaways[_giveawayId].retweetMaxCount
                 )
             );
     }
@@ -334,8 +263,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     /**
      * @notice Return URI for giveaway endpoint
      */
-    function getGiveawayRefreshURI(uint256 _giveawayId) public view returns (string memory _giveawayURI) {
-        console.log("getGiveawayRefreshURI requestBaseURI %s _giveawayId %s", requestBaseURI, _giveawayId);
+    function getGiveawayRefreshURI(uint256 _giveawayId) public view override returns (string memory _giveawayURI) {
         return
             string(
                 abi.encodePacked(
@@ -343,10 +271,10 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
                     "/chains/",
                     block.chainid,
                     "/giveaways/",
-                    Strings.toString(_giveawayId),
+                    _giveawayId,
                     "/refresh",
                     "?tweetId",
-                    Strings.toString(giveaways[_giveawayId].tweetId)
+                    giveaways[_giveawayId].tweetId
                 )
             );
     }
@@ -354,16 +282,15 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     /**
      * @notice Return URI for sign up endpoint
      */
-    function getSignUpURI(uint256 _userId) public view returns (string memory _signUpURI) {
-        console.log("getSignUpURI requestBaseURI %s _userId %s", requestBaseURI, _userId);
-        return string(abi.encodePacked(requestBaseURI, "/users/", Strings.toString(_userId)));
+    function getSignUpURI(uint256 _userId) public view override returns (string memory _signUpURI) {
+        return string(abi.encodePacked(requestBaseURI, "/users/", _userId));
     }
 
     /**
      * @notice Get the list of deployed giveaways
      * @return _giveaways the list of giveaways
      */
-    function getGiveaways() external view returns (Giveaway[] memory _giveaways) {
+    function getGiveaways() external view override returns (Giveaway[] memory _giveaways) {
         Giveaway[] memory allGiveaways = new Giveaway[](epoch.current());
         for (uint256 idx = 0; idx < epoch.current(); idx++) allGiveaways[idx] = giveaways[idx];
         return allGiveaways;
@@ -382,39 +309,17 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
     function setupKeeper(
         address _cronUpkeep,
         string memory _encodedCron
-    ) external whenPaused onlyAdmin onlyAddressInit(_cronUpkeep) {
-        cronUpkeep = _cronUpkeep;
-        keeper = KeeperHelpers.createKeeper(cronUpkeep, "refreshActiveGiveawayStatus()", _encodedCron);
-        ICronUpkeep(cronUpkeep).addDelegator(address(keeper));
+    ) external override whenPaused onlyAdmin onlyAddressInit(_cronUpkeep) {
+        keeper = KeeperHelpers.createKeeper(_cronUpkeep, "refreshActiveGiveawayStatus()", _encodedCron);
+        ICronUpkeep(_cronUpkeep).addDelegator(address(keeper));
         IKeeper(keeper).registerCronToUpkeep();
-        // WORKS
-        // cronUpkeep = CronUpkeep(_cronUpkeep);
-        // keeper = new Keeper(address(cronUpkeep), "refreshActiveGiveawayStatus()", _encodedCron);
-        // cronUpkeep.addDelegator(address(keeper));
-        // keeper.registerCronToUpkeep();
-
-        // OLD
-        // refresh giveaways retweets count from encodedCron (default every hour)
-        // encodedCron = _encodedCron;
-        // cronUpkeep = _cronUpkeep;
-
-        // V1
-        // keeper = _keeper;
-        // IKeeper(keeper).registerCronToUpkeep();
-
-        // V0
-        // Keeper keeperContract = new Keeper(cronUpkeep, "refreshActiveGiveawayStatus()", encodedCron);
-        // keeper = address(keeperContract);
-        // ICronUpkeep(cronUpkeep).addDelegator(address(keeper));
-        // keeperContract.registerCronToUpkeep();
     }
 
     /**
      * @notice Pause the current giveaway and associated keeper job
      * @dev Callable by admin or creator
      */
-
-    function pauseGiveaways() external whenNotPaused onlyAdmin {
+    function pauseGiveaways() external override whenNotPaused onlyAdmin {
         _pause();
         IKeeper(keeper).pauseKeeper();
     }
@@ -423,7 +328,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Unpause the current giveaway and associated keeper job
      * @dev Callable by admin or creator
      */
-    function unpauseGiveaways() external whenPaused onlyAdmin {
+    function unpauseGiveaways() external override whenPaused onlyAdmin {
         _unpause();
         IKeeper(keeper).unpauseKeeper();
     }
@@ -432,7 +337,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Witdraws LINK from the contract to the Owner
      * @dev only admin can call this function
      */
-    function withdrawLink() external onlyAdmin {
+    function withdrawLink() external override onlyAdmin {
         LinkTokenInterface link = LinkTokenInterface(chainlinkTokenAddress());
         require(link.transfer(owner, link.balanceOf(address(this))), "Unable to transfer");
     }
@@ -441,7 +346,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Set requestBaseURI
      * @dev only admin can call this function
      */
-    function setRequestBaseURI(string calldata _requestBaseURI) external onlyAdmin {
+    function setRequestBaseURI(string calldata _requestBaseURI) external override onlyAdmin {
         requestBaseURI = _requestBaseURI;
     }
 
@@ -449,7 +354,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @notice Add user to users list
      * @dev only admin can call this function
      */
-    function addUser(uint256 _userId, address _userAddress) external onlyAdmin {
+    function addUser(uint256 _userId, address _userAddress) external override onlyAdmin {
         if (!users.contains(_userId)) users.set(_userId, _userAddress);
     }
 
@@ -467,7 +372,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
         uint256 _payment,
         bytes4 _callbackFunctionId,
         uint256 _expiration
-    ) public onlyAdmin {
+    ) public override onlyAdmin {
         cancelChainlinkRequest(_requestId, _payment, _callbackFunctionId, _expiration);
     }
 
@@ -571,6 +476,7 @@ contract GiveawayV1 is Child, ChainlinkClient, KeeperCompatibleInterface {
      * @param _winnerId twitter id of winner
      * @param _winnerAddress winner address
      * @param _prize prize
+     * TODO NEXT VERSION : Standardize this function and pass it to child smart contract
      */
     function _addWinner(
         uint256 _giveawayId,

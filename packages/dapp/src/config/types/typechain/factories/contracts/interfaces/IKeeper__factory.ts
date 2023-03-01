@@ -95,7 +95,33 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "getHandler",
+    outputs: [
+      {
+        internalType: "string",
+        name: "_handler",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "pauseKeeper",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_target",
+        type: "address",
+      },
+    ],
+    name: "registerCronToUpkeep",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -129,6 +155,19 @@ const _abi = [
       },
     ],
     name: "setEncodedCron",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

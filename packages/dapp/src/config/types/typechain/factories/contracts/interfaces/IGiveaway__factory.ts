@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
 import type {
-  IGame,
-  IGameInterface,
-} from "../../../contracts/interfaces/IGame";
+  IGiveaway,
+  IGiveawayInterface,
+} from "../../../contracts/interfaces/IGiveaway";
 
 const _abi = [
   {
@@ -148,31 +148,6 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: "uint256",
-        name: "epoch",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "playerAddress",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "roundCount",
-        type: "uint256",
-      },
-    ],
-    name: "GameLost",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
         internalType: "address",
         name: "claimer",
         type: "address",
@@ -205,61 +180,99 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "remainingPlayersCount",
+        name: "userId",
         type: "uint256",
       },
       {
         indexed: false,
         internalType: "uint256",
-        name: "amountWon",
+        name: "tweetId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "prizesLength",
         type: "uint256",
       },
     ],
-    name: "GameSplitted",
+    name: "GiveawayCreated",
     type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
-        name: "epoch",
+        name: "userId",
         type: "uint256",
       },
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "winnersCounter",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "playerAddress",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amountWon",
-        type: "uint256",
+        indexed: true,
+        internalType: "bytes32",
+        name: "requestId",
+        type: "bytes32",
       },
     ],
-    name: "GameWon",
+    name: "GiveawayRefreshRequested",
     type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
+        indexed: true,
+        internalType: "uint256",
+        name: "giveawayId",
+        type: "uint256",
+      },
+      {
         indexed: false,
-        internalType: "address",
-        name: "playerAddress",
-        type: "address",
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
       },
     ],
-    name: "PlayedRound",
+    name: "GiveawayRefreshed",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "giveawayId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "bytes32",
+        name: "requestId",
+        type: "bytes32",
+      },
+    ],
+    name: "GiveawayWinnerRequested",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "giveawayId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    name: "PerformUpkeepExecuted",
     type: "event",
   },
   {
@@ -328,57 +341,38 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
+        indexed: true,
+        internalType: "uint256",
+        name: "userId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "bytes32",
+        name: "requestId",
+        type: "bytes32",
+      },
+    ],
+    name: "SignUpRequested",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "userId",
+        type: "uint256",
+      },
+      {
         indexed: false,
         internalType: "address",
-        name: "playerAddress",
+        name: "userAddress",
         type: "address",
       },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "playersCount",
-        type: "uint256",
-      },
     ],
-    name: "RegisteredForGame",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "timelock",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "resetId",
-        type: "uint256",
-      },
-    ],
-    name: "ResetGame",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "timelock",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "playersCount",
-        type: "uint256",
-      },
-    ],
-    name: "StartedGame",
+    name: "SignedUp",
     type: "event",
   },
   {
@@ -413,42 +407,41 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "epoch",
+        name: "giveawayId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "position",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "winnerId",
         type: "uint256",
       },
       {
         indexed: false,
         internalType: "address",
-        name: "emmiter",
+        name: "contractAddress",
         type: "address",
       },
       {
         indexed: false,
         internalType: "uint256",
-        name: "timestamp",
+        name: "amount",
         type: "uint256",
       },
-    ],
-    name: "TriggeredDailyCheckpoint",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
       {
         indexed: false,
         internalType: "uint256",
-        name: "epoch",
+        name: "tokenId",
         type: "uint256",
       },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "playerAddress",
-        type: "address",
-      },
     ],
-    name: "VoteToSplitPot",
+    name: "WinnerAdded",
     type: "event",
   },
   {
@@ -518,8 +511,47 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "claimCreatorFee",
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_userId",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_userAddress",
+        type: "address",
+      },
+    ],
+    name: "addUser",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "_requestId",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint256",
+        name: "_payment",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes4",
+        name: "_callbackFunctionId",
+        type: "bytes4",
+      },
+      {
+        internalType: "uint256",
+        name: "_expiration",
+        type: "uint256",
+      },
+    ],
+    name: "cancelRequest",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -545,95 +577,158 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "getGameData",
-    outputs: [
+    inputs: [
+      {
+        internalType: "string",
+        name: "_name",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_image",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "_userId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_tweetId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_endTimestamp",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_retweetMaxCount",
+        type: "uint256",
+      },
       {
         components: [
           {
             internalType: "uint256",
-            name: "gameId",
+            name: "position",
             type: "uint256",
           },
           {
             internalType: "uint256",
-            name: "versionId",
+            name: "amount",
             type: "uint256",
           },
           {
             internalType: "uint256",
-            name: "epoch",
+            name: "standard",
             type: "uint256",
-          },
-          {
-            internalType: "bytes32",
-            name: "name",
-            type: "bytes32",
-          },
-          {
-            internalType: "uint256",
-            name: "playerAddressesCount",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "remainingPlayersCount",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "maxPlayers",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "registrationAmount",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "playTimeRange",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "treasuryFee",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "creatorFee",
-            type: "uint256",
-          },
-          {
-            internalType: "bool",
-            name: "isPaused",
-            type: "bool",
-          },
-          {
-            internalType: "bool",
-            name: "isInProgress",
-            type: "bool",
           },
           {
             internalType: "address",
-            name: "creator",
+            name: "contractAddress",
             type: "address",
           },
           {
-            internalType: "address",
-            name: "admin",
-            type: "address",
-          },
-          {
-            internalType: "string",
-            name: "encodedCron",
-            type: "string",
+            internalType: "uint256",
+            name: "tokenId",
+            type: "uint256",
           },
         ],
-        internalType: "struct IGame.GameData",
-        name: "gameData",
-        type: "tuple",
+        internalType: "struct IChild.Prize[]",
+        name: "_prizes",
+        type: "tuple[]",
+      },
+    ],
+    name: "createGiveaway",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "_requestId",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint256",
+        name: "_giveawayId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "_payload",
+        type: "bytes",
+      },
+    ],
+    name: "fulfillGiveawayWinner",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "_requestId",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint256",
+        name: "_giveawayId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_retweetCount",
+        type: "uint256",
+      },
+    ],
+    name: "fulfillRefreshGiveaway",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "_requestId",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint256",
+        name: "_userId",
+        type: "uint256",
+      },
+      {
+        internalType: "bool",
+        name: "_hasSignedUp",
+        type: "bool",
+      },
+    ],
+    name: "fulfillSignUp",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_giveawayId",
+        type: "uint256",
+      },
+    ],
+    name: "getGiveawayRefreshURI",
+    outputs: [
+      {
+        internalType: "string",
+        name: "_giveawayURI",
+        type: "string",
       },
     ],
     stateMutability: "view",
@@ -642,59 +737,17 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_player",
-        type: "address",
+        internalType: "uint256",
+        name: "_giveawayId",
+        type: "uint256",
       },
     ],
-    name: "getPlayer",
+    name: "getGiveawayURI",
     outputs: [
       {
-        components: [
-          {
-            internalType: "address",
-            name: "playerAddress",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "roundRangeLowerLimit",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "roundRangeUpperLimit",
-            type: "uint256",
-          },
-          {
-            internalType: "bool",
-            name: "hasPlayedRound",
-            type: "bool",
-          },
-          {
-            internalType: "uint256",
-            name: "roundCount",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "position",
-            type: "uint256",
-          },
-          {
-            internalType: "bool",
-            name: "hasLost",
-            type: "bool",
-          },
-          {
-            internalType: "bool",
-            name: "isSplitOk",
-            type: "bool",
-          },
-        ],
-        internalType: "struct IGame.Player",
-        name: "gamePlayer",
-        type: "tuple",
+        internalType: "string",
+        name: "_giveawayURI",
+        type: "string",
       },
     ],
     stateMutability: "view",
@@ -702,12 +755,59 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "getPlayerAddresses",
+    name: "getGiveaways",
     outputs: [
       {
-        internalType: "address[]",
-        name: "gamePlayerAddresses",
-        type: "address[]",
+        components: [
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "image",
+            type: "string",
+          },
+          {
+            internalType: "address",
+            name: "creator",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "userId",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "tweetId",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "endTimestamp",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "retweetCount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "retweetMaxCount",
+            type: "uint256",
+          },
+          {
+            internalType: "bool",
+            name: "isEnded",
+            type: "bool",
+          },
+        ],
+        internalType: "struct IGiveaway.Giveaway[]",
+        name: "_giveaways",
+        type: "tuple[]",
       },
     ],
     stateMutability: "view",
@@ -760,13 +860,19 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "getRemainingPlayersCount",
-    outputs: [
+    inputs: [
       {
         internalType: "uint256",
-        name: "remainingPlayersCount",
+        name: "_userId",
         type: "uint256",
+      },
+    ],
+    name: "getSignUpURI",
+    outputs: [
+      {
+        internalType: "string",
+        name: "_signUpURI",
+        type: "string",
       },
     ],
     stateMutability: "view",
@@ -839,150 +945,31 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "hasSignedUp",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
-        components: [
-          {
-            internalType: "address",
-            name: "owner",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "creator",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "cronUpkeep",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "keeper",
-            type: "address",
-          },
-          {
-            internalType: "bytes32",
-            name: "name",
-            type: "bytes32",
-          },
-          {
-            internalType: "uint256",
-            name: "version",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "gameId",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "playTimeRange",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "maxPlayers",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "registrationAmount",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "treasuryFee",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "creatorFee",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "encodedCron",
-            type: "string",
-          },
-          {
-            components: [
-              {
-                internalType: "uint256",
-                name: "position",
-                type: "uint256",
-              },
-              {
-                internalType: "uint256",
-                name: "amount",
-                type: "uint256",
-              },
-              {
-                internalType: "uint256",
-                name: "standard",
-                type: "uint256",
-              },
-              {
-                internalType: "address",
-                name: "contractAddress",
-                type: "address",
-              },
-              {
-                internalType: "uint256",
-                name: "tokenId",
-                type: "uint256",
-              },
-            ],
-            internalType: "struct IChild.Prize[]",
-            name: "prizes",
-            type: "tuple[]",
-          },
-        ],
-        internalType: "struct IGame.Initialization",
-        name: "_initialization",
-        type: "tuple",
+        internalType: "uint256",
+        name: "_userId",
+        type: "uint256",
       },
     ],
-    name: "initialize",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "isAllPlayersSplitOk",
+    name: "hasSignedUp",
     outputs: [
       {
         internalType: "bool",
-        name: "isSplitOk",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "isGameAllPrizesStandard",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "isStandard",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "isGamePayable",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "isPayable",
+        name: "",
         type: "bool",
       },
     ],
@@ -998,16 +985,16 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "playRound",
+    name: "pauseGiveaways",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "registerForGame",
+    name: "refreshActiveGiveawayStatus",
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -1039,127 +1026,12 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "_creatorFee",
-        type: "uint256",
-      },
-    ],
-    name: "setCreatorFee",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_cronUpkeep",
-        type: "address",
-      },
-    ],
-    name: "setCronUpkeep",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "string",
-        name: "_encodedCron",
+        name: "_requestBaseURI",
         type: "string",
       },
     ],
-    name: "setEncodedCron",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "bytes32",
-            name: "name",
-            type: "bytes32",
-          },
-          {
-            internalType: "uint256",
-            name: "maxPlayers",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "registrationAmount",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "playTimeRange",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "treasuryFee",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "creatorFee",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "encodedCron",
-            type: "string",
-          },
-        ],
-        internalType: "struct IGame.UpdateGameData",
-        name: "_updateGameData",
-        type: "tuple",
-      },
-    ],
-    name: "setGameData",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_maxPlayers",
-        type: "uint256",
-      },
-    ],
-    name: "setMaxPlayers",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "_name",
-        type: "bytes32",
-      },
-    ],
-    name: "setName",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_playTimeRange",
-        type: "uint256",
-      },
-    ],
-    name: "setPlayTimeRange",
+    name: "setRequestBaseURI",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1178,8 +1050,32 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "startGame",
+    inputs: [
+      {
+        internalType: "address",
+        name: "_cronUpkeep",
+        type: "address",
+      },
+      {
+        internalType: "string",
+        name: "_encodedCron",
+        type: "string",
+      },
+    ],
+    name: "setupKeeper",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_userId",
+        type: "uint256",
+      },
+    ],
+    name: "signUp",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1201,31 +1097,11 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_creator",
-        type: "address",
-      },
-    ],
-    name: "transferCreatorOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "_factory",
         type: "address",
       },
     ],
     name: "transferFactoryOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "triggerDailyCheckpoint",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1239,7 +1115,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "voteToSplitPot",
+    name: "unpauseGiveaways",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1299,6 +1175,13 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "withdrawLink",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -1313,12 +1196,15 @@ const _abi = [
   },
 ];
 
-export class IGame__factory {
+export class IGiveaway__factory {
   static readonly abi = _abi;
-  static createInterface(): IGameInterface {
-    return new utils.Interface(_abi) as IGameInterface;
+  static createInterface(): IGiveawayInterface {
+    return new utils.Interface(_abi) as IGiveawayInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): IGame {
-    return new Contract(address, _abi, signerOrProvider) as IGame;
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): IGiveaway {
+    return new Contract(address, _abi, signerOrProvider) as IGiveaway;
   }
 }
