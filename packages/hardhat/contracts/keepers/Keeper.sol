@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.6;
-import "hardhat/console.sol";
 
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -149,7 +148,6 @@ contract Keeper is IKeeper, Ownable, Pausable {
         uint256 nextCronJobIDs = ICronUpkeep(cronUpkeep).getNextCronJobIDs();
         cronUpkeepJobId = nextCronJobIDs;
 
-        console.log("ENCODED CRON %s", encodedCron);
         bytes memory encodedCronBytes = CronExternal.toEncodedSpec(encodedCron);
 
         ICronUpkeep(cronUpkeep).createCronJobFromEncodedSpec(

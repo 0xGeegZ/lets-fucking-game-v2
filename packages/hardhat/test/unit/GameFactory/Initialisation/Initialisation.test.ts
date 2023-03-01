@@ -6,15 +6,16 @@ import { initialiseTestData } from '../../../factories/setup'
 describe('GameFactoryContract', function () {
   beforeEach(initialiseTestData)
   context('GameV1 deployed', function () {
-    // TODO should only allow factoy to call initialize function ?
-
     describe('when an account tries to initialize the base contract', function () {
       it('should revert with the correct reason', async function () {
+        // TODO REMOVE THIS TEST ON NEXT VERSION :
+        // should only allow factoy to call initialize function
         await expectRevert(
           this.game.initialize({
             creator: this.bob.address,
             owner: this.owner.address,
             cronUpkeep: this.cronUpkeep.address,
+            keeper: '0x0000000000000000000000000000000000000000',
             name: this.name,
             version: '0',
             gameId: '0',
@@ -32,6 +33,8 @@ describe('GameFactoryContract', function () {
     })
     describe('when the creator tries to initialize a game already initialized', function () {
       it('should revert with the correct message', async function () {
+        // TODO REMOVE THIS TEST ON NEXT VERSION :
+        // should only allow factoy to call initialize function
         const registrationAmount =
           this.authorizedAmounts[this.authorizedAmounts.length - 1]
 
@@ -65,6 +68,7 @@ describe('GameFactoryContract', function () {
             creator: this.bob.address,
             owner: this.owner.address,
             cronUpkeep: this.cronUpkeep.address,
+            keeper: '0x0000000000000000000000000000000000000000',
             name: this.name,
             version: '0',
             gameId: '0',
