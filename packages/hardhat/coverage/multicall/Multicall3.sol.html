@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for multicall/Multicall3.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">multicall/</a> Multicall3.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/22</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/16</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/61</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
+ *Submitted for verification at BscScan.com on 2022-03-09
+ */
+&nbsp;
+// SPDX-License-Identifier: MIT
+pragma solidity &gt;=0.8.6;
+&nbsp;
+/// @title Multicall3
+/// @notice Aggregate results from multiple function calls
+/// @dev Multicall &amp; Multicall2 backwards-compatible
+/// @dev Aggregate methods are marked `payable` to save 24 gas per call
+/// @author Michael Elliot &lt;mike@makerdao.com&gt;
+/// @author Joshua Levine &lt;joshua@makerdao.com&gt;
+/// @author Nick Johnson &lt;arachnid@notdot.net&gt;
+/// @author Andreas Bigger &lt;andreas@nascent.xyz&gt;
+/// @author Matt Solomon &lt;matt@mattsolomon.dev&gt;
+contract Multicall3 {
+    struct Call {
+        address target;
+        bytes callData;
+    }
+&nbsp;
+    struct Call3 {
+        address target;
+        bool allowFailure;
+        bytes callData;
+    }
+&nbsp;
+    struct Call3Value {
+        address target;
+        bool allowFailure;
+        uint256 value;
+        bytes callData;
+    }
+&nbsp;
+    struct Result {
+        bool success;
+        bytes returnData;
+    }
+&nbsp;
+    /// @notice Backwards-compatible call aggregation with Multicall
+    /// @param calls An array of Call structs
+    /// @return blockNumber The block number where the calls were executed
+    /// @return returnData An array of bytes containing the responses
+<span class="fstat-no" title="function not covered" >    function aggregate(Call[] calldata calls) public payable returns (uint256 blockNumber, bytes[] memory returnData) {</span>
+        blockNumber = block.number;
+<span class="cstat-no" title="statement not covered" >        uint256 length = calls.length;</span>
+        returnData = new bytes[](length);
+<span class="cstat-no" title="statement not covered" >        Call calldata call;</span>
+<span class="cstat-no" title="statement not covered" >        for (uint256 i = 0; i &lt; length; ) {</span>
+<span class="cstat-no" title="statement not covered" >            bool success;</span>
+            call = calls[i];
+            (success, returnData[i]) = call.target.call(call.callData);
+<span class="cstat-no" title="statement not covered" >            require(success, "Multicall3: call failed")</span>;
+            unchecked {
+                ++i;
+            }
+        }
+    }
+&nbsp;
+    /// @notice Backwards-compatible with Multicall2
+    /// @notice Aggregate calls without requiring success
+    /// @param requireSuccess If true, require all calls to succeed
+    /// @param calls An array of Call structs
+    /// @return returnData An array of Result structs
+<span class="fstat-no" title="function not covered" >    function tryAggregate(bool requireSuccess, Call[] calldata calls)</span>
+        public
+        payable
+        returns (Result[] memory returnData)
+    {
+<span class="cstat-no" title="statement not covered" >        uint256 length = calls.length;</span>
+        returnData = new Result[](length);
+<span class="cstat-no" title="statement not covered" >        Call calldata call;</span>
+<span class="cstat-no" title="statement not covered" >        for (uint256 i = 0; i &lt; length; ) {</span>
+<span class="cstat-no" title="statement not covered" >            Result memory result = returnData[i];</span>
+            call = calls[i];
+            (result.success, result.returnData) = call.target.call(call.callData);
+<span class="cstat-no" title="statement not covered" >            if (requireSuccess) <span class="cstat-no" title="statement not covered" >require(result.success, "Multicall3: call failed")</span>;</span>
+            unchecked {
+                ++i;
+            }
+        }
+    }
+&nbsp;
+    /// @notice Backwards-compatible with Multicall2
+    /// @notice Aggregate calls and allow failures using tryAggregate
+    /// @param calls An array of Call structs
+    /// @return blockNumber The block number where the calls were executed
+    /// @return blockHash The hash of the block where the calls were executed
+    /// @return returnData An array of Result structs
+<span class="fstat-no" title="function not covered" >    function tryBlockAndAggregate(bool requireSuccess, Call[] calldata calls)</span>
+        public
+        payable
+        returns (
+            uint256 blockNumber,
+            bytes32 blockHash,
+            Result[] memory returnData
+        )
+    {
+        blockNumber = block.number;
+        blockHash = blockhash(block.number);
+        returnData = tryAggregate(requireSuccess, calls);
+    }
+&nbsp;
+    /// @notice Backwards-compatible with Multicall2
+    /// @notice Aggregate calls and allow failures using tryAggregate
+    /// @param calls An array of Call structs
+    /// @return blockNumber The block number where the calls were executed
+    /// @return blockHash The hash of the block where the calls were executed
+    /// @return returnData An array of Result structs
+<span class="fstat-no" title="function not covered" >    function blockAndAggregate(Call[] calldata calls)</span>
+        public
+        payable
+        returns (
+            uint256 blockNumber,
+            bytes32 blockHash,
+            Result[] memory returnData
+        )
+    {
+        (blockNumber, blockHash, returnData) = tryBlockAndAggregate(true, calls);
+    }
+&nbsp;
+    /// @notice Aggregate calls, ensuring each returns success if required
+    /// @param calls An array of Call3 structs
+    /// @return returnData An array of Result structs
+<span class="fstat-no" title="function not covered" >    function aggregate3(Call3[] calldata calls) public payable returns (Result[] memory returnData) {</span>
+<span class="cstat-no" title="statement not covered" >        uint256 length = calls.length;</span>
+        returnData = new Result[](length);
+<span class="cstat-no" title="statement not covered" >        Call3 calldata calli;</span>
+<span class="cstat-no" title="statement not covered" >        for (uint256 i = 0; i &lt; length; ) {</span>
+<span class="cstat-no" title="statement not covered" >            Result memory result = returnData[i];</span>
+            calli = calls[i];
+            (result.success, result.returnData) = calli.target.call(calli.callData);
+            assembly {
+                // Revert if the call fails and failure is not allowed
+                // `allowFailure := calldataload(add(calli, 0x20))` and `success := mload(result)`
+                if iszero(or(calldataload(add(calli, 0x20)), mload(result))) {
+                    // set "Error(string)" signature: bytes32(bytes4(keccak256("Error(string)")))
+                    mstore(0x00, 0x08c379a000000000000000000000000000000000000000000000000000000000)
+                    // set data offset
+                    mstore(0x04, 0x0000000000000000000000000000000000000000000000000000000000000020)
+                    // set length of revert string
+                    mstore(0x24, 0x0000000000000000000000000000000000000000000000000000000000000017)
+                    // set revert string: bytes32(abi.encodePacked("Multicall3: call failed"))
+                    mstore(0x44, 0x4d756c746963616c6c333a2063616c6c206661696c6564000000000000000000)
+                    revert(0x00, 0x64)
+                }
+            }
+            unchecked {
+                ++i;
+            }
+        }
+    }
+&nbsp;
+    /// @notice Aggregate calls with a msg value
+    /// @notice Reverts if msg.value is less than the sum of the call values
+    /// @param calls An array of Call3Value structs
+    /// @return returnData An array of Result structs
+<span class="fstat-no" title="function not covered" >    function aggregate3Value(Call3Value[] calldata calls) public payable returns (Result[] memory returnData) {</span>
+<span class="cstat-no" title="statement not covered" >        uint256 valAccumulator;</span>
+<span class="cstat-no" title="statement not covered" >        uint256 length = calls.length;</span>
+        returnData = new Result[](length);
+<span class="cstat-no" title="statement not covered" >        Call3Value calldata calli;</span>
+<span class="cstat-no" title="statement not covered" >        for (uint256 i = 0; i &lt; length; ) {</span>
+<span class="cstat-no" title="statement not covered" >            Result memory result = returnData[i];</span>
+            calli = calls[i];
+<span class="cstat-no" title="statement not covered" >            uint256 val = calli.value;</span>
+            // Humanity will be a Type V Kardashev Civilization before this overflows - andreas
+            // ~ 10^25 Wei in existence &lt;&lt; ~ 10^76 size uint fits in a uint256
+            unchecked {
+                valAccumulator += val;
+            }
+            (result.success, result.returnData) = calli.target.call{ value: val }(calli.callData);
+            assembly {
+                // Revert if the call fails and failure is not allowed
+                // `allowFailure := calldataload(add(calli, 0x20))` and `success := mload(result)`
+                if iszero(or(calldataload(add(calli, 0x20)), mload(result))) {
+                    // set "Error(string)" signature: bytes32(bytes4(keccak256("Error(string)")))
+                    mstore(0x00, 0x08c379a000000000000000000000000000000000000000000000000000000000)
+                    // set data offset
+                    mstore(0x04, 0x0000000000000000000000000000000000000000000000000000000000000020)
+                    // set length of revert string
+                    mstore(0x24, 0x0000000000000000000000000000000000000000000000000000000000000017)
+                    // set revert string: bytes32(abi.encodePacked("Multicall3: call failed"))
+                    mstore(0x44, 0x4d756c746963616c6c333a2063616c6c206661696c6564000000000000000000)
+                    revert(0x00, 0x84)
+                }
+            }
+            unchecked {
+                ++i;
+            }
+        }
+        // Finally, make sure the msg.value = SUM(call[0...i].value)
+<span class="cstat-no" title="statement not covered" >        require(msg.value == valAccumulator, "Multicall3: value mismatch")</span>;
+    }
+&nbsp;
+    /// @notice Returns the block hash for the given block number
+    /// @param blockNumber The block number
+<span class="fstat-no" title="function not covered" >    function getBlockHash(uint256 blockNumber) public view returns (bytes32 blockHash) {</span>
+        blockHash = blockhash(blockNumber);
+    }
+&nbsp;
+    /// @notice Returns the block number
+<span class="fstat-no" title="function not covered" >    function getBlockNumber() public view returns (uint256 blockNumber) {</span>
+        blockNumber = block.number;
+    }
+&nbsp;
+    /// @notice Returns the block coinbase
+<span class="fstat-no" title="function not covered" >    function getCurrentBlockCoinbase() public view returns (address coinbase) {</span>
+        coinbase = block.coinbase;
+    }
+&nbsp;
+    /// @notice Returns the block difficulty
+<span class="fstat-no" title="function not covered" >    function getCurrentBlockDifficulty() public view returns (uint256 difficulty) {</span>
+        difficulty = block.difficulty;
+    }
+&nbsp;
+    /// @notice Returns the block gas limit
+<span class="fstat-no" title="function not covered" >    function getCurrentBlockGasLimit() public view returns (uint256 gaslimit) {</span>
+        gaslimit = block.gaslimit;
+    }
+&nbsp;
+    /// @notice Returns the block timestamp
+<span class="fstat-no" title="function not covered" >    function getCurrentBlockTimestamp() public view returns (uint256 timestamp) {</span>
+        timestamp = block.timestamp;
+    }
+&nbsp;
+    /// @notice Returns the (ETH) balance of a given address
+<span class="fstat-no" title="function not covered" >    function getEthBalance(address addr) public view returns (uint256 balance) {</span>
+        balance = addr.balance;
+    }
+&nbsp;
+    /// @notice Returns the block hash of the last block
+<span class="fstat-no" title="function not covered" >    function getLastBlockHash() public view returns (bytes32 blockHash) {</span>
+        unchecked {
+            blockHash = blockhash(block.number - 1);
+        }
+    }
+&nbsp;
+    /// @notice Gets the base fee of the given block
+    /// @notice Can revert if the BASEFEE opcode is not implemented by the given chain
+<span class="fstat-no" title="function not covered" >    function getBasefee() public view returns (uint256 basefee) {</span>
+        basefee = block.basefee;
+    }
+&nbsp;
+    /// @notice Returns the chain id
+<span class="fstat-no" title="function not covered" >    function getChainId() public view returns (uint256 chainid) {</span>
+        chainid = block.chainid;
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Mar 01 2023 18:58:49 GMT+0100 (heure normale d’Europe centrale)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

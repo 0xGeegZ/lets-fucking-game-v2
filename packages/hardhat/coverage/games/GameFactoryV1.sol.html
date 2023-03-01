@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for games/GameFactoryV1.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">games/</a> GameFactoryV1.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">96.67% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>29/30</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">83.33% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>20/24</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">90% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>9/10</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">97.96% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>48/49</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">36×</span>
+<span class="cline-any cline-yes">36×</span>
+<span class="cline-any cline-yes">36×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-yes">313×</span>
+<span class="cline-any cline-yes">38×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
+pragma solidity &gt;=0.8.6;
+&nbsp;
+import "@openzeppelin/contracts/proxy/Clones.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+&nbsp;
+import { IGame } from "../interfaces/IGame.sol";
+import { ICronUpkeep } from "../interfaces/ICronUpkeep.sol";
+import { IKeeper } from "../interfaces/IKeeper.sol";
+&nbsp;
+import { KeeperHelpers } from "../libraries/KeeperHelpers.sol";
+&nbsp;
+import { Factory } from "../abstracts/Factory.sol";
+&nbsp;
+contract GameFactoryV1 is Factory {
+    using Counters for Counters.Counter;
+&nbsp;
+    uint256[] public authorizedAmounts;
+    mapping(uint256 =&gt; AuthorizedAmount) public usedAuthorizedAmounts;
+&nbsp;
+    ///
+    ///STRUCTS
+    ///
+&nbsp;
+    /**
+     * @notice AuthorizedAmount structure that contain all usefull data bout an authorized amount
+     * @dev TODO NEXT VERSION add default Name and Image to AuthorizedAmount
+     */
+    struct AuthorizedAmount {
+        uint256 amount;
+        bool isUsed;
+    }
+&nbsp;
+    ///
+    ///EVENTS
+    ///
+&nbsp;
+    /**
+     * @notice Called when a game is created
+     */
+    event GameCreated(uint256 id, address gameAddress, uint256 implementationVersion, address creatorAddress);
+&nbsp;
+    /**
+     * @notice Constructor Tha initialised the factory configuration
+     * @param _game the game implementation address
+     * @param _cronUpkeep the keeper address
+     * @param _itemCreationAmount the game creation amount
+     * @param _authorizedAmounts the list of authorized amounts for game creation
+     */
+    constructor(
+        address _game,
+        address _cronUpkeep,
+        uint256 _itemCreationAmount,
+        uint256[] memory _authorizedAmounts
+    ) onlyIfAuthorizedAmountsIsNotEmpty(_authorizedAmounts) Factory(_game, _cronUpkeep, _itemCreationAmount) {
+        for (uint256 i = 0; i &lt; _authorizedAmounts.length; i++) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (!_isExistAuthorizedAmounts(_authorizedAmounts[i])) {
+                authorizedAmounts.push(_authorizedAmounts[i]);
+                usedAuthorizedAmounts[_authorizedAmounts[i]] = AuthorizedAmount({
+                    isUsed: false,
+                    amount: _authorizedAmounts[i]
+                });
+            }
+        }
+    }
+&nbsp;
+    ///
+    /// MAIN FUNCTIONS
+    ///
+&nbsp;
+    /**
+     * @notice Create a new game
+     * @param _maxPlayers the max players for the game
+     * @param _playTimeRange the player time range
+     * @param _registrationAmount the registration amount
+     * @param _treasuryFee the treasury fee in percent
+     * @param _creatorFee the creator fee in %
+     * @param _encodedCron the encoded cron as * * * * *
+     */
+    function createNewGame(
+        bytes32 _name,
+        uint256 _maxPlayers,
+        uint256 _playTimeRange,
+        uint256 _registrationAmount,
+        uint256 _treasuryFee,
+        uint256 _creatorFee,
+        string memory _encodedCron,
+        IGame.Prize[] memory _prizes
+    )
+        external
+        payable
+        whenNotPaused
+        <span class="missing-if-branch" title="else path not taken" >E</span>onlyItemCreationAmount
+        <span class="missing-if-branch" title="else path not taken" >E</span>onlyAllowedRegistrationAmount(_registrationAmount)
+        onlyIfNotUsedRegistrationAmounts(_registrationAmount)
+        returns (address game)
+    {
+        address latestGameV1Address = versions[latestVersionId].deployedAddress;
+        address payable newGameAddress = payable(Clones.clone(latestGameV1Address));
+&nbsp;
+        usedAuthorizedAmounts[_registrationAmount].isUsed = true;
+        items.push(
+            Item({
+                id: id.current(),
+                versionId: latestVersionId,
+                creator: msg.sender,
+                deployedAddress: newGameAddress,
+                itemCreationAmount: itemCreationAmount
+            })
+        );
+&nbsp;
+        ICronUpkeep(cronUpkeep).addDelegator(newGameAddress);
+&nbsp;
+        address keeper = KeeperHelpers.createKeeper(cronUpkeep, _encodedCron, "triggerDailyCheckpoint()");
+        ICronUpkeep(cronUpkeep).addDelegator(keeper);
+&nbsp;
+        // Declare structure and initialize later to avoid stack too deep exception
+        IGame.Initialization memory initialization;
+        initialization.creator = msg.sender;
+        initialization.owner = owner();
+        initialization.cronUpkeep = cronUpkeep;
+        initialization.keeper = keeper;
+        initialization.name = _name;
+        initialization.version = latestVersionId;
+        initialization.gameId = id.current();
+        initialization.playTimeRange = _playTimeRange;
+        initialization.maxPlayers = _maxPlayers;
+        initialization.registrationAmount = _registrationAmount;
+        initialization.treasuryFee = _treasuryFee;
+        initialization.creatorFee = _creatorFee;
+        initialization.encodedCron = _encodedCron;
+        initialization.prizes = _prizes;
+&nbsp;
+        uint256 prizepool = msg.value - itemCreationAmount;
+        IGame(newGameAddress).initialize{ value: prizepool }(initialization);
+&nbsp;
+        IKeeper(keeper).registerCronToUpkeep(newGameAddress);
+        IKeeper(keeper).transferOwnership(newGameAddress);
+&nbsp;
+        emit GameCreated(id.current(), newGameAddress, latestVersionId, msg.sender);
+        id.increment();
+&nbsp;
+        return newGameAddress;
+    }
+&nbsp;
+    ///
+    ///INTERNAL FUNCTIONS
+    ///
+&nbsp;
+    /**
+     * @notice Check if authorized amount exist
+     * @param _authorizedAmount the authorized amount to check
+     * @return isExist true if exist false if not
+     */
+    function _isExistAuthorizedAmounts(uint256 _authorizedAmount) internal view returns (bool isExist) {
+        for (uint256 i = 0; i &lt; authorizedAmounts.length; i++)
+            if (authorizedAmounts[i] == _authorizedAmount) return true;
+        return false;
+    }
+&nbsp;
+    ///
+    ///GETTER FUNCTIONS
+    ///
+&nbsp;
+    /**
+     * @notice Get the list of deployed itemsVersions
+     * @return allGames the list of itemsVersions
+     */
+    function getDeployedGames() external view returns (Item[] memory allGames) {
+        return items;
+    }
+&nbsp;
+    /**
+     * @notice Get the list of authorized amounts
+     * @return gameAuthorisedAmounts the list of authorized amounts
+     */
+    function getAuthorizedAmounts() external view returns (uint256[] memory gameAuthorisedAmounts) {
+        return authorizedAmounts;
+    }
+&nbsp;
+    /**
+     * @notice Get authorized amount
+     * @param _authorizedAmount the authorized amount to get
+     * @return gameAuthorisedAmount the authorized amount
+     */
+<span class="fstat-no" title="function not covered" >    function getAuthorizedAmount(</span>
+        uint256 _authorizedAmount
+    ) external view returns (AuthorizedAmount memory gameAuthorisedAmount) {
+<span class="cstat-no" title="statement not covered" >        return usedAuthorizedAmounts[_authorizedAmount];</span>
+    }
+&nbsp;
+    ///
+    ///ADMIN FUNCTIONS
+    ///
+&nbsp;
+    /**
+     * @notice Add some authorized amounts
+     * @param _authorizedAmounts the list of authorized amounts to add
+     * @dev Callable by admin
+     */
+    function addAuthorizedAmounts(uint256[] memory _authorizedAmounts) external onlyAdmin {
+        for (uint256 i = 0; i &lt; _authorizedAmounts.length; i++) {
+            if (!_isExistAuthorizedAmounts(_authorizedAmounts[i])) {
+                authorizedAmounts.push(_authorizedAmounts[i]);
+                usedAuthorizedAmounts[_authorizedAmounts[i]] = AuthorizedAmount({
+                    isUsed: false,
+                    amount: _authorizedAmounts[i]
+                });
+            }
+        }
+    }
+&nbsp;
+    ///
+    /// MODIFIERS
+    ///
+&nbsp;
+    /**
+     * @notice Modifier that ensure that registration amount is part of allowed registration amounts
+     * @param _registrationAmount the receiver for the funds (admin or factory)
+     */
+    modifier onlyAllowedRegistrationAmount(uint256 _registrationAmount) {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(
+            usedAuthorizedAmounts[_registrationAmount].amount == _registrationAmount,
+            "registrationAmout is not allowed"
+        );
+        _;
+    }
+&nbsp;
+    /**
+     * @notice Modifier that ensure that registration amount is part of allowed registration amounts
+     * @param _registrationAmount authorized amount
+     */
+    modifier onlyIfNotUsedRegistrationAmounts(uint256 _registrationAmount) {
+        require(
+            _registrationAmount == 0 || !usedAuthorizedAmounts[_registrationAmount].isUsed,
+            "registrationAmout is already used"
+        );
+        _;
+    }
+&nbsp;
+    /**
+     * @notice Modifier that ensure that authorized amounts param is not empty
+     * @param _authorizedAmounts list of authorized amounts
+     */
+    modifier onlyIfAuthorizedAmountsIsNotEmpty(uint256[] memory _authorizedAmounts) {
+        require(_authorizedAmounts.length &gt;= 1, "authorizedAmounts should be greather or equal to 1");
+        _;
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Mar 01 2023 18:58:49 GMT+0100 (heure normale d’Europe centrale)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

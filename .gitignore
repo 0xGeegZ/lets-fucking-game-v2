@@ -33,8 +33,8 @@ packages/hardhat/cache
 packages/hardhat/artifacts
 packages/hardhat/deployments
 packages/hardhat/build
-packages/hardhat/coverage
-packages/hardhat/coverage.json
+# packages/hardhat/coverage
+# packages/hardhat/coverage.json
 
 ## Dapp Files ##
 # testing
