@@ -23,12 +23,6 @@ const func: DeployFunction = async function ({
   if (!REGISTRATION_AMOUNT_DEFAULT)
     throw new Error('No game config found for chain id', chainId)
 
-  // const { address: cronExternalAddress } = await deployments.get('CronExternal')
-  // const libraries = {
-  //   libraries: {
-  //     Cron: cronExternalAddress,
-  //   },
-  // }
   const { address: tokenHelpersAddress } = await deployments.get('TokenHelpers')
   const helpersLibrariesG = {
     libraries: {
@@ -40,12 +34,6 @@ const func: DeployFunction = async function ({
     'GameV1',
     helpersLibrariesG
   )
-
-  // const { interface: gameFactoryInterface } = await ethers.getContractFactory(
-  //   'GameFactory',
-  // )
-
-  // const { interface: gameInterface } = await ethers.getContractFactory('GameV1')
 
   const { address: keeperHelpersAddress } = await deployments.get(
     'KeeperHelpers'
