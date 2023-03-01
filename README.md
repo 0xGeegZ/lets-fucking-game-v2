@@ -89,6 +89,8 @@ This help us to create a well structured project with a good potential of scalab
   - We store on chain the strict minimum of data to keep all the data on chain
   - Serverless architecture for an easy deployment and scalability
 
+[👉 SEE OUR SMART CONTRACTS CODE COVERAGE](https://htmlpreview.github.io/?https://github.com/lets-fucking-game/lets-fucking-game-v2/blob/dev/packages/hardhat/coverage/index.html)
+
 ## Challenges we ran into
 
 During the development of LFG, we encountered several challenges that required careful attention and problem-solving skills.
