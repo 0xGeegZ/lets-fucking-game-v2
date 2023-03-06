@@ -3,6 +3,9 @@ import PageSection from 'components/PageSection'
 import { PageMeta } from 'components/Layout/Page'
 import Hero from './components/Hero'
 import MetricsSection from './components/MetricsSection'
+import GamePresentation from './components/GamePresentation'
+import GamePresentationAlt from './components/GamePresentationAlt'
+
 import HowToPlay from './components/HowToPlay/HowToPlay'
 import Rules from './components/Rules/Rules'
 import FAQ from './components/FAQ/FAQ'
@@ -72,8 +75,28 @@ const Home: React.FC<React.PropsWithChildren> = () => {
         index={2}
         hasCurvedDivider={false}
       >
-        <MetricsSection />
+        <GamePresentation />
       </PageSection>
+      {/* <PageSection
+        innerProps={{ style: { margin: '0', width: '100%' } }}
+        containerProps={{
+          id: 'metrics',
+        }}
+        index={2}
+        hasCurvedDivider={false}
+      >
+        <GamePresentationAlt />
+      </PageSection>
+      <PageSection
+        innerProps={{ style: { margin: '0', width: '100%' } }}
+        containerProps={{
+          id: 'metrics',
+        }}
+        index={2}
+        hasCurvedDivider={false}
+      >
+        <MetricsSection />
+      </PageSection> */}
 
       <PageSection
         index={2}

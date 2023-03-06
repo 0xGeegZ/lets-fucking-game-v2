@@ -13,9 +13,17 @@ LFG is a decentralized application that aims to revolutionize the way online con
 
 In addition to a traditional contest with a draw for one or more winners, we thought of a more gamified approach that would determine the winner through a battle between participants. The goal was to create more engagement from the community and propose an innovative approach to organizing contests.
 
-Originally created during the [ChainLink Hackathon Fall 2022](https://devpost.com/software/let-s-fucking-game-be-the-last-to-win-the-prize), we've continued to actively develop the project and have now shipped almost all the features on our roadmap.
+Originally created during the [ChainLink Hackathon Fall 2022](https://devpost.com/software/let-s-fucking-game-be-the-last-to-win-the-prize), we've continued to actively develop the project and have now shipped almost all the features on our roadmap :
+
+- Add ERC20 tokens support
+- Add ERC 721 token support for NFT
+- Use Chainlink Data Feed to get some data from classical API (like Twitter)
+- Make contracts more generic to easily add more game types
+- Adding classic giveaway contests on smart contract part (not on the frontend yet)
 
 We're excited to present the latest version of Let's Fucking Game at the [Fantom Hackathon Q1 2023](https://fantomq12023.devpost.com/).
+
+During this Hackathon, we mainly focus on the smart contract part and do not have the time to update the front end. It will be the next part of our development.
 
 Hackathon version Release accessible [HERE](https://github.com/lets-fucking-game/lets-fucking-game-v2).
 

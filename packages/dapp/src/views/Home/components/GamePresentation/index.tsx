@@ -11,7 +11,7 @@ const StepContainer = styled(Flex)`
   }
 `
 
-const StyledStepCard = styled(Box)`
+const StyledGameCard = styled(Box)`
   display: flex;
   align-self: baseline;
   position: relative;
@@ -20,7 +20,7 @@ const StyledStepCard = styled(Box)`
   border-radius: ${({ theme }) => theme.radii.card};
 `
 
-const StepCardInner = styled(Box)`
+const GameCardInner = styled(Box)`
   width: 100%;
   padding: 24px;
   background: ${({ theme }) => theme.card.background};
@@ -29,10 +29,10 @@ const StepCardInner = styled(Box)`
 
 type Step = { title: string; subtitle: string; label: string }
 
-const StepCard: React.FC<React.PropsWithChildren<{ step: Step }>> = ({ step }) => {
+const GameCard: React.FC<React.PropsWithChildren<{ step: Step }>> = ({ step }) => {
   return (
-    <StyledStepCard width="100%">
-      <StepCardInner height={['200px', '180px', null, '250px']}>
+    <StyledGameCard width="100%">
+      <GameCardInner height={['200px', '180px', null, '250px']}>
         <Text mb="16px" fontSize="12px" bold textAlign="right" textTransform="uppercase">
           {step.label}
         </Text>
@@ -44,50 +44,49 @@ const StepCard: React.FC<React.PropsWithChildren<{ step: Step }>> = ({ step }) =
           {/* eslint-disable-next-line react/no-danger */}
           <div dangerouslySetInnerHTML={{ __html: step.subtitle }} />
         </Text>
-      </StepCardInner>
-    </StyledStepCard>
+      </GameCardInner>
+    </StyledGameCard>
   )
 }
 
-const HowToPlay: React.FC<React.PropsWithChildren> = () => {
+const GamePresentation: React.FC<React.PropsWithChildren> = () => {
   const { t } = useTranslation()
 
   const steps: Step[] = [
     {
-      label: t('Step %number%', { number: 1 }),
-      title: t('Register for a game'),
-      subtitle: t('Choose between available games and register to one of them.'),
-    },
-    {
-      label: t('Step %number%', { number: 2 }),
-      title: t('Wait for the start'),
-      subtitle: t('Wait until the required number of players has registered.'),
-    },
-    {
-      label: t('Step %number%', { number: 3 }),
-      title: t('Perform predefined task'),
+      label: t('Game type #%number%', { number: 1 }),
+      title: t('Classic Giveaway Contests'),
       subtitle: t(
-        `For the daily action game, play once a day during the random time range.</br>
-        For the classic contest, complete the predefined task once and wait for the winners draw.`,
+        `Join our classic contest by completing a predefined task (such as liking or retweeting a post) on you favorite Social Media. </br>
+        Winners will be randomly selected from the pool of participants. </br>
+        Prize will be claimable by winner(s) after verification of their Social Media account property.`,
       ),
+    },
+    {
+      label: t('Game type #%number%', { number: 2 }),
+      title: t('Daily Action Game'),
+      subtitle: t(`Register to the game thanks to LFG dapp. </br>
+      Play our one-button game once a day during a random time slot. </br>
+      Be one of the last players to share the prize pool.`),
     },
   ]
   return (
     <Box width="100%">
       <Flex mb="40px" alignItems="center" flexDirection="column">
         <Heading mb="24px" scale="xl" color="secondary">
-          {t('How to Play')}
+          {t('Fun and innovative games contests')}
         </Heading>
-        <Text textAlign="center">{t('Let’s Fucking Game Rules')}</Text>
-        <Text>{t('Simple & Fun!')}</Text>
+        <Text textAlign="center">
+          {t('LFG provides a transparent and secure dapp for hosting two types of Social Media contests:')}
+        </Text>
       </Flex>
       <StepContainer>
         {steps.map((step) => (
-          <StepCard key={step.label} step={step} />
+          <GameCard key={step.label} step={step} />
         ))}
       </StepContainer>
     </Box>
   )
 }
 
-export default HowToPlay
+export default GamePresentation

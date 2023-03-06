@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { Box, Flex, Text, Heading, Image } from '@pancakeswap/uikit'
 import { useTranslation } from '@pancakeswap/localization'
+import FoldableText from 'components/FoldableSection/FoldableText'
 
 const Divider = styled.div`
   background-color: ${({ theme }) => theme.colors.cardBorder};
@@ -80,7 +81,7 @@ const PoolAllocations = () => {
   return (
     <StyledStepCard width={['280px', '330px', '380px']}>
       <StepCardInner height="auto">
-        <Flex mb="32px" justifyContent="center">
+        <Flex mb="8px" justifyContent="center" alignItems="center">
           <RulesDrawing />
         </Flex>
         <Flex justifyContent="space-between">
@@ -127,32 +128,115 @@ const Rules: React.FC<React.PropsWithChildren> = () => {
         <Heading mb="24px" scale="xl" color="secondary">
           {t('Rules')}
         </Heading>
-        <Text textAlign="center">{t("Let's play a new game with really simple rules")}</Text>
-        <Text>{t('Simple & Fun!')}</Text>
+        <Text textAlign="center">{t('LFG games rules')}</Text>
+        {/* <Text>{t('with really simple rules!')}</Text> */}
       </Flex>
       <Divider />
       <GappedFlex flexDirection={['column', 'column', 'column', 'row']}>
         <Flex flex="2" flexDirection="column">
           <Heading mb="24px" scale="lg" color="secondary">
-            {t('Winning Criteria')}
+            {t('Games Rules')}
           </Heading>
-          <Heading mb="24px" scale="md">
-            {t('The last remaining players share the prizepool')}
+          <FoldableText title={t('Classic Giveaway Contest')} mb="24px">
+            <Text mb="16px" color="textSubtle">
+              {t(
+                'Contest creators first create a tweet and then use LFG to create the contest, entering the contest rules.',
+              )}
+            </Text>
+            <Text mb="16px" color="textSubtle">
+              {t(
+                'Participants can join the contest as they traditionally do on social media platforms. For example, if the contest is on Twitter and requires participants to retweet a tweet, they should do so.',
+              )}
+            </Text>
+            <Text mb="24px" color="textSubtle">
+              {t(
+                'The winner(s) are determined automatically by the smart contract, and the prize will be claimable after verification with their Twitter account using the Twitter API.',
+              )}
+            </Text>
+          </FoldableText>
+          <FoldableText title={t('Daily Action Game')} mb="24px">
+            <Text mb="16px" color="textSubtle">
+              {t("Players interact with the game's smart contract once per day during a randomly selected time slot.")}
+            </Text>
+            <Text mb="16px" color="textSubtle">
+              {t("The last remaining players share the prizes according to the prize pool's distribution.")}
+            </Text>
+            <Text mb="16px" color="textSubtle">
+              {t(
+                'When the number of players drops to below 50%, one player can vote to split the pot between the remaining players. If all remaining players agree to split the pot, the pot is fairly distributed between them.',
+              )}
+            </Text>
+            <Text mb="24px" color="textSubtle">
+              {t(
+                "During the game configuration, the creator have the ability to choose the time slots as well as the winners' structure to allow for more or fewer players to win more or less of the prize pool.",
+              )}
+            </Text>
+          </FoldableText>
+          <FoldableText title={t('Split Prizepool')} mb="24px">
+            <Text mb="16px" color="textSubtle">
+              {t('Players can also vote to split pot when there are less than 50% of remaining players.')}
+            </Text>
+            <Text mb="16px" color="textSubtle">
+              {t(
+                ' This could be useful if the game takes too long. If all players vote to split, the smart contract will stop the game and split prizepool to remaining players.',
+              )}
+            </Text>
+          </FoldableText>
+          {/* <Heading mb="24px" scale="md">
+            {t('Classic Giveaway Contest')}
           </Heading>
           <Text mb="16px" color="textSubtle">
-            {t('But you can also vote to split pot when there are less than 50% of remaining players.')}
+            {t(
+              'Contest creators first create a tweet and then use LFG to create the contest, entering the contest rules.',
+            )}
+          </Text>
+          <Text mb="16px" color="textSubtle">
+            {t(
+              'Participants can join the contest as they traditionally do on social media platforms. For example, if the contest is on Twitter and requires participants to retweet a tweet, they should do so.',
+            )}
+          </Text>
+          <Text mb="24px" color="textSubtle">
+            {t(
+              'The winner(s) are determined automatically by the smart contract, and the prize will be claimable after verification with their Twitter account using the Twitter API.',
+            )}
+          </Text>
+          <Heading mb="24px" scale="md">
+            {t('Daily Action Game')}
+          </Heading>
+          <Text mb="16px" color="textSubtle">
+            {t("Players interact with the game's smart contract once per day during a randomly selected time slot.")}
+          </Text>
+          <Text mb="16px" color="textSubtle">
+            {t("The last remaining players share the prizes according to the prize pool's distribution.")}
+          </Text>
+          <Text mb="16px" color="textSubtle">
+            {t(
+              'When the number of players drops to below 50%, one player can vote to split the pot between the remaining players. If all remaining players agree to split the pot, the pot is fairly distributed between them.',
+            )}
+          </Text>
+          <Text mb="24px" color="textSubtle">
+            {t(
+              "During the game configuration, the creator have the ability to choose the time slots as well as the winners' structure to allow for more or fewer players to win more or less of the prize pool.",
+            )}
+          </Text>
+
+          <Heading mb="24px" scale="md">
+            {t('Prizepool can be splitted')}
+          </Heading>
+          <Text mb="16px" color="textSubtle">
+            {t('Players can also vote to split pot when there are less than 50% of remaining players.')}
           </Text>
           <Text mb="16px" color="textSubtle">
             {t(
               ' This could be useful if the game takes too long. If all players vote to split, the smart contract will stop the game and split prizepool to remaining players.',
             )}
-          </Text>
+          </Text> */}
 
-          <Text mt="16px" color="textSubtle">
+          {/* <Text mt="16px" color="textSubtle" fontStyle="italic">
             {t('More options will be added after the MVP test.')}
-          </Text>
+          </Text> */}
         </Flex>
-        <Flex flex="1" justifyContent="center">
+        <Flex flex="1" justifyContent="center" alignItems="center">
           <WinningCriteriaDrawing />
         </Flex>
       </GappedFlex>
@@ -160,17 +244,63 @@ const Rules: React.FC<React.PropsWithChildren> = () => {
       <GappedFlex flexDirection={['column', 'column', 'column', 'row']}>
         <Flex flex="2" flexDirection="column">
           <Heading mb="24px" scale="lg" color="secondary">
-            {t('Prize Funds')}
+            {t('PrizePool')}
           </Heading>
-          <Text color="textSubtle">
-            {t(
-              'Here are the default game prize allocation. Game creators can update those parameters so check data for each game before register.',
-            )}
+          <Text color="textSubtle" mb="8px">
+            {t('Here are the default game prize allocation.')}
           </Text>
-          <Text mt="24px" color="textSubtle">
-            {t('The prizes for each game come from two sources:')}
+          <Text color="textSubtle" mb="24px">
+            {t('Game creators can update those parameters so check data for each game before register.')}
           </Text>
-          <Text fontSize="18px" bold my="16px">
+          <FoldableText title={t('Classic Giveaway Contest')} mb="24px">
+            <Text mb="16px" color="textSubtle">
+              {t('The prizepool came from game creator only. He will set the prize pool during game creation.')}
+            </Text>
+          </FoldableText>
+          <FoldableText title={t('Daily Action Game')} mb="24px">
+            <Text mb="18px" color="textSubtle">
+              {t('The prizes for each game can come from two sources:')}
+            </Text>
+            <Text fontSize="18px" bold ml="16px">
+              {t('Player registration')}
+            </Text>
+            <BulletList>
+              <li>
+                <Text display="inline" color="textSubtle">
+                  {t(
+                    'Registration amount paid by people goes back into the prize pools, minus creator and treasury fees.',
+                  )}
+                </Text>
+              </li>
+            </BulletList>
+
+            <Text fontSize="18px" bold ml="16px" mt="16px">
+              {t('Creator Prizes')}
+            </Text>
+            <BulletList>
+              <li>
+                <Text display="inline" color="textSubtle">
+                  {t('Creator can create a game and set the prize pool during game creation.')}
+                </Text>
+              </li>
+            </BulletList>
+          </FoldableText>
+
+          {/* <Heading mb="8px" scale="md">
+            {t('Classic Giveaway Contest')}
+          </Heading>
+
+          <Text mb="24px" color="textSubtle">
+            {t('The prizepool came from game creator only. He will set the prize pool during game creation.')}
+          </Text>
+
+          <Heading mb="8px" scale="md">
+            {t('Daily Action Game')}
+          </Heading>
+          <Text mb="18px" color="textSubtle">
+            {t('The prizes for each game can come from two sources:')}
+          </Text>
+          <Text fontSize="18px" bold ml="16px">
             {t('Player registration')}
           </Text>
           <BulletList>
@@ -182,36 +312,22 @@ const Rules: React.FC<React.PropsWithChildren> = () => {
               </Text>
             </li>
           </BulletList>
-          <Text bold fontSize="18px" my="16px">
+          <Text fontSize="18px" bold ml="16px" mt="16px">
             {t('Creator Prizes')}
           </Text>
           <BulletList>
             <li>
               <Text display="inline" color="textSubtle">
-                {t('Creator can create a free game and set the prize pool on game creation.')}
+                {t('Creator can create a game and set the prize pool during game creation.')}
               </Text>
             </li>
-          </BulletList>
+          </BulletList> */}
         </Flex>
         <Flex flex="1" justifyContent="center">
           <PoolAllocations />
         </Flex>
       </GappedFlex>
       <Divider />
-      {/* <Flex justifyContent="center" alignItems="center" flexDirection={['column', 'column', 'row']}>
-          <Image width={240} height={172} src="/images/lottery/tombola.png" alt="tombola bunny" mr="8px" mb="16px" />
-          <Flex maxWidth="300px" flexDirection="column">
-            <Heading mb="16px" scale="md">
-              {t('Still got questions?')}
-            </Heading>
-            <Text>
-              {t('Check our in-depth guide on')}{' '}
-              <InlineLink href="https://docs.pancakeswap.finance/products/lottery/lottery-guide">
-                {t('how to play the PancakeSwap lottery!')}
-              </InlineLink>
-            </Text>
-          </Flex>
-        </Flex> */}
     </Box>
   )
 }

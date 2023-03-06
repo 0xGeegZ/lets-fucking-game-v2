@@ -83,7 +83,14 @@
     ]
   },
   "hardhat.telemetry": false,
-  "cSpell.words": ["gamified", "Hackathon", "roadmap", "shellcheck", "solhint"],
+  "cSpell.words": [
+    "Chainlink",
+    "gamified",
+    "Hackathon",
+    "roadmap",
+    "shellcheck",
+    "solhint"
+  ],
   "[properties]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   }
