@@ -4,7 +4,7 @@
 
 ## Description
 
-LFG is a decentralized application that aims to revolutionize the way online contests are organized. The platform leverages smart contracts on the blockchain to provide a more secure and trustworthy way for people to participate in social media contests.
+LFG is a multichains decentralized application that aims to revolutionize the way online contests are organized. The platform leverages smart contracts and blockchain to provide a more secure and trustworthy way for people to participate in social media contests.
 
 - Provides a transparent and secure dapp for hosting contests
 - Eliminates the possibility of rigged or fake contests
@@ -15,7 +15,7 @@ In addition to a traditional contest with a draw for one or more winners, we tho
 
 Originally created during the [ChainLink Hackathon Fall 2022](https://devpost.com/software/let-s-fucking-game-be-the-last-to-win-the-prize), we've continued to actively develop the project and have now shipped almost all the features on our roadmap :
 
-- Add ERC20 tokens support
+- Add ERC20 tokens support (in addition to native token support)
 - Add ERC 721 token support for NFT
 - Use Chainlink Data Feed to get some data from classical API (like Twitter)
 - Interfacing our Giveaway Smart Contract to Twitter API
@@ -32,18 +32,17 @@ FANTOM Hackathon Q1 2023 version Release accessible [HERE](https://github.com/le
 
 [👉 Check our Dapp here](./packages/dapp/)
 
-[👉 Check our Smart Contract Code Coverage 👈](https://htmlpreview.github.io/?https://github.com/lets-fucking-game/lets-fucking-game-v2/blob/dev/packages/hardhat/coverage/index.html)
-
 [![Code Coverage](https://res.cloudinary.com/vaka/image/upload/v1678121114/LFG/Code_Coverage_-_General.png)](https://htmlpreview.github.io/?https://github.com/lets-fucking-game/lets-fucking-game-v2/blob/dev/packages/hardhat/coverage/index.html "LFG Smart Contract Code Coverage")
+[👉 Check our Smart Contract Code Coverage 👈](https://htmlpreview.github.io/?https://github.com/lets-fucking-game/lets-fucking-game-v2/blob/dev/packages/hardhat/coverage/index.html)
 
 ## Contracts deployed on FANTOM TESTNET
 
 **MAIN :**
 
 - **GameFactory contract [0x5F8757a431A5c2fcA35DF8ac58Cb1FC23229079D](https://testnet.ftmscan.com/address/0x5F8757a431A5c2fcA35DF8ac58Cb1FC23229079D#code)** :
-  Enables users to create games and register to play them. Users can create a new game by specifying various parameters, including the maximum number of players, registration amount, and prizes. The contract also includes functions for retrieving lists of deployed games and authorized amounts. The smart contract is modularized with multiple interfaces and abstracts for easier management of different game versions.
+  Contract Factory that enables creators to create games. Creators can create a new game by specifying various parameters, including the maximum number of players, registration amount, and prizes. The contract also includes functions for retrieving lists of deployed games and authorized amounts. The smart contract is modularized with multiple interfaces and abstracts for easier management of different game versions.
 - **GameV1 BASE contract [0xEd5Efa65bE3F9670Ae29C9FdB945a7766963fF3C](https://testnet.ftmscan.com/address/0xEd5Efa65bE3F9670Ae29C9FdB945a7766963fF3C#code)** :
-  Base contract for game versions. It includes various functions for initializing games, managing players, and distributing prizes. Some of the main methods include initialize, registerForGame, startGame, and playRound. The contract also specifies parameters such as the maximum number of players and prizes, as well as fees for the treasury and game creator.
+  Base cloneable contract for games. It includes various functions for initializing games, managing players, and distributing prizes. Some of the main methods include initialize, registerForGame, startGame, and playRound. The contract also specifies parameters such as the maximum number of players and prizes, as well as fees for the treasury and game creator.
 - **GiveawayV1 BASE contract [0x01B87afE883Dc00C70C92755e2d219C63aaF4313](https://testnet.ftmscan.com/address/0x01b87afe883dc00c70c92755e2d219c63aaf4313#code)** :
   Base contract for giveaways. It includes functions for creating and managing giveaways, retrieving giveaway information, and selecting winners. Some of the main methods include createGiveaway, signUp, fulfillGiveawayWinner, and claimPrize. The contract also specifies parameters such as the minimum and maximum number of participants, the entry fee, and the prizes that will be distributed to winners.
 - **CronUpkeep contract [0x1EE9D78849cA6053E3Dd5Af41a0e1e311508aB99](https://testnet.ftmscan.com/address/0x1EE9D78849cA6053E3Dd5Af41a0e1e311508aB99#code)** :
@@ -128,17 +127,15 @@ One of the main challenges we faced was ensuring the security of the smart contr
 
 Another challenge was integrating external data feeds using Chainlink's oracle system. This required a thorough understanding of how the system worked and careful attention to ensure that the data being used was accurate and reliable.
 
-Finally, we encountered some challenges in the cross-chain administration of the project.
-
-Overall, these challenges highlight the complexity of developing a secure and trustworthy decentralized platform, and the need for careful planning and attention to detail in order to ensure its success.
+Finally, we encountered some challenges in the multi-chain administration of the project.
 
 ## Accomplishments that we're proud of
 
 Throughout the development process of LFG, we encountered several challenges that required careful attention and problem-solving skills. Despite these challenges, we are proud to have accomplished several notable achievements:
 
-Firstly, we're proud of creating a platform that provides a more secure and trustworthy way for people to participate in online contests. With LFG's decentralized approach and smart contract technology, participants can be confident that the contests are fair and transparent, and the prizes are stored securely.
+Firstly, we're proud of creating a platform that provides a more secure and trustworthy way for people to participate in online contests. With LFG's decentralized approach, participants can be confident that the contests are fair and transparent, and the prizes are stored securely before the contest start.
 
-We're also proud of integrating a gamified approach to contests, which we believe will increase engagement and participation from the community. By providing a fun and engaging way to participate in contests, we hope to create a more vibrant and active community on the LFG platform.
+We're also proud of integrating a gamified approach to contests, which we believe will increase engagement and participation from the community. By providing a fun and engaging way to participate in contests, we hope to create a more meaningful and rewarding experience for all users (players and creators).
 
 Finally, we're proud of our team's dedication and hard work in developing LFG from its initial concept to its current state. We believe that LFG has the potential to revolutionize the way online contests are organized and create new opportunities for people to participate in a more secure and fair way.
 
@@ -148,15 +145,17 @@ From a technical perspective, we're proud of the code coverage of our smart cont
 
 Working on LFG was a valuable learning experience for our team, especially considering that four of the five team members had never been initiated to web3 before this project. We learned a lot about web3, both in terms of smart contracts, Hardhat, and interfacing with etherJs.
 
-We also gained a better understanding of how to architect a project for cross-chain administration and manipulated the hardhat deploy plugin, which made it easier to manage deployments and tests using fixtures.
+We also gained a better understanding of how to architect a project for multi-chain administration and manipulated the hardhat deploy plugin, which made it easier to manage deployments and tests using fixtures.
 
 ## What's next for LFG
 
 Moving forward, we plan to continue to improve and develop the LFG platform, with the ultimate goal of launching it into production and making it available to a wider audience.
 
-To achieve this goal, we plan to conduct a thorough audit of the platform to ensure its security and reliability and make any necessary improvements before launching. We believe that this will help us gain the trust of our users and create a more robust and reliable platform.
+To achieve this goal, we plan to conduct a thorough audit of the platform smart contracts to ensure its security and reliability and make any necessary improvements before launching. We believe that this will help us gain the trust of our users and create a more robust and reliable platform.
 
-If we are fortunate enough to win this hackathon, we plan to use the prize money to organize contests with NFT communities to further develop and promote the LFG platform. We believe that this will not only provide valuable exposure for our platform but also help to foster a more vibrant and active NFT community.
+If we are fortunate enough to win this hackathon, we plan to use the prize money to organize contests with NFT communities on Twitter to further develop and promote the LFG platform. We believe that this will not only provide valuable exposure for our platform but also help the Crypto Space to foster a more vibrant and active community.
+
+[👉 It will be an honor to organize a contest for the Fantom Community on Twitter 😇](https://twitter.com/0xGeegZ)
 
 In the future, we plan to work on improving the architecture of the smart contracts, particularly to optimize them and optimize gas costs. Additionally, we would like to use Ethereum Push Notification to improve the user experience and explore the possibility of adding ChainLink VRF to randomize the daily time range generation in a better way.
 
