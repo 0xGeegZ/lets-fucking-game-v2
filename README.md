@@ -38,26 +38,26 @@ FANTOM Hackathon Q1 2023 version Release accessible [HERE](https://github.com/le
 
 **PRIMARY :**
 
-- GameFactory contract [0x5F8757a431A5c2fcA35DF8ac58Cb1FC23229079D](https://testnet.ftmscan.com/address/0x5F8757a431A5c2fcA35DF8ac58Cb1FC23229079D#code) :
+- **GameFactory contract [0x5F8757a431A5c2fcA35DF8ac58Cb1FC23229079D](https://testnet.ftmscan.com/address/0x5F8757a431A5c2fcA35DF8ac58Cb1FC23229079D#code)** :
   Enables users to create games and register to play them. Users can create a new game by specifying various parameters, including the maximum number of players, registration amount, and prizes. The contract also includes functions for retrieving lists of deployed games and authorized amounts. The smart contract is modularized with multiple interfaces and abstracts for easier management of different game versions.
-- GameV1 BASE contract [0xEd5Efa65bE3F9670Ae29C9FdB945a7766963fF3C](https://testnet.ftmscan.com/address/0xEd5Efa65bE3F9670Ae29C9FdB945a7766963fF3C#code) :
+- **GameV1 BASE contract [0xEd5Efa65bE3F9670Ae29C9FdB945a7766963fF3C](https://testnet.ftmscan.com/address/0xEd5Efa65bE3F9670Ae29C9FdB945a7766963fF3C#code)** :
   Base contract for game versions. It includes various functions for initializing games, managing players, and distributing prizes. Some of the main methods include initialize, registerForGame, startGame, and playRound. The contract also specifies parameters such as the maximum number of players and prizes, as well as fees for the treasury and game creator.
-- GiveawayV1 BASE contract [0x01B87afE883Dc00C70C92755e2d219C63aaF4313](https://testnet.ftmscan.com/address/0x01b87afe883dc00c70c92755e2d219c63aaf4313#code) :
+- **GiveawayV1 BASE contract [0x01B87afE883Dc00C70C92755e2d219C63aaF4313](https://testnet.ftmscan.com/address/0x01b87afe883dc00c70c92755e2d219c63aaf4313#code)** :
   Base contract for giveaways. It includes functions for creating and managing giveaways, retrieving giveaway information, and selecting winners. Some of the main methods include createGiveaway, signUp, fulfillGiveawayWinner, and claimPrize. The contract also specifies parameters such as the minimum and maximum number of participants, the entry fee, and the prizes that will be distributed to winners.
-- CronUpkeep contract [0x1EE9D78849cA6053E3Dd5Af41a0e1e311508aB99](https://testnet.ftmscan.com/address/0x1EE9D78849cA6053E3Dd5Af41a0e1e311508aB99#code) :
+- **CronUpkeep contract [0x1EE9D78849cA6053E3Dd5Af41a0e1e311508aB99](https://testnet.ftmscan.com/address/0x1EE9D78849cA6053E3Dd5Af41a0e1e311508aB99#code)** :
   The CronUpkeep smart contract is a keeper-compatible contract that runs various tasks on cron schedules. Users must use the encodeCronString() function to encode their cron jobs before setting them. It allows the creation, updating, and deletion of cron jobs. Additionally, it can check for an eligible cron job to run and execute it. The contract can be paused or unpaused, and a delegator can be added or removed.
 
 **LIBRARIES :**
 
-- TokenHelpers contract [0x2EeD5D0e3A4A3Fc999BdE8A9Eb46ad1A5D210556](https://testnet.ftmscan.com/address/0x2EeD5D0e3A4A3Fc999BdE8A9Eb46ad1A5D210556#code) :
+- **TokenHelpers contract [0x2EeD5D0e3A4A3Fc999BdE8A9Eb46ad1A5D210556](https://testnet.ftmscan.com/address/0x2EeD5D0e3A4A3Fc999BdE8A9Eb46ad1A5D210556#code)** :
   Library that includes methods for transferring funds, ERC20 and ERC721 tokens between addresses. It also includes methods for getting ERC721 token IDs and ERC20 token balances for a given account.
-- KeeperHelpers contracts [0x9AC49f429fa6AfF63B4B8FDE32a5CC1ABDbA97bF](https://testnet.ftmscan.com/address/0x9AC49f429fa6AfF63B4B8FDE32a5CC1ABDbA97bF#code) : Library that provide a method to create a new keeper for a given cron job. Keepers are responsible for executing tasks on-chain and are triggered by cron schedules.
+- **KeeperHelpers contracts [0x9AC49f429fa6AfF63B4B8FDE32a5CC1ABDbA97bF](https://testnet.ftmscan.com/address/0x9AC49f429fa6AfF63B4B8FDE32a5CC1ABDbA97bF#code)** : Library that provide a method to create a new keeper for a given cron job. Keepers are responsible for executing tasks on-chain and are triggered by cron schedules.
 
 **SECONDARY :**
 
-- CronExternal contract [0xfC952f50c6EcDf621cE99138759c42E58468F34d](https://testnet.ftmscan.com/address/0xfC952f50c6EcDf621cE99138759c42E58468F34d#code) :
+- **CronExternal contract [0xfC952f50c6EcDf621cE99138759c42E58468F34d](https://testnet.ftmscan.com/address/0xfC952f50c6EcDf621cE99138759c42E58468F34d#code)** :
   Allows scheduling function calls on a specified interval using a Unix-style cron format.
-- MulticallV3 contracts [0xdAfD0A4BDf6fe4590a9770e904e8d88575C04280](https://testnet.ftmscan.com/address/0xdAfD0A4BDf6fe4590a9770e904e8d88575C04280#code) :
+- **MulticallV3 contracts [0xdAfD0A4BDf6fe4590a9770e904e8d88575C04280](https://testnet.ftmscan.com/address/0xdAfD0A4BDf6fe4590a9770e904e8d88575C04280#code)** :
   Utility smart contract that enables batched read-only calls to multiple functions in one transaction, reducing gas costs and improving efficiency. It allows users to retrieve the results of multiple function calls with a single contract call.
 
 ## Inspiration
