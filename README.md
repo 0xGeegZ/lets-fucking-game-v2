@@ -36,7 +36,7 @@ FANTOM Hackathon Q1 2023 version Release accessible [HERE](https://github.com/le
 
 ## Contracts deployed on FANTOM TESTNET
 
-**PRIMARY :**
+**MAIN :**
 
 - **GameFactory contract [0x5F8757a431A5c2fcA35DF8ac58Cb1FC23229079D](https://testnet.ftmscan.com/address/0x5F8757a431A5c2fcA35DF8ac58Cb1FC23229079D#code)** :
   Enables users to create games and register to play them. Users can create a new game by specifying various parameters, including the maximum number of players, registration amount, and prizes. The contract also includes functions for retrieving lists of deployed games and authorized amounts. The smart contract is modularized with multiple interfaces and abstracts for easier management of different game versions.
@@ -53,10 +53,10 @@ FANTOM Hackathon Q1 2023 version Release accessible [HERE](https://github.com/le
   Library that includes methods for transferring funds, ERC20 and ERC721 tokens between addresses. It also includes methods for getting ERC721 token IDs and ERC20 token balances for a given account.
 - **KeeperHelpers contracts [0x9AC49f429fa6AfF63B4B8FDE32a5CC1ABDbA97bF](https://testnet.ftmscan.com/address/0x9AC49f429fa6AfF63B4B8FDE32a5CC1ABDbA97bF#code)** : Library that provide a method to create a new keeper for a given cron job. Keepers are responsible for executing tasks on-chain and are triggered by cron schedules.
 
-**SECONDARY :**
+**UTILITIES :**
 
 - **CronExternal contract [0xfC952f50c6EcDf621cE99138759c42E58468F34d](https://testnet.ftmscan.com/address/0xfC952f50c6EcDf621cE99138759c42E58468F34d#code)** :
-  Allows scheduling function calls on a specified interval using a Unix-style cron format.
+  Utility that offer some functions to manipulate Unix-style cron format.
 - **MulticallV3 contracts [0xdAfD0A4BDf6fe4590a9770e904e8d88575C04280](https://testnet.ftmscan.com/address/0xdAfD0A4BDf6fe4590a9770e904e8d88575C04280#code)** :
   Utility smart contract that enables batched read-only calls to multiple functions in one transaction, reducing gas costs and improving efficiency. It allows users to retrieve the results of multiple function calls with a single contract call.
 
