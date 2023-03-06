@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat'
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
+import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { gameConfig } from '../config/gameConfig'
 import { delay } from '../helpers/delay'
@@ -26,6 +26,7 @@ const func: DeployFunction = async function ({
 
   const options = {
     from: deployerAddress,
+    nonce: 'pending',
     log: true,
   }
 
@@ -95,6 +96,10 @@ const func: DeployFunction = async function ({
     )
     cronUpkeep.addDelegator(gameFactoryAddress)
   } catch (error) {
+    log(
+      '[ERROR] When adding GameFactoryV1 to Keeper delegators, trying without Cron library'
+    )
+
     const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
       'CronUpkeep'
     )

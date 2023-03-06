@@ -1,5 +1,15 @@
 import { BinanceWalletConnector } from '@pancakeswap/wagmi/connectors/binanceWallet'
-import { bsc, bscTest, goerli, mainnet, hardhat, polygon, mumbai } from '@pancakeswap/wagmi/chains'
+import {
+  bsc,
+  bscTest,
+  goerli,
+  mainnet,
+  hardhat,
+  polygon,
+  mumbai,
+  fantomTestnet,
+  fantomOpera,
+} from '@pancakeswap/wagmi/chains'
 import { configureChains, createClient } from 'wagmi'
 import memoize from 'lodash/memoize'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
@@ -11,7 +21,7 @@ import { SafeConnector } from '@gnosis.pm/safe-apps-wagmi'
 
 // TODO GUIGUI UPDATE CHAINS
 // const CHAINS = [bsc, polygon, mainnet, bscTest, mumbai, goerli, hardhat]
-const CHAINS = [polygon, bscTest, mumbai, goerli, hardhat]
+const CHAINS = [fantomOpera, fantomTestnet, bscTest, mumbai, goerli, hardhat]
 
 const getNodeRealUrl = (networkName: string) => {
   let host = null

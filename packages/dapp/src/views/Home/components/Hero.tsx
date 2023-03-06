@@ -129,7 +129,7 @@ const Hero = () => {
             {t("Let's F*#@$* Game")}
           </Heading>
           <Heading scale="md" mb="24px">
-            {t('Play to our "One Button Game" once a day. Be one of the last to share the prizepool.')}
+            {t('Compete with Confidence: Secure, Decentralized, and Fun Contests')}
           </Heading>
           <Flex>
             {!account && <ConnectWalletButton mr="8px" />}

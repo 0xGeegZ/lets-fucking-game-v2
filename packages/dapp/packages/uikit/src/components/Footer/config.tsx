@@ -87,7 +87,7 @@ export const socials = [
   {
     label: "Twitter",
     icon: TwitterIcon,
-    href: "https://twitter.com/0xGeegZ",
+    href: "https://twitter.com/lfg_games",
     // items: [],
   },
   // {

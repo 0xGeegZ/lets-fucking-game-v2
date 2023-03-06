@@ -1,9 +1,12 @@
 {
-	"name": "giveaways",
-	"version": "0.0.1",
+	"name": "lets-fucking-game-giveaways-api",
 	"description": "Cloudflare worker giveaway API",
+  "license": "MIT",
+  "version": "0.0.1",
+  "author": "@GuiDieudo",
 	"scripts": {
 		"dev": "npx wrangler dev",
+		"build": "npx wrangler build",
 		"publish": "npx wrangler publish",
 		"format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
 		"lint": "eslint --max-warnings=0 src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",

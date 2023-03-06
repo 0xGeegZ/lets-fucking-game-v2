@@ -42,6 +42,7 @@ const NetworkSelect = ({ switchNetwork, chainId }) => {
               ChainId.MUMBAI === chain.id ||
               ChainId.GOERLI === chain.id ||
               ChainId.BSC_TESTNET === chain.id ||
+              ChainId.FANTOM_TESTNET === chain.id ||
               chain.id === chainId,
         )
         .map((chain) => (

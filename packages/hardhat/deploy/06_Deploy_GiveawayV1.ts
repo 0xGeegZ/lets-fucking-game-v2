@@ -1,8 +1,9 @@
 import { ethers } from 'hardhat'
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
+import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { giveawayConfig } from '../config/giveawayConfig'
+import { networkConfig } from '../config/networkConfig'
 import { delay } from '../helpers/delay'
 
 const func: DeployFunction = async function ({
@@ -36,6 +37,7 @@ const func: DeployFunction = async function ({
 
   const options = {
     from: deployerAddress,
+    nonce: 'pending',
     log: true,
   }
 
@@ -52,7 +54,7 @@ const func: DeployFunction = async function ({
   log('Deploying GiveawayV1 contract')
   const { address: cronUpkeepAddress } = await deployments.get('CronUpkeep')
   const { address: cronExternalAddress } = await deployments.get('CronExternal')
-  const libraries = {
+  const cronLibraries = {
     libraries: {
       Cron: cronExternalAddress,
     },
@@ -81,7 +83,7 @@ const func: DeployFunction = async function ({
   //   receipt: { gasUsed: keeperGasUsed },
   // } = await deploy('Keeper', {
   //   ...options,
-  //   ...libraries,
+  //   ...cronLibraries,
   //   args: keeperArgs,
   // })
 
@@ -91,17 +93,6 @@ const func: DeployFunction = async function ({
   //   )
 
   // log('Adding Keeper to Keeper delegators')
-
-  const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
-    'CronUpkeep',
-    libraries
-  )
-
-  const cronUpkeep = new ethers.Contract(
-    cronUpkeepAddress,
-    cronUpkeepInterface,
-    deployer
-  )
   // cronUpkeep.addDelegator(keeperAddress)
 
   // TODO Load it from config
@@ -134,8 +125,34 @@ const func: DeployFunction = async function ({
     )
 
   log('Adding GiveawayV1 to Keeper delegators')
+  try {
+    const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
+      'CronUpkeep',
+      cronLibraries
+    )
 
-  cronUpkeep.addDelegator(giveawayAddress)
+    const cronUpkeep = new ethers.Contract(
+      cronUpkeepAddress,
+      cronUpkeepInterface,
+      deployer
+    )
+    cronUpkeep.addDelegator(giveawayAddress)
+  } catch (error) {
+    log(
+      '[ERROR] When adding Keeper to Keeper delegators, trying without Cron library'
+    )
+
+    const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
+      'CronUpkeep'
+    )
+
+    const cronUpkeep = new ethers.Contract(
+      cronUpkeepAddress,
+      cronUpkeepInterface,
+      deployer
+    )
+    cronUpkeep.addDelegator(giveawayAddress)
+  }
 
   if (isLocalDeployment || !giveawayNewlyDeployed) return
 
@@ -144,7 +161,7 @@ const func: DeployFunction = async function ({
     log(`✅ Verifying contract GiveawayV1`)
     await hre.run('verify:verify', {
       address: giveawayAddress,
-      constructorArguments: [],
+      constructorArguments: giveawayArgs,
     })
     await delay(10 * 1000)
   } catch (error) {

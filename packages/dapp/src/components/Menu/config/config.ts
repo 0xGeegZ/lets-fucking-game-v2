@@ -29,7 +29,7 @@ const config: (
 ) => ConfigMenuItemsType[] = (t, isDark, languageCode, chainId) =>
   [
     {
-      label: t('Games'),
+      label: t('Daily Action Games'),
       href: '/games',
       icon: EarnIcon,
       fillIcon: EarnFillIcon,
@@ -43,6 +43,28 @@ const config: (
         {
           label: t('My Created Games'),
           href: '/games/my-games',
+          supportChainIds: SUPPORT_GAMES_TEST,
+        },
+      ].map((item) => addMenuItemSupported(item, chainId)),
+    },
+    {
+      label: t('Classic Giveaway Contests'),
+      disabled: true,
+      href: '/giveaways',
+      icon: EarnIcon,
+      fillIcon: EarnFillIcon,
+      image: '/images/decorations/pe2.png',
+      items: [
+        {
+          label: t('All Giveaways'),
+          disabled: true,
+          href: '/giveaways',
+          supportChainIds: SUPPORT_GAMES_TEST,
+        },
+        {
+          label: t('My Created giveaways'),
+          disabled: true,
+          href: '/giveaways/my-giveaways',
           supportChainIds: SUPPORT_GAMES_TEST,
         },
       ].map((item) => addMenuItemSupported(item, chainId)),
