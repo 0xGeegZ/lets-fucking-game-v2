@@ -62,6 +62,7 @@ FANTOM Hackathon Q1 2023 version Release accessible [HERE](https://github.com/le
   Utility smart contract that enables batched read-only calls to multiple functions in one transaction, reducing gas costs and improving efficiency. It allows users to retrieve the results of multiple function calls with a single contract call.
 
 [Contracts Class Diagram](./packages/hardhat/classDiagram.svg)
+[![Contracts Class Diagram](./packages/hardhat/classDiagram.svg)](https://htmlpreview.github.io/?https://github.com/lets-fucking-game/lets-fucking-game-v2/blob/dev/packages/hardhat/classDiagram.svg "Contracts Class Diagram")
 
 ## Inspiration
 
