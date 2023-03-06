@@ -61,8 +61,8 @@ FANTOM Hackathon Q1 2023 version Release accessible [HERE](https://github.com/le
 - **MulticallV3 contracts [0xdAfD0A4BDf6fe4590a9770e904e8d88575C04280](https://testnet.ftmscan.com/address/0xdAfD0A4BDf6fe4590a9770e904e8d88575C04280#code)** :
   Utility smart contract that enables batched read-only calls to multiple functions in one transaction, reducing gas costs and improving efficiency. It allows users to retrieve the results of multiple function calls with a single contract call.
 
-[Contracts Class Diagram](./packages/hardhat/classDiagram.svg)
-[![Contracts Class Diagram](./packages/hardhat/classDiagram.svg)](https://htmlpreview.github.io/?https://github.com/lets-fucking-game/lets-fucking-game-v2/blob/dev/packages/hardhat/classDiagram.svg "Contracts Class Diagram")
+👉 More infos about our Smart Contracts Architecture :
+[![Contracts Class Diagram](./packages/hardhat/classDiagram.svg)](./packages/hardhat/classDiagram.svg, "Contracts Class Diagram")
 
 ## Inspiration
 
