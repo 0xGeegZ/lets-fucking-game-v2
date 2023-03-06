@@ -34,6 +34,8 @@ FANTOM Hackathon Q1 2023 version Release accessible [HERE](https://github.com/le
 
 [👉 Check our Smart Contract Code Coverage 👈](https://htmlpreview.github.io/?https://github.com/lets-fucking-game/lets-fucking-game-v2/blob/dev/packages/hardhat/coverage/index.html)
 
+[![Code Coverage](https://res.cloudinary.com/vaka/image/upload/v1678121114/LFG/Code_Coverage_-_General.png)](https://htmlpreview.github.io/?https://github.com/lets-fucking-game/lets-fucking-game-v2/blob/dev/packages/hardhat/coverage/index.html "LFG Smart Contract Code Coverage")
+
 ## Contracts deployed on FANTOM TESTNET
 
 **MAIN :**
