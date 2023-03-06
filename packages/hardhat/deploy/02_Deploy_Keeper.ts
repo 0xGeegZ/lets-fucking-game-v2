@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat'
-import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { DeployFunction } from 'hardhat-deploy/types'
 
 import { delay } from '../helpers/delay'
 
@@ -18,6 +18,7 @@ const func: DeployFunction = async function ({
   const CRON_MAX_JOBS = 100
   const options = {
     from: deployer,
+    nonce: 'pending',
     log: true,
   }
 

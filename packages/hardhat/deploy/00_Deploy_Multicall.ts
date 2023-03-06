@@ -1,5 +1,5 @@
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
+import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { delay } from '../helpers/delay'
 
@@ -14,6 +14,7 @@ const func: DeployFunction = async function ({
 
   const options = {
     from: deployerAddress,
+    nonce: 'pending',
     log: true,
   }
 

@@ -50,10 +50,23 @@ const func: DeployFunction = async function ({
   ]
 
   const { address: giveawayAddress } = await deployments.get('GiveawayV1')
-  const { interface: giveawayInterface } = await ethers.getContractFactory(
-    'GiveawayV1',
-    helpersLibraries
-  )
+
+  let giveawayInterface
+  try {
+    const { interface: giveawayInterfaceTmp } = await ethers.getContractFactory(
+      'GiveawayV1',
+      helpersLibraries
+    )
+    giveawayInterface = giveawayInterfaceTmp
+  } catch (error) {
+    log(
+      '[ERROR] When loading GiveawayV1 from contract factory, trying without dependencies library'
+    )
+    const { interface: giveawayInterfaceTmp } = await ethers.getContractFactory(
+      'GiveawayV1'
+    )
+    giveawayInterface = giveawayInterfaceTmp
+  }
 
   const giveaway = new ethers.Contract(
     giveawayAddress,

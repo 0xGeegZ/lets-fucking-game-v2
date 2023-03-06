@@ -120,14 +120,16 @@ export const gameConfig: Record<string, GameConfig | null> = {
   },
   '250': {
     ...defaultGameConfig,
-    GAME_CREATION_AMOUNT: parseEther('0.05'),
-    REGISTRATION_AMOUNT_FREE_MIN: parseEther('0.001'),
+    GAME_CREATION_AMOUNT: parseEther('0.5'),
+    REGISTRATION_AMOUNT_DEFAULT: parseEther('1'),
+    REGISTRATION_AMOUNT_FREE_MIN: parseEther('0.01'),
+    AUTHORIZED_REGISTRATION_AMOUNTS: [0, 1, 2, 5, 10, 100, 200, 250],
     PLAYERS_DEFAULT: 5,
   },
   '4002': {
     ...defaultGameConfig,
-    GAME_CREATION_AMOUNT: parseEther('0.5'),
-    AUTHORIZED_REGISTRATION_AMOUNTS: [0, 0.5, 1, 2, 5, 10, 100, 200, 250],
+    GAME_CREATION_AMOUNT: parseEther('0.01'),
+    PLAYERS_DEFAULT: 5,
   },
 }
 

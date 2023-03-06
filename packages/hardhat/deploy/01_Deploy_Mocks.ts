@@ -1,5 +1,5 @@
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
+import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 const func: DeployFunction = async function ({
   deployments,
@@ -8,7 +8,7 @@ const func: DeployFunction = async function ({
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  await deploy('LinkToken', { from: deployer, log: true })
+  await deploy('LinkToken', { from: deployer, nonce: 'pending', log: true })
 }
 
 func.tags = ['all', 'test', 'dev', 'mocks']

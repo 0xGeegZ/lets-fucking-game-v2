@@ -65,7 +65,7 @@ const GamePresentation: React.FC<React.PropsWithChildren> = () => {
     {
       label: t('Game type #%number%', { number: 2 }),
       title: t('Daily Action Game'),
-      subtitle: t(`Register to the game thanks to LFG dapp. </br>
+      subtitle: t(`Register to the game through to LFG dapp. </br>
       Play our one-button game once a day during a random time slot. </br>
       Be one of the last players to share the prize pool.`),
     },

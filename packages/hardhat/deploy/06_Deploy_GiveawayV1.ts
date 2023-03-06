@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat'
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
+import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { giveawayConfig } from '../config/giveawayConfig'
 import { networkConfig } from '../config/networkConfig'
@@ -37,6 +37,7 @@ const func: DeployFunction = async function ({
 
   const options = {
     from: deployerAddress,
+    nonce: 'pending',
     log: true,
   }
 
@@ -92,21 +93,6 @@ const func: DeployFunction = async function ({
   //   )
 
   // log('Adding Keeper to Keeper delegators')
-
-  // FIXME : linking to cronLibraries will throw error on deployments (except local)
-  const params = ['CronUpkeep']
-  if (isLocalDeployment) params.push(cronLibraries)
-  const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
-    ...params
-    // 'CronUpkeep'
-    // cronLibraries
-  )
-
-  const cronUpkeep = new ethers.Contract(
-    cronUpkeepAddress,
-    cronUpkeepInterface,
-    deployer
-  )
   // cronUpkeep.addDelegator(keeperAddress)
 
   // TODO Load it from config
@@ -139,8 +125,34 @@ const func: DeployFunction = async function ({
     )
 
   log('Adding GiveawayV1 to Keeper delegators')
+  try {
+    const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
+      'CronUpkeep',
+      cronLibraries
+    )
 
-  cronUpkeep.addDelegator(giveawayAddress)
+    const cronUpkeep = new ethers.Contract(
+      cronUpkeepAddress,
+      cronUpkeepInterface,
+      deployer
+    )
+    cronUpkeep.addDelegator(giveawayAddress)
+  } catch (error) {
+    log(
+      '[ERROR] When adding Keeper to Keeper delegators, trying without Cron library'
+    )
+
+    const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
+      'CronUpkeep'
+    )
+
+    const cronUpkeep = new ethers.Contract(
+      cronUpkeepAddress,
+      cronUpkeepInterface,
+      deployer
+    )
+    cronUpkeep.addDelegator(giveawayAddress)
+  }
 
   if (isLocalDeployment || !giveawayNewlyDeployed) return
 
@@ -149,7 +161,7 @@ const func: DeployFunction = async function ({
     log(`✅ Verifying contract GiveawayV1`)
     await hre.run('verify:verify', {
       address: giveawayAddress,
-      constructorArguments: [],
+      constructorArguments: giveawayArgs,
     })
     await delay(10 * 1000)
   } catch (error) {

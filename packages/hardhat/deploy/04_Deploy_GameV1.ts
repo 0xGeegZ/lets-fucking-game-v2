@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat'
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
+import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { delay } from '../helpers/delay'
 
@@ -19,6 +19,7 @@ const func: DeployFunction = async function ({
 
   const options = {
     from: deployerAddress,
+    nonce: 'pending',
     log: true,
   }
 
@@ -57,21 +58,34 @@ const func: DeployFunction = async function ({
 
   const { address: cronUpkeepAddress } = await deployments.get('CronUpkeep')
 
-  // FIXME : linking to cronLibraries will throw error on deployments (except local)
-  const params = ['CronUpkeep']
-  if (isLocalDeployment) params.push(cronLibraries)
-  const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
-    ...params
-    // 'CronUpkeep'
-    // cronLibraries
-  )
+  try {
+    const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
+      'CronUpkeep',
+      cronLibraries
+    )
 
-  const cronUpkeep = new ethers.Contract(
-    cronUpkeepAddress,
-    cronUpkeepInterface,
-    deployer
-  )
-  cronUpkeep.addDelegator(gameAddress)
+    const cronUpkeep = new ethers.Contract(
+      cronUpkeepAddress,
+      cronUpkeepInterface,
+      deployer
+    )
+    cronUpkeep.addDelegator(gameAddress)
+  } catch (error) {
+    log(
+      '[ERROR] When adding GameV1 to Keeper delegators, trying without Cron library'
+    )
+
+    const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
+      'CronUpkeep'
+    )
+
+    const cronUpkeep = new ethers.Contract(
+      cronUpkeepAddress,
+      cronUpkeepInterface,
+      deployer
+    )
+    cronUpkeep.addDelegator(gameAddress)
+  }
 
   if (isLocalDeployment || !gameNewlyDeployed) return
 
@@ -80,7 +94,7 @@ const func: DeployFunction = async function ({
     log(`✅ Verifying contract GameV1`)
     await hre.run('verify:verify', {
       address: gameAddress,
-      constructorArguments: [],
+      constructorArguments: gameArgs,
     })
     await delay(10 * 1000)
   } catch (error) {

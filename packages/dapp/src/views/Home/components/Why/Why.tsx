@@ -11,7 +11,7 @@ const Why: React.FC<React.PropsWithChildren> = () => {
 
   return (
     <Box width="100%">
-      <Flex mb="40px" alignItems="center" flexDirection="column">
+      <Flex mb="24px" alignItems="center" flexDirection="column">
         <Heading mb="24px" scale="xl" color="secondary">
           {t('About Us')}
         </Heading>

@@ -66,10 +66,20 @@ const func: DeployFunction = async function ({
   const freeGamePrizes = updatedPrizes
 
   const { address: gameFactoryAddress } = await deployments.get('GameFactoryV1')
-  const { interface: gameFactoryInterface } = await ethers.getContractFactory(
-    'GameFactoryV1',
-    helpersLibraries
-  )
+
+  let gameFactoryInterface
+  try {
+    const { interface: gameFactoryInterfaceTmp } =
+      await ethers.getContractFactory('GameFactoryV1', helpersLibraries)
+    gameFactoryInterface = gameFactoryInterfaceTmp
+  } catch (error) {
+    log(
+      '[ERROR] When loading GameFactoryV1 from contract factory, trying without dependencies library'
+    )
+    const { interface: gameFactoryInterfaceTmp } =
+      await ethers.getContractFactory('GameFactoryV1')
+    gameFactoryInterface = gameFactoryInterfaceTmp
+  }
 
   const gameFactory = new ethers.Contract(
     gameFactoryAddress,
@@ -87,7 +97,9 @@ const func: DeployFunction = async function ({
     creatorFee,
     encodedCron,
     prizes,
-    { value: itemCreationAmount }
+    {
+      value: itemCreationAmount,
+    }
   )
   log(`✅ New payable game created`)
 
@@ -101,7 +113,9 @@ const func: DeployFunction = async function ({
     creatorFee,
     encodedCron,
     freeGamePrizes,
-    { value: itemCreationAmount.add(freeGamePrizepoolAmount) }
+    {
+      value: itemCreationAmount.add(freeGamePrizepoolAmount),
+    }
   )
   log(`✅ New free game created`)
 

@@ -18,6 +18,7 @@ Originally created during the [ChainLink Hackathon Fall 2022](https://devpost.co
 - Add ERC20 tokens support
 - Add ERC 721 token support for NFT
 - Use Chainlink Data Feed to get some data from classical API (like Twitter)
+- Interfacing our Giveaway Smart Contract to Twitter API
 - Make contracts more generic to easily add more game types
 - Adding classic giveaway contests on smart contract part (not on the frontend yet)
 
@@ -37,15 +38,20 @@ Hackathon version Release accessible [HERE](https://github.com/lets-fucking-game
 
 **PRIMARY :**
 
-- GameFactory contract [0xaa318806d683765e6576636a2d88ee14fda9c720](https://goerli.etherscan.io/address/0xaa318806d683765e6576636a2d88ee14fda9c720#code)
-- GameV1 BASE contract [0x82BF8997DC54A3E447BcF4E636cBFc45A13D0Ed9](https://goerli.etherscan.io/address/0x82BF8997DC54A3E447BcF4E636cBFc45A13D0Ed9#code)
-- GiveawayV1 BASE contract [0x82BF8997DC54A3E447BcF4E636cBFc45A13D0Ed9](https://goerli.etherscan.io/address/0x82BF8997DC54A3E447BcF4E636cBFc45A13D0Ed9#code)
-- CronUpkeep contract [0x45aa5aec20F3019A707D0EFb1C6282c4F0Aea44e](https://goerli.etherscan.io/address/0x45aa5aec20F3019A707D0EFb1C6282c4F0Aea44e#code)
+- GameFactory contract [0x5F8757a431A5c2fcA35DF8ac58Cb1FC23229079D](https://testnet.ftmscan.com/address/0x5F8757a431A5c2fcA35DF8ac58Cb1FC23229079D#code)
+- GameV1 BASE contract [0xEd5Efa65bE3F9670Ae29C9FdB945a7766963fF3C](https://testnet.ftmscan.com/address/0xEd5Efa65bE3F9670Ae29C9FdB945a7766963fF3C#code)
+- GiveawayV1 BASE contract [0x01B87afE883Dc00C70C92755e2d219C63aaF4313](https://testnet.ftmscan.com/address/0x01b87afe883dc00c70c92755e2d219c63aaf4313#code)
+- CronUpkeep contract [0x1EE9D78849cA6053E3Dd5Af41a0e1e311508aB99](https://testnet.ftmscan.com/address/0x1EE9D78849cA6053E3Dd5Af41a0e1e311508aB99#code)
+
+**LIBRARIES :**
+
+- TokenHelpers contract [0x2EeD5D0e3A4A3Fc999BdE8A9Eb46ad1A5D210556](https://testnet.ftmscan.com/address/0x2EeD5D0e3A4A3Fc999BdE8A9Eb46ad1A5D210556#code)
+- KeeperHelpers contracts [0x9AC49f429fa6AfF63B4B8FDE32a5CC1ABDbA97bF](https://testnet.ftmscan.com/address/0x9AC49f429fa6AfF63B4B8FDE32a5CC1ABDbA97bF#code)
 
 **SECONDARY :**
 
-- CronExternal contract [0xb37EEC7c8a7312687777e4E61c4D2C12e2Fe0DD2](https://goerli.etherscan.io/address/0xb37EEC7c8a7312687777e4E61c4D2C12e2Fe0DD2#code)
-- MulticallV3 contracts [0xD960c6f4D7800daFd4508FAE9bD82b9d15CC4608](https://goerli.etherscan.io/address/0xD960c6f4D7800daFd4508FAE9bD82b9d15CC4608#code)
+- CronExternal contract [0xfC952f50c6EcDf621cE99138759c42E58468F34d](https://testnet.ftmscan.com/address/0xfC952f50c6EcDf621cE99138759c42E58468F34d#code)
+- MulticallV3 contracts [0xdAfD0A4BDf6fe4590a9770e904e8d88575C04280](https://testnet.ftmscan.com/address/0xdAfD0A4BDf6fe4590a9770e904e8d88575C04280#code)
 
 ## Inspiration
 

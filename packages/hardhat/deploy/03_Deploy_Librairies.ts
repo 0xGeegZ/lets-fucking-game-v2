@@ -16,6 +16,7 @@ const func: DeployFunction = async function ({
 
   const options = {
     from: deployer,
+    nonce: 'pending',
     log: true,
   }
 
