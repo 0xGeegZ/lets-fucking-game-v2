@@ -72,7 +72,7 @@ const FAQ = () => {
             </Text>
           </FoldableText>
           <FoldableText title={t('How long does a game typically last ?')} mt="24px">
-            <Text mt="16px" bold scale="md">
+            <Text mt="16px" bold>
               {t('Classic Giveaway Contest')}
             </Text>
             <Text fontSize="14px" color="textSubtle">
@@ -80,7 +80,7 @@ const FAQ = () => {
                 'The winners will be randomly selected when the maximum number of players is met. The length of the game can vary depending on the size and engagement of the community, but it can take a few minutes to a few days.',
               )}
             </Text>
-            <Text mt="16px" bold scale="md">
+            <Text mt="16px" bold>
               {t('Daily Action Game')}
             </Text>
             <Text fontSize="14px" color="textSubtle">
@@ -97,7 +97,7 @@ const FAQ = () => {
             </Text>
           </FoldableText>
           <FoldableText title={t('How long does a game typically last ?')} mt="24px">
-            <Text mt="16px" bold scale="md">
+            <Text mt="16px" bold>
               {t('Classic Giveaway Contest')}
             </Text>
             <Text fontSize="14px" color="textSubtle">
@@ -105,7 +105,7 @@ const FAQ = () => {
                 'Once your participation is validated, you cannot remove it. However, if you win and do not want to claim your prize, you can choose not to do so.',
               )}
             </Text>
-            <Text mt="16px" bold scale="md">
+            <Text mt="16px" bold>
               {t('Daily Action Game')}
             </Text>
             <Text fontSize="14px" color="textSubtle">
