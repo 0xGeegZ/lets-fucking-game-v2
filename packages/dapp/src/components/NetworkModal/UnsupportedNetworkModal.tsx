@@ -17,8 +17,8 @@ export function UnsupportedNetworkModal({ pageSupportedChains }: { pageSupported
   const { switchNetworkAsync, isLoading, canSwitch } = useSwitchNetwork()
   const switchNetworkLocal = useSwitchNetworkLocal()
   const { chains } = useNetwork()
-  //   const chainId = useLocalNetworkChain() || ChainId.BSC
-  const chainId = useLocalNetworkChain() || ChainId.MUMBAI
+  // TODO GUIGUI UPDATE DEFAULT CHAIN
+  const chainId = useLocalNetworkChain() || ChainId.FANTOM_TESTNET
   const { isConnected } = useAccount()
   const { logout } = useAuth()
   const { t } = useTranslation()
@@ -66,12 +66,11 @@ export function UnsupportedNetworkModal({ pageSupportedChains }: { pageSupported
                 switchNetworkAsync(chainId)
               } else {
                 // TODO GUIGUI UPDATE DEFAULT CHAIN
-                // switchNetworkAsync(ChainId.BSC)
-                switchNetworkAsync(ChainId.MUMBAI)
+                switchNetworkAsync(ChainId.FANTOM_TESTNET)
               }
             }}
           >
-            {isLoading ? <Dots>{t('Switch network in wallet')}</Dots> : t('Switch network in wallet')}
+            {isLoading ? <Dots>{t('Switching network...')}</Dots> : t('Switch network in wallet')}
           </Button>
         ) : (
           <Message variant="danger">
@@ -83,8 +82,8 @@ export function UnsupportedNetworkModal({ pageSupportedChains }: { pageSupported
             variant="secondary"
             onClick={() =>
               logout().then(() => {
-                // switchNetworkLocal(ChainId.BSC)
-                switchNetworkLocal(ChainId.MUMBAI)
+                // TODO GUIGUI UPDATE DEFAULT CHAIN
+                switchNetworkLocal(ChainId.FANTOM_TESTNET)
               })
             }
           >
