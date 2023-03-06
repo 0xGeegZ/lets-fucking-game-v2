@@ -61,6 +61,8 @@ FANTOM Hackathon Q1 2023 version Release accessible [HERE](https://github.com/le
 - **MulticallV3 contracts [0xdAfD0A4BDf6fe4590a9770e904e8d88575C04280](https://testnet.ftmscan.com/address/0xdAfD0A4BDf6fe4590a9770e904e8d88575C04280#code)** :
   Utility smart contract that enables batched read-only calls to multiple functions in one transaction, reducing gas costs and improving efficiency. It allows users to retrieve the results of multiple function calls with a single contract call.
 
+[![Contracts Class Diagram](https://res.cloudinary.com/vaka/image/upload/v1678121114/LFG/Code_Coverage_-_General.png)]
+
 ## Inspiration
 
 LFG was inspired by the need for transparency and fairness in online contests. We recognized that many contests on social media platforms were often fake or rigged, leaving participants with no chance of winning. By leveraging the power of decentralization, we wanted to create a platform that could offer a more secure and trustworthy way for people to participate in online contests.
@@ -117,7 +119,7 @@ This help us to create a well structured project with a good potential of scalab
   - We store on chain the strict minimum of data to keep all the data on chain
   - Serverless architecture for an easy deployment and scalability
 
-[👉 Check our Smart Contract Code Coverage](https://htmlpreview.github.io/?https://github.com/lets-fucking-game/lets-fucking-game-v2/blob/dev/packages/hardhat/coverage/index.html)
+[👉 Check our Smart Contract Code Coverage](./packages/hardhat/classDiagram.svg)
 
 ## Challenges we ran into
 

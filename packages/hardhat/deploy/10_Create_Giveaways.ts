@@ -74,19 +74,22 @@ const func: DeployFunction = async function ({
     deployer
   )
 
-  log('Creating new giveaway')
-  await giveaway.createGiveaway(
-    name,
-    image,
-    userId,
-    tweetId,
-    endTimestamp,
-    retweetMaxCount,
-    prizes,
-    { value: giveawayAmount }
-  )
-  log(`✅ New giveaway created`)
-
+  try {
+    log('Creating new giveaway')
+    await giveaway.createGiveaway(
+      name,
+      image,
+      userId,
+      tweetId,
+      endTimestamp,
+      retweetMaxCount,
+      prizes,
+      { value: giveawayAmount }
+    )
+    log(`✅ New giveaway created`)
+  } catch (error) {
+    log(`❌ New giveaway not created`, error)
+  }
   // TODO add giveaway to delegators when implemented
 }
 
