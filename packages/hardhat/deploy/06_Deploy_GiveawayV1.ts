@@ -3,6 +3,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
 
 import { giveawayConfig } from '../config/giveawayConfig'
+import { networkConfig } from '../config/networkConfig'
 import { delay } from '../helpers/delay'
 
 const func: DeployFunction = async function ({
@@ -52,7 +53,7 @@ const func: DeployFunction = async function ({
   log('Deploying GiveawayV1 contract')
   const { address: cronUpkeepAddress } = await deployments.get('CronUpkeep')
   const { address: cronExternalAddress } = await deployments.get('CronExternal')
-  const libraries = {
+  const cronLibraries = {
     libraries: {
       Cron: cronExternalAddress,
     },
@@ -81,7 +82,7 @@ const func: DeployFunction = async function ({
   //   receipt: { gasUsed: keeperGasUsed },
   // } = await deploy('Keeper', {
   //   ...options,
-  //   ...libraries,
+  //   ...cronLibraries,
   //   args: keeperArgs,
   // })
 
@@ -92,9 +93,13 @@ const func: DeployFunction = async function ({
 
   // log('Adding Keeper to Keeper delegators')
 
+  // FIXME : linking to cronLibraries will throw error on deployments (except local)
+  const params = ['CronUpkeep']
+  if (isLocalDeployment) params.push(cronLibraries)
   const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
-    'CronUpkeep',
-    libraries
+    ...params
+    // 'CronUpkeep'
+    // cronLibraries
   )
 
   const cronUpkeep = new ethers.Contract(

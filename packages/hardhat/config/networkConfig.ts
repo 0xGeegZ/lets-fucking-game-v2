@@ -54,6 +54,28 @@ export const networkConfig: Record<
     oracleToken: '0x816BA5612d744B01c36b0517B32b4FcCb9747009',
     requestJobId: '53f9755920cd451a8fe46f5087468395',
   },
+  '250': {
+    name: 'fantom',
+    // TODO update with real LinkToken address
+    linkToken: '0x326C977E6efc84E512bB9C30f76E30c160eD06FB',
+    fee: '100000000000000',
+    fundAmount: '100000000000000',
+    // TODO update with real oracleToken address
+    oracleToken: '0x816BA5612d744B01c36b0517B32b4FcCb9747009',
+    // TODO update with real requestJobId address
+    requestJobId: '53f9755920cd451a8fe46f5087468395',
+  },
+  '4002': {
+    name: 'fantom_testnet',
+    // TODO update with real LinkToken address
+    linkToken: '0x326C977E6efc84E512bB9C30f76E30c160eD06FB',
+    fee: '100000000000000',
+    fundAmount: '100000000000000',
+    // TODO update with real oracleToken address
+    oracleToken: '0x816BA5612d744B01c36b0517B32b4FcCb9747009',
+    // TODO update with real requestJobId address
+    requestJobId: '53f9755920cd451a8fe46f5087468395',
+  },
 }
 
 export const developmentChains = ['hardhat', 'localhost']

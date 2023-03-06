@@ -110,6 +110,15 @@ export const giveawayConfig: Record<string, GiveawayConfig | null> = {
     // GIVEAWAY_AMOUNT_DEFAULT: parseEther('50'),
     AUTHORIZED_GIVEAWAY_AMOUNTS: [0, 0.0001, 0.5, 1, 2, 5, 10, 100, 200, 250],
   },
+  '250': {
+    ...defaultGiveawayConfig,
+    GIVEAWAY_AMOUNT_DEFAULT: parseEther('0.5'),
+  },
+  '4002': {
+    ...defaultGiveawayConfig,
+    GIVEAWAY_AMOUNT_DEFAULT: parseEther('0.5'),
+    AUTHORIZED_GIVEAWAY_AMOUNTS: [0, 0.05, 0.5, 0.75, 1, 1.5, 2, 5, 10],
+  },
 }
 
 export const developmentChains = ['hardhat', 'localhost']

@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat'
-import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { DeployFunction } from 'hardhat-deploy/types'
 
 import { delay } from '../helpers/delay'
 
@@ -56,9 +56,14 @@ const func: DeployFunction = async function ({
   }
 
   const { address: cronUpkeepAddress } = await deployments.get('CronUpkeep')
+
+  // FIXME : linking to cronLibraries will throw error on deployments (except local)
+  const params = ['CronUpkeep']
+  if (isLocalDeployment) params.push(cronLibraries)
   const { interface: cronUpkeepInterface } = await ethers.getContractFactory(
-    'CronUpkeep',
-    cronLibraries
+    ...params
+    // 'CronUpkeep'
+    // cronLibraries
   )
 
   const cronUpkeep = new ethers.Contract(

@@ -74,7 +74,7 @@ export const avalandcheFuji: Chain = {
 
 export const fantomOpera: Chain = {
   id: 250,
-  name: 'Fantom Opera',
+  name: 'Fantom',
   network: 'fantom',
   nativeCurrency: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
   rpcUrls: {
@@ -109,7 +109,7 @@ const bscExplorer = { name: 'BscScan', url: 'https://bscscan.com' }
 
 export const bsc: Chain = {
   id: 56,
-  name: 'BNB Smart Chain',
+  name: 'Binance Smart Chain',
   network: 'bsc',
   rpcUrls: {
     public: 'https://bsc-dataseed1.binance.org',
@@ -132,7 +132,7 @@ export const bsc: Chain = {
 
 export const bscTest: Chain = {
   id: 97,
-  name: 'BNB Smart Chain Testnet',
+  name: 'BSC Testnet',
   network: 'bsc-testnet',
   nativeCurrency: {
     decimals: 18,

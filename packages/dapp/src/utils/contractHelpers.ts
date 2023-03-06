@@ -46,7 +46,7 @@ export const getErc721Contract = (address: string, signer?: Signer | Provider) =
 
 export const getGameFactoryContract = (chainId?: number, signer?: Signer | Provider) => {
   if (!internal[chainId || ChainId.BSC]) {
-    console.error('No config found for this chain')
+    console.error('[getGameFactoryContract] No config found for this chain', chainId)
     return null
   }
   if (!internal[chainId || ChainId.BSC].GameFactoryV1) {
@@ -64,7 +64,7 @@ export const getGameFactoryContract = (chainId?: number, signer?: Signer | Provi
 
 export const getGameV1Contract = (address: string, chainId?: number, signer?: Signer | Provider) => {
   if (!internal[chainId || ChainId.BSC]) {
-    console.error('No config found for this chain')
+    console.error('[getGameV1Contract] No config found for this chain')
     return null
   }
 
@@ -83,7 +83,7 @@ export const getGameV1Contract = (address: string, chainId?: number, signer?: Si
 
 export const getGiveawayV1Contract = (chainId?: number, signer?: Signer | Provider) => {
   if (!internal[chainId || ChainId.BSC]) {
-    console.error('No config found for this chain')
+    console.error('[getGiveawayV1Contract] No config found for this chain')
     return null
   }
   if (!internal[chainId || ChainId.BSC].Giveaway) {

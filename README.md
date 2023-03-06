@@ -139,6 +139,8 @@ In the future, we plan to work on improving the architecture of the smart contra
 
 Overall, our team is committed to developing a platform that provides real value to users and leverages the power of blockchain technology to create a more secure, transparent, and trustworthy online contest experience. We're excited to continue working on this project and exploring new ways to innovate and improve in the future.
 
+Following the recent announcement by Chainlink on March 1st 2023 regarding their new feature called [ChainLink Function](https://blog.chain.link/introducing-chainlink-functions/), we have decided to enhance our smart contract that interact with Twitter API thanks to Chainlink Data Feed. By using Chainlink Function, our goal is to make the contract more generic, enabling us to easily add new social media platform through their API in the future.
+
 ## Built with
 
 Primary :

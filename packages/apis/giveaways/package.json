@@ -1,7 +1,9 @@
 {
-	"name": "giveaways",
-	"version": "0.0.1",
+	"name": "lets-fucking-game-apis-giveaways",
 	"description": "Cloudflare worker giveaway API",
+  "license": "MIT",
+  "version": "0.0.1",
+  "author": "@GuiDieudo",
 	"scripts": {
 		"dev": "npx wrangler dev",
 		"publish": "npx wrangler publish",
