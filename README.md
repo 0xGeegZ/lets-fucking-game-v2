@@ -1,6 +1,6 @@
-# Let's Fucking Game
+# Let's F*#@$* Game
 
-[![Let's Fucking Game Presentation](http://img.youtube.com/vi/vdYPN0rT-SM/0.jpg)](https://youtu.be/vdYPN0rT-SM "Let's Fucking Game Presentation")
+[![Let's F*#@$* Game Presentation](https://img.youtube.com/vi/hFh7e8sjqbQ/0.jpg)](https://youtu.be/hFh7e8sjqbQ "LFGames Presentation")
 
 ## Description
 
