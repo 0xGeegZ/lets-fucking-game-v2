@@ -94,6 +94,12 @@ export const fantomTestnet: Chain = {
   network: 'fantom-testnet',
   nativeCurrency: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
   rpcUrls: {
+    /* 
+      https://endpoints.omniatech.io/v1/fantom/testnet/public	
+      https://rpc.ankr.com/fantom_testnet	
+      https://rpc.testnet.fantom.network	
+      https://fantom-testnet.public.blastapi.io
+    */
     // default: 'https://rpc.testnet.fantom.network',
     default: 'https://fantom-testnet.public.blastapi.io	',
   },
