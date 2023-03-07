@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat'
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
+import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { delay } from '../helpers/delay'
 
@@ -83,6 +83,7 @@ const func: DeployFunction = async function ({
 
   if (isLocalDeployment || !cronUpkeepNewlyDeployed) return
 
+  log(`🕦 Waiting before verification...`)
   await delay(30 * 1000)
   try {
     log(`✅ Verifying contract CronExternal`)
@@ -90,6 +91,7 @@ const func: DeployFunction = async function ({
       address: cronExternalAddress,
       constructorArguments: [],
     })
+    log(`🕧 Waiting post verification...`)
     await delay(10 * 1000)
   } catch (error) {
     console.error('Error during contract verification', error.message)
@@ -101,6 +103,7 @@ const func: DeployFunction = async function ({
       address: cronUpkeepAddress,
       constructorArguments: cronUpkeepArgs,
     })
+    log(`🕧 Waiting post verification...`)
     await delay(10 * 1000)
   } catch (error) {
     console.error('Error during contract verification', error.message)

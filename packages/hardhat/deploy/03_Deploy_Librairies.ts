@@ -1,5 +1,5 @@
-import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { DeployFunction } from 'hardhat-deploy/types'
 
 import { delay } from '../helpers/delay'
 
@@ -65,6 +65,7 @@ const func: DeployFunction = async function ({
   )
     return
 
+  log(`🕦 Waiting before verification...`)
   await delay(30 * 1000)
   try {
     log(`✅ Verifying contract TokenHelpers`)
@@ -72,6 +73,7 @@ const func: DeployFunction = async function ({
       address: tokenHelpersAddress,
       constructorArguments: [],
     })
+    log(`🕧 Waiting post verification...`)
     await delay(10 * 1000)
   } catch (error) {
     console.error('Error during contract verification', error.message)
@@ -83,6 +85,7 @@ const func: DeployFunction = async function ({
       address: keeperHelpersAddress,
       constructorArguments: [],
     })
+    log(`🕧 Waiting post verification...`)
     await delay(10 * 1000)
   } catch (error) {
     console.error('Error during contract verification', error.message)

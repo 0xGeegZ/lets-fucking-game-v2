@@ -156,6 +156,7 @@ const func: DeployFunction = async function ({
 
   if (isLocalDeployment || !giveawayNewlyDeployed) return
 
+  log(`🕦 Waiting before verification...`)
   await delay(30 * 1000)
   try {
     log(`✅ Verifying contract GiveawayV1`)
@@ -163,6 +164,7 @@ const func: DeployFunction = async function ({
       address: giveawayAddress,
       constructorArguments: giveawayArgs,
     })
+    log(`🕧 Waiting post verification...`)
     await delay(10 * 1000)
   } catch (error) {
     console.error('Error during contract verification', error.message)
