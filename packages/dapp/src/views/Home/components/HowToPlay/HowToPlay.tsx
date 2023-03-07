@@ -56,19 +56,25 @@ const HowToPlay: React.FC<React.PropsWithChildren> = () => {
     {
       label: t('Step %number%', { number: 1 }),
       title: t('Register for a game'),
-      subtitle: t('Choose between available games and register to one of them.'),
+      subtitle: t(
+        `For the daily action game, choose between available games and register to one of them.</br>
+        For the classic contest, just participate on social media platform (creator will have to register the contest on LFG).`,
+      ),
     },
     {
       label: t('Step %number%', { number: 2 }),
-      title: t('Wait for the start'),
-      subtitle: t('Wait until the required number of players has registered.'),
-    },
-    {
-      label: t('Step %number%', { number: 3 }),
       title: t('Perform predefined task'),
       subtitle: t(
         `For the daily action game, play once a day during the random time range.</br>
-        For the classic contest, complete the predefined task once and wait for the winners draw.`,
+        For the classic contest, perform predefined task asked by creator.`,
+      ),
+    },
+    {
+      label: t('Step %number%', { number: 3 }),
+      title: t('Game ends'),
+      subtitle: t(
+        `For the daily action game, try to be one of the last to win the prize.</br>
+        For the classic contest, wait until the required number of players has registered, draw will be automatically triggered.`,
       ),
     },
   ]
