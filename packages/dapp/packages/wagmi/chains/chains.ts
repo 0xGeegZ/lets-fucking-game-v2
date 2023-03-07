@@ -94,7 +94,8 @@ export const fantomTestnet: Chain = {
   network: 'fantom-testnet',
   nativeCurrency: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
   rpcUrls: {
-    default: 'https://rpc.testnet.fantom.network',
+    // default: 'https://rpc.testnet.fantom.network',
+    default: 'https://fantom-testnet.public.blastapi.io	',
   },
   blockExplorers: {
     default: {
