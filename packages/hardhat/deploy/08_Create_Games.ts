@@ -87,52 +87,64 @@ const func: DeployFunction = async function ({
     deployer
   )
 
-  log('Creating new payable game')
-  await gameFactory.createNewGame(
-    name,
-    maxPlayers,
-    playTimeRange,
-    registrationAmount,
-    treasuryFee,
-    creatorFee,
-    encodedCron,
-    prizes,
-    {
-      value: itemCreationAmount,
-    }
-  )
-  log(`✅ New payable game created`)
+  try {
+    log('Creating new payable game')
+    await gameFactory.createNewGame(
+      name,
+      maxPlayers,
+      playTimeRange,
+      registrationAmount,
+      treasuryFee,
+      creatorFee,
+      encodedCron,
+      prizes,
+      {
+        value: itemCreationAmount,
+      }
+    )
+    log(`✅ New payable game created`)
+  } catch (error) {
+    log(`❌ New payable game not created`, error)
+  }
 
-  log('Creating new free game')
-  await gameFactory.createNewGame(
-    name,
-    maxPlayers,
-    playTimeRange,
-    zeroRegistrationAmount,
-    treasuryFee,
-    creatorFee,
-    encodedCron,
-    freeGamePrizes,
-    {
-      value: itemCreationAmount.add(freeGamePrizepoolAmount),
-    }
-  )
-  log(`✅ New free game created`)
+  try {
+    log('Creating new free game')
+    await gameFactory.createNewGame(
+      name,
+      maxPlayers,
+      playTimeRange,
+      zeroRegistrationAmount,
+      treasuryFee,
+      creatorFee,
+      encodedCron,
+      freeGamePrizes,
+      {
+        value: itemCreationAmount.add(freeGamePrizepoolAmount),
+      }
+    )
+    log(`✅ New free game created`)
+  } catch (error) {
+    log(`❌ New free game not created`, error)
+  }
 
-  // log('Creating new free game for 2 players')
-  // await gameFactory.createNewGame(
-  //   name,
-  //   2,
-  //   playTimeRange,
-  //   zeroRegistrationAmount,
-  //   treasuryFee,
-  //   creatorFee,
-  //   '*/2 * * * *',
-  //   // encodedCron,
-  //   freeGamePrizes,
-  //   { value: itemCreationAmount.add(freeGamePrizepoolAmount) }
-  // )
-  // log(`✅ New free game for 2 players created`)
+  try {
+    log('Creating new free game for 2 players')
+    await gameFactory.createNewGame(
+      name,
+      2,
+      playTimeRange,
+      zeroRegistrationAmount,
+      treasuryFee,
+      creatorFee,
+      '*/2 * * * *',
+      // encodedCron,
+      freeGamePrizes,
+      { value: itemCreationAmount.add(freeGamePrizepoolAmount) }
+    )
+    log(`✅ New free game for 2 players created`)
+  } catch (error) {
+    log(`❌ New free game for 2 players not created`, error)
+  }
 }
 
 func.tags = ['all', 'test', 'dev', 'staging', 'create-games']

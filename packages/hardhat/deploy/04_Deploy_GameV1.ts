@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat'
-import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { DeployFunction } from 'hardhat-deploy/types'
 
 import { delay } from '../helpers/delay'
 
@@ -89,6 +89,7 @@ const func: DeployFunction = async function ({
 
   if (isLocalDeployment || !gameNewlyDeployed) return
 
+  log(`🕦 Waiting before verification...`)
   await delay(30 * 1000)
   try {
     log(`✅ Verifying contract GameV1`)
@@ -96,6 +97,7 @@ const func: DeployFunction = async function ({
       address: gameAddress,
       constructorArguments: gameArgs,
     })
+    log(`🕧 Waiting post verification...`)
     await delay(10 * 1000)
   } catch (error) {
     console.error('Error during contract verification', error.message)

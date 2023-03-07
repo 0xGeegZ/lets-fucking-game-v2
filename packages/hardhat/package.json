@@ -19,7 +19,7 @@
     "prepend-spdx": "hardhat prepend-spdx-license",
     "deploy:one": "bin/deploy.sh",
     "deploy": "npx hardhat deploy --tags dev --network hardhat",
-    "deploy:staging": "yarn deploy:staging:bsc && yarn deploy:staging:fantom && yarn deploy:staging:mumbai && deploy:staging:goerli",
+    "deploy:staging": "(yarn run 'deploy:staging:bsc' &) && (yarn run 'deploy:staging:fantom' &) && (yarn run 'deploy:staging:mumbai' &) && (yarn run 'deploy:staging:goerli' &)",
     "deploy:staging:bsc": "npx hardhat deploy --tags staging --network bscTestnet",
     "deploy:staging:fantom": "npx hardhat deploy --tags keeper --network ftmTestnet",
     "deploy:staging:mumbai": "npx hardhat deploy --tags staging --network polygonMumbai",

@@ -62,7 +62,7 @@ const config: (
           supportChainIds: SUPPORT_GAMES_TEST,
         },
         {
-          label: t('My Created giveaways'),
+          label: t('My Created Giveaways'),
           disabled: true,
           href: '/giveaways/my-giveaways',
           supportChainIds: SUPPORT_GAMES_TEST,
